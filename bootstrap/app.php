@@ -13,8 +13,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Config\Database;
 use Dotenv\Dotenv;
 
-$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv = Dotenv::createUnsafeImmutable(__DIR__ . '/../');
 $dotenv->safeLoad();
+
+
+
+/* -------- Instance Database -------- */
+Database::getInstance()->connection();
+
 
 
 
@@ -33,5 +39,3 @@ Router::start();
 
 
 
-/* -------- Instance Database -------- */
-Database::getInstance();

@@ -1,17 +1,16 @@
 <?php
 
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Question;
+use Illuminate\Database\Eloquent\Model;
 
-
-class Category extends Model
+class Domain extends Model
 {
 
-    protected $table = 'categories';
-    protected $fillable = ['name'];
+    protected $table = 'domains';
+    protected $fillabled = [];
+
 
     public function questions()
     {

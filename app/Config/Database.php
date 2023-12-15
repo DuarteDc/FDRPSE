@@ -2,12 +2,13 @@
 
 namespace App\Config;
 
+use Exception;
 use Illuminate\Database\Capsule\Manager as Capsule; 
 
 class Database
 {
 
-    private static Database $instance;
+    private static Database  | null $instance = null;
     private Capsule $capsule;
 
     public function __construct()
@@ -16,28 +17,34 @@ class Database
     }
 
     public static function getInstance() {
-        if(empty(self::$instance)) 
-            return new Database;
+        if(is_null(self::$instance)) {
+            $instance = new Database;
+            return $instance;
+        }
 
         return self::$instance;
     }
 
 
     public function connection() {
-        $this->capsule->addConnection([
-            'driver'    => getenv('DBDRIVER'),
-            'host'      => getenv('HOST'),
-            'database'  => getenv('DATABASE'),
-            'username'  => getenv('USERNAME'),
-            'password'  => getenv('PASSWORD'),
-            'charset'   => getenv('UTF8'),
-            'collation' => '',
-            'prefix'    => '',
-            'schema'    => 'public',
-            'sslmode'   => 'prefer',
-        ]);
-
-        $this->capsule->bootEloquent();
+        try {
+            $this->capsule->addConnection([
+                'driver'    => getenv('DBDRIVER'),
+                'host'      => getenv('HOST'),
+                'database'  => getenv('DATABASE'),
+                'username'  => getenv('USERNAME'),
+                'password'  => getenv('PASSWORD'),
+                'charset'   => 'utf8',
+                'collation' => '',
+                'prefix'    => '',
+                'schema'    => 'public',
+                'sslmode'   => 'prefer',
+            ]);
+    
+            $this->capsule->bootEloquent();
+        }catch(Exception $e) {
+            new Exception($e->getMessage());
+        }
     }
 
 }

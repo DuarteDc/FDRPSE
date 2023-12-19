@@ -1,13 +1,15 @@
 <?php
 
-use App\Models\Question;
-use App\Models\User;
-use  Pecee\SimpleRouter\SimpleRouter as Route;
+use Bramus\Router\Router;
 
-Route::get('/', function() {
-    $user = Question::pluck('name', 'status');
-    // var_dump($user);
-    echo json_encode($user, JSON_PRETTY_PRINT);
-    echo '<br> <br> <br>';
-    //return json_encode(User::find(273)->with('administrativeUnit')->get(), JSON_PRETTY_PRINT);
+$router = new Router;
+
+$router->setNamespace('\App\Http\Controllers');
+
+$router->mount('/api(/.*)?', function () use ($router) {
+    $router->post('/signin', 'AuthController@login');
 });
+
+
+
+$router->run();

@@ -3,12 +3,12 @@
 namespace App\Config;
 
 use Exception;
-use Illuminate\Database\Capsule\Manager as Capsule; 
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 class Database
 {
 
-    private static Database  | null $instance = null;
+    private static $instance;
     private Capsule $capsule;
 
     public function __construct()
@@ -16,17 +16,17 @@ class Database
         $this->capsule = new Capsule;
     }
 
-    public static function getInstance() {
-        if(is_null(self::$instance)) {
-            $instance = new Database;
-            return $instance;
-        }
+    public static function getInstance(): Database
+    {
+        if (self::$instance === null)
+            self::$instance = new Database;
 
         return self::$instance;
     }
 
 
-    public function connection() {
+    public function connection(): void
+    {
         try {
             $this->capsule->addConnection([
                 'driver'    => getenv('DBDRIVER'),
@@ -40,11 +40,11 @@ class Database
                 'schema'    => 'public',
                 'sslmode'   => 'prefer',
             ]);
-    
+
+            $this->capsule->setAsGlobal();
             $this->capsule->bootEloquent();
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             new Exception($e->getMessage());
         }
     }
-
 }

@@ -1,24 +1,25 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 
-class AuthController extends BaseController {
+class AuthController extends BaseController
+{
 
-    public function login() {
-        $rules = $this->validate(
-            $this->request(),
-            ['email' => 'email|required', 'password' => 'required']
-        );
-        if($rules->fails()) return $this->response($rules->errors()->firstOfAll(), 400);
-
+    public function login()
+    {
         $user = User::where('email', $this->post('email'))->first();
 
-        if(!$user->verifyPassword($this->post('password'), $user->password)) return $this->response(['message' => 'El usuario o contraseña no son validos'], 400);
-        $this->response($this->createSession($user));
-
+        if (!$user->verifyPassword($this->post('password'), $user->password)) return $this->responseJson(['message' => 'El usuario o contraseña no son validos'], 400);
+        $this->responseJson($this->createSession($user));
     }
 
+
+    public function xd()
+    {
+        echo "xee";
+    }
 }

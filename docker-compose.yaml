@@ -2,10 +2,14 @@ version: '3'
 
 services:
   db:
-    image: postgres:6.4
+    image: postgres:9.6
     restart: always
     ports: 
       - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DATABASE}
+      POSTGRES_PASSWORD: ${PASSWORD}
+
     container_name: "questionsdb"
     volumes: 
       - ./postgres:/var/lib/postgresql/data

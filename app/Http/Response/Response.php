@@ -16,7 +16,7 @@ abstract class Response implements HttpResponse
         500 => '500 Internal Server Error'
     ];
 
-    public static function responseJson(array $data = [], int $status = 200, array $headers = []): void
+    public static function responseJson($data = [], int $status = 200, array $headers = []): void
     {
         header("Access-Control-Allow-Origin: *");
         header("Cache-Control: no-transform,public,max-age=300,s-maxage=900");

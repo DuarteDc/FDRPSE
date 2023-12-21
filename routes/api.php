@@ -1,14 +1,16 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Requests\Auth\LoginRequest;
-use Routes\Router;
+use Bramus\Router\Router;
 
 $router = new Router();
 
-$router->mount('/api/*', function () use ($router) {
-    $router->get('/', [AuthController::class, 'xd']);
-    
-    $router->post('/signin', [AuthController::class, 'login'], LoginRequest::class);
+$router->setNamespace('App\Http\Controllers');
+
+$router->mount('/api.*', function () use ($router) {
+    $router->post('/login', 'AuthController@login');
+
+    $router->get('/questions', 'QuestionController@index');
+    $router->post('/questions', 'QuestionController@save');
+
 });
-$route->run();
+$router->run();

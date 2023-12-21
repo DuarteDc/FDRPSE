@@ -24,14 +24,17 @@ abstract class Request extends Response implements HttpRequest
 
     public static function get(string $param): string | null
     {
-        return isset($_GET[$param]) ? $_GET[$param] : "";
+        return isset($_GET[$param]) ? $_GET[$param] : null;
     }
 
-    public static function validations(array $fields, array $validations, array $messages = [])
+    public static function validate(array $validations, array $messages = [])
     {
-        $rules = new Validator;
-        $errors = $rules->validate($fields, $validations, $messages);
-        if ($errors->fails()) return self::getFormError($errors);
+        $validator = new Validator;
+        $rules = $validator->make(static::request(), $validations);
+        if( count($messages) > 0) $rules->setMessages($messages);
+
+        $rules->validate();
+        if ($rules->fails()) return self::getFormError($rules);
     }
 
     private static function getFormError($errors)

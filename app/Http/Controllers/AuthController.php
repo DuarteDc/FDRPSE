@@ -27,9 +27,4 @@ class AuthController extends Controller
         if (!$user->verifyPassword($this->post('password'), $user->password)) return $this->responseJson(['message' => 'El usuario o contraseña no son validos'], 400);
         $this->responseJson($this->createSession($user));
     }
-
-    public function xd()
-    {
-        echo "xee";
-    }
 }

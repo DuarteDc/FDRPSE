@@ -10,18 +10,17 @@ use Rakit\Validation\Validator;
 abstract class Request extends Response implements HttpRequest
 {
     use Auth;
-
-    public static function post(string $param): string | null
-    {
-        if (isset($_POST[$param])) return $_POST[$param];
-        return json_decode(file_get_contents('php://input'), true)[$param] ?? null;
-    }
-
+        
     public static function request(): mixed
     {
         return json_decode(file_get_contents('php://input'), true) ?? json_decode(json_encode($_POST));
     }
 
+    public static function post(string $param): string | null
+    {
+        return isset(static::request()[$param]) ?? null;
+    }
+    
     public static function get(string $param): string | null
     {
         return isset($_GET[$param]) ? $_GET[$param] : null;
@@ -31,15 +30,16 @@ abstract class Request extends Response implements HttpRequest
     {
         $validator = new Validator;
         $rules = $validator->make(static::request(), $validations);
-        if( count($messages) > 0) $rules->setMessages($messages);
 
+        $rules->setMessages($messages);
         $rules->validate();
-        if ($rules->fails()) return self::getFormError($rules);
+
+        return $rules->fails() ? static::getFormError($rules) : null;
     }
 
     private static function getFormError($errors)
     {
-        self::responseJson($errors->errors()->firstOfAll(), 400);
+        static::responseJson($errors->errors()->firstOfAll(), 400);
         exit();
     }
 }

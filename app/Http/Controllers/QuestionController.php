@@ -22,6 +22,6 @@ class QuestionController extends Controller
 
         $questions->save();
 
-        $this->responseJson(['question' => $questions]);
+        $this->responseJson(['questions' => $questions]);
     }
 }

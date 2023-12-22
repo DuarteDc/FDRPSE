@@ -9,8 +9,7 @@ class Domain extends Model
 {
 
     protected $table = 'domains';
-    protected $fillabled = [];
-
+    protected $fillabled = ['name'];
 
     public function questions()
     {

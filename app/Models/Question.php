@@ -16,11 +16,13 @@ class Question  extends Model
         return $this->morphTo();
     }
 
-    public function qualificationQuestions() {
+    public function qualificationQuestions()
+    {
         return $this->belongsTo(QualificationOption::class);
     }
 
-    public function subquestions() {
+    public function subquestions()   
+    {
         return $this->hasMany(Subquestion::class, 'question_id');
     }
 }

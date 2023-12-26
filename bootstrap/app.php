@@ -17,12 +17,14 @@ $dotenv->safeLoad();
 
 
 /* -------- Instance Database -------- */
+
 Database::getInstance()->connection();
 
 
 
 
 /* -------- Load Routes -------- */
+
 require_once __DIR__ . '/../routes/api.php';
 
 

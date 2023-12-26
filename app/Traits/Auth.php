@@ -6,8 +6,9 @@ use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-trait Auth {
+use App\Models\User;
 
+trait Auth {
 
     public static function auth()
     {
@@ -17,7 +18,7 @@ trait Auth {
         return $decode->user;
     }
 
-    public static function createSession($payload)
+    public static function createSession(User $payload)
     {
         $key = getenv('JWT_SECRET_KEY');
         $data = [

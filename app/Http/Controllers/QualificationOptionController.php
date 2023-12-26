@@ -27,5 +27,6 @@ class QualificationOptionController extends Controller
         $questions->save();
 
         $this->responseJson(['question' => $questions]);
+        
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Exception;
 
 class AuthController extends Controller
 {
@@ -28,5 +29,14 @@ class AuthController extends Controller
 
         if (!$user || $user->password != $this->post('password')) return $this->responseJson(['message' => 'El usuario o contraseña no son validos'], 400);
         $this->responseJson($this->createSession($user));
+    }
+
+    public function me()
+    {
+        $session =  $_SERVER['HTTP_SESSION'] ?? '';
+        if (!$session) return $this->responseJson(['message' => "unauthorized - 401"], 401);
+        $session = $this::check($session);
+        if ($session instanceof Exception) return $this->responseJson(['message' => $session->getMessage()], 401);
+        $this->responseJson($session);
     }
 }

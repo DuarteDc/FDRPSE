@@ -24,21 +24,13 @@ $router->options('/api.*', function () {
 
 $router->mount('/api.*', function () use ($router) {
 
-    // $router->get('/xd', function () {
-    //     // $xd = new User([
-    //     //     'name' => 'Eduardo',
-    //     //     'last_name' => 'Duarte',
-    //     //     'email' => 'duarte@xmail.com',
-    //     //     'password' => 'password',
-    //     // ]);
-    //     // $xd->save();
-
-    //     var_dump(User::all());
-    // });
-
+    $router->get('/me', 'AuthController@me');
     $router->post('/signin', 'AuthController@login');
 
     $router->get('/questions', 'QuestionController@index');
     $router->post('/questions', 'QuestionController@save');
+
+
+    $router->get('/categories', 'CategoryController@index');
 });
 $router->run();

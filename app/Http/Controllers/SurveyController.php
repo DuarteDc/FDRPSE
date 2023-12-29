@@ -15,6 +15,11 @@ class SurveyController extends Controller
     }
 
     public function save() {
+
+    }
+
+    public function showByUser() {
+        $survey = $this->auth();
     }
 
 }

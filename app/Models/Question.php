@@ -7,13 +7,13 @@ use App\Models\QualificationOption;
 
 class Question  extends Model
 {
-
+ 
     protected $table = 'questions';
     protected $fillable = ['name', 'qualification_option_id'];
 
     public function questionable()
     {
-        return $this->morphTo();
+        return $this->morphTo();  
     }
 
     public function qualificationQuestions()

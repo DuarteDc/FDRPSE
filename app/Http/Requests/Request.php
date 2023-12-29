@@ -10,7 +10,7 @@ use Rakit\Validation\Validator;
 abstract class Request extends Response implements HttpRequest
 {
     use Auth;
-        
+
     public static function request(): mixed
     {
         return json_decode(file_get_contents('php://input'), true) ?? json_decode(json_encode($_POST));
@@ -18,9 +18,9 @@ abstract class Request extends Response implements HttpRequest
 
     public static function post(string $param): string | null
     {
-        return isset(static::request()[$param]) ?? null;
+        return isset(static::request()[$param]) ? static::request()[$param] : null;
     }
-    
+
     public static function get(string $param): string | null
     {
         return isset($_GET[$param]) ? $_GET[$param] : null;

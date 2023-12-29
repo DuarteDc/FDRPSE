@@ -1,15 +1,16 @@
 <?php
 
 
-namespace App\models;
+namespace App\Models;
 
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
-    protected  $table  = 'users';
-    protected $fillable = ['name', 'last_name'];
+    protected $table  = 'users';
+    protected $connection = 'second_db';
+    protected $fillable = ['name', 'last_name', 'email', 'password'];
 
     public function questions()
     {

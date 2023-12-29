@@ -24,7 +24,9 @@ class AuthController extends Controller
 
         $user = User::where('email', $this->post('email'))->first();
 
-        if (!$user->verifyPassword($this->post('password'), $user->password)) return $this->responseJson(['message' => 'El usuario o contraseña no son validos'], 400);
+        //if (!$user || !$user->verifyPassword($this->post('password'), $user->password)) return $this->responseJson(['message' => 'El usuario o contraseña no son validos'], 400);
+
+        if (!$user || $user->password != $this->post('password')) return $this->responseJson(['message' => 'El usuario o contraseña no son validos'], 400);
         $this->responseJson($this->createSession($user));
     }
 }

@@ -32,5 +32,8 @@ $router->mount('/api.*', function () use ($router) {
 
 
     $router->get('/categories', 'CategoryController@index');
+
+
+    $router->get('/sections', 'SectionController@index');
 });
 $router->run();

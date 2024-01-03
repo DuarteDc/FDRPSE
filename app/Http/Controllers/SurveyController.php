@@ -19,7 +19,8 @@ class SurveyController extends Controller
     }
 
     public function showByUser() {
-        $survey = $this->auth();
+        $user = $this->auth();
+        
     }
 
 }

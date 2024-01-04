@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Domain;
+use App\Models\Dimension;
 
-class DomainController extends Controller
+class DimensionController extends Controller
 {
 
     public function index()
     {
-        $domains = Domain::all();
-        $this->responseJson(['domains' => $domains]);
+        $dimensions = Dimension::all();
+        $this->responseJson(['dimensions' => $dimensions]);
     }
 
     public function save()
@@ -23,11 +23,11 @@ class DomainController extends Controller
             'name:max' => 'El nombre debe contener máximo 200 caracteres',
         ]);
 
-        $domain = new Domain([
+        $dimension = new Dimension([
             'name' => $this->post('name'),
         ]);
 
-        $domain->save();
+        $dimension->save();
         $this->responseJson(['message' => 'El dominio se creó correctamente']);
     }
 }

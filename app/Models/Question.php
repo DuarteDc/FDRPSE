@@ -7,21 +7,16 @@ use App\Models\QualificationOption;
 
 class Question  extends Model
 {
- 
+
     protected $table = 'questions';
     protected $fillable = ['name', 'qualification_option_id'];
-
-    public function questionable()
-    {
-        return $this->morphTo();  
-    }
 
     public function qualificationQuestions()
     {
         return $this->belongsTo(QualificationOption::class);
     }
 
-    public function subquestions()   
+    public function subquestions()
     {
         return $this->hasMany(Subquestion::class, 'question_id');
     }

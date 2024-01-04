@@ -30,10 +30,14 @@ $router->mount('/api.*', function () use ($router) {
     $router->get('/questions', 'QuestionController@index');
     $router->post('/questions', 'QuestionController@save');
 
-
     $router->get('/categories', 'CategoryController@index');
     $router->post('/categories', 'CategoryController@save');
 
+    $router->get('/domains', 'DomainController@index');
+    $router->post('/domains', 'DomainController@save');
+
+    $router->get('/dimensions', 'DimensionController@index');
+    $router->post('/dimensions', 'DimensionController@save');
 
     $router->get('/sections', 'SectionController@index');
 });

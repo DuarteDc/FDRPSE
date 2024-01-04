@@ -24,11 +24,11 @@ class CategoryController extends Controller
             'name:max' => 'El nombre debe contener máximo 200 caracteres',
         ]);
 
-        $section = new Category([
+        $category = new Category([
             'name' => $this->post('name'),
         ]);
 
-        $section->save();
-        $this->responseJson(['message' => 'La sección se creó correctamente']);
+        $category->save();
+        $this->responseJson(['message' => 'La categoría se creó correctamente']);
     }
 }

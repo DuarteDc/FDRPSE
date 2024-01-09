@@ -2,8 +2,6 @@
 
 namespace App\Http\Interfaces;
 
-use Rakit\Validation\Validation;
-
 interface HttpRequest
 {
     public static function request(): mixed;

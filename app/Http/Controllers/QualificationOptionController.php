@@ -9,8 +9,8 @@ class QualificationOptionController extends Controller
 
     public function index()
     {
-        $questions = QualificationOption::all();
-        $this->responseJson($questions, 200);
+        $qualifications = QualificationOption::with('questions')->take(2)->get();
+        $this->responseJson(['qualifications' => $qualifications]);
     }
 
     public function save()
@@ -27,6 +27,5 @@ class QualificationOptionController extends Controller
         $questions->save();
 
         $this->responseJson(['question' => $questions]);
-        
     }
 }

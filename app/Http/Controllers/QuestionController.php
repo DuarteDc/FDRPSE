@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Question\CreateQuestionRequest;
 use App\Models\CategoryDimensionDomainQuestion;
 use App\Models\Question;
 
@@ -16,12 +17,14 @@ class QuestionController extends Controller
 
     public function save()
     {
+        $this->validate(CreateQuestionRequest::rules());
+
         $questions = new Question([
-            'name' => 'Mi trabajo  me exige hacer mucho esfuerzo físico',
+            'question' => $this->post('question'),
             'qualification_option_id' => 2
         ]);
 
-        $questions->save();
+        // $questions->save();
 
         $this->responseJson(['questions' => $questions]);
     }

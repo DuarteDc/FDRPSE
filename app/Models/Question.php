@@ -9,7 +9,7 @@ class Question  extends Model
 {
 
     protected $table = 'questions';
-    protected $fillable = ['name', 'qualification_option_id'];
+    protected $fillable = ['question', 'qualification_option_id'];
 
     public function qualificationQuestions()
     {
@@ -20,4 +20,10 @@ class Question  extends Model
     {
         return $this->hasMany(Subquestion::class, 'question_id');
     }
+
+    public function question() {
+        return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->question), '-'));
+    }
+
+
 }

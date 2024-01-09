@@ -2,18 +2,18 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Http\Interfaces\HttpRulesRequest;
 use App\Http\Requests\Request;
 
-class LoginRequest extends Request
+class LoginRequest extends Request implements HttpRulesRequest
 {
 
-    public function rules()
+    public static function rules()
     {
-        $this->validate(
-            [
+        
+        return  [
                 'email' => 'email|required',
                 'password' => 'required|min:55'
-            ],
-        );
+        ];
     }
 }

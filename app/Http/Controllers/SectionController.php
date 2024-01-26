@@ -11,7 +11,7 @@ class SectionController extends Controller
     {
         $sections = Section::all();
 
-        $this->responseJson($sections);
+        $this->responseJson(['sections' => $sections]);
     }
 
     public function save()

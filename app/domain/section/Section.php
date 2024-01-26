@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\domain\section;
 
-use App\Models\Question;
+use App\domain\question\Question;
 use Illuminate\Database\Eloquent\Model;
 
 class Section extends Model

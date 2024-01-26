@@ -14,6 +14,12 @@ class CreateQuestionRequest extends Request implements HttpRulesRequest
         return [
             'question' => 'required|min:8|max:200',
             'category_id' => 'required',
+            'qualification_id' => 'required',
         ];
+    }
+
+    public static function messages(): array
+    {
+        return [];
     }
 }

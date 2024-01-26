@@ -17,7 +17,13 @@ class QuestionController extends Controller
 
     public function save()
     {
-        $this->validate(CreateQuestionRequest::rules());
+        
+        $this->validate(CreateQuestionRequest::rules(), CreateQuestionRequest::messages());
+        ['question' => $question] = $this->request();
+
+        return $this->responseJson(['question' => $this->request()]);
+
+
 
         $questions = new Question([
             'question' => $this->post('question'),

@@ -3,9 +3,17 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Bootstrap\\" : "bootstrap/",
-            "Routes\\" : "routes/"
-        }
+            "Bootstrap\\": "bootstrap/",
+            "Routes\\": "routes/"
+        },
+        "files": [
+            "app/infrastructure/routes/questions/routes.php",
+            "app/infrastructure/routes/category/routes.php",
+            "app/infrastructure/routes/section/routes.php",
+            "app/infrastructure/routes/domain/routes.php",
+            "app/infrastructure/routes/qualification/routes.php",
+            "app/infrastructure/routes/routes.php"
+        ]
     },
     "authors": [
         {

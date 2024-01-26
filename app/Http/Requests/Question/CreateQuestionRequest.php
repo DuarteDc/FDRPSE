@@ -12,9 +12,10 @@ class CreateQuestionRequest extends Request implements HttpRulesRequest
     public static function rules(): array
     {
         return [
-            'question' => 'required|min:8|max:200',
-            'category_id' => 'required',
-            'qualification_id' => 'required',
+            'name' => 'required|min:8|max:200',
+            'category_id' => 'required|numeric',
+            'qualification_id' => 'required|numeric',
+            'section_id' => 'required|numeric',
         ];
     }
 
@@ -22,4 +23,5 @@ class CreateQuestionRequest extends Request implements HttpRulesRequest
     {
         return [];
     }
+    
 }

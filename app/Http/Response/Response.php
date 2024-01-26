@@ -8,6 +8,7 @@ abstract class Response implements HttpResponse
 {
     private static array $codes = [
         200 => '200 OK',
+        201 => '201 Created',
         400 => '400 Bad Request',
         401 => '401 Unauthorized',
         403 => '403 Forbidden',

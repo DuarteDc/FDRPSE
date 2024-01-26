@@ -2,11 +2,13 @@
 
 use Bramus\Router\Router;
 
-use function App\infrastructure\routes\questionRoutes;
+use function App\infrastructure\routes\MainRouter\{
+    categoryRouter, sectionRouter, domainRouter, qualificationRouter, questionRouter
+};
 
 $router = new Router();
 
-// $router->setNamespace('App\infrastructure\Controllers');
+$router->setNamespace('App\infrastructure\Controllers');
 
 function sendCorsHeaders()
 {
@@ -25,26 +27,27 @@ $router->options('/api.*', function () {
 
 $router->mount('/api.*', function () use ($router) {
 
-    // $router->get('/me', 'AuthController@me');
-    // $router->post('/signin', 'AuthController@login');
-
-    $router->get('/questions', function() {
-        print_r("xd");
+    $router->mount('/categories.*', function () use ($router) {
+        categoryRouter($router);
     });
 
+    $router->mount('/sections.*', function () use ($router) {
+        sectionRouter($router);
+    });
 
-    // $router->get('/categories', 'CategoryController@index');
-    // $router->post('/categories', 'CategoryController@save');
+    $router->mount('/domains.*', function () use ($router) {
+        domainRouter($router);
+    });
 
-    // $router->get('/domains', 'DomainController@index');
-    // $router->post('/domains', 'DomainController@save');
+    $router->mount('/qualification.*', function () use ($router) {
+        qualificationRouter($router);
+    });
 
-    // $router->get('/dimensions', 'DimensionController@index');
-    // $router->post('/dimensions', 'DimensionController@save');
-
-    // $router->get('/sections', 'SectionController@index');
-
-
-    // $router->get('/qualifications', 'QualificationOptionController@index');
+    $router->mount('/questions', function () use ($router) {
+        questionRouter($router);
+    });
+    
 });
+
+
 $router->run();

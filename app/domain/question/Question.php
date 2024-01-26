@@ -7,7 +7,7 @@ class Question  extends Model
 {
 
     protected $table = 'questions';
-    protected $fillable = ['question', 'qualification_option_id', 'category_id', 'dimension_id', 'domain_id', 'question_id'];
+    protected $fillable = ['name', 'qualification_id', 'category_id', 'dimension_id', 'domain_id', 'section_id'];
 
     // public function qualificationQuestions()
     // {

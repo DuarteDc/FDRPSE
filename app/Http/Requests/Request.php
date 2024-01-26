@@ -13,7 +13,7 @@ abstract class Request extends Response implements HttpRequest
 
     public static function request(): mixed
     {
-        return json_decode(file_get_contents('php://input'), true) ?? json_decode(json_encode($_POST));
+        return (object) json_decode(file_get_contents('php://input'), true) ?? $_POST;
     }
 
     public static function post(string $param): string | null
@@ -29,7 +29,7 @@ abstract class Request extends Response implements HttpRequest
     public static function validate(array $validations, array $messages = [])
     {
         $validator = new Validator;
-        $rules = $validator->make(static::request(), $validations);
+        $rules = $validator->make((array) static::request(), $validations);
 
         $rules->setMessages($messages);
         $rules->validate();

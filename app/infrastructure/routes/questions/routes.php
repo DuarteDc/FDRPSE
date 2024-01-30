@@ -32,7 +32,13 @@ function router(Router $router)
     $router->get('/', function () use ($questionController) {
         $questionController->index();
     });
+
     $router->post('/create', function () use ($questionController) {
         $questionController->createQuestion();
     });
+
+    $router->get('/{id}', function (string $id) use ($questionController) {
+        $questionController->getQuestion($id);
+    });
+
 };

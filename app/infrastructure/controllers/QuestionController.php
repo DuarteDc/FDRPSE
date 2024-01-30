@@ -3,6 +3,7 @@
 namespace App\infrastructure\controllers;
 
 use App\application\question\QuestionUseCase;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\CreateQuestionRequest;
 
@@ -24,4 +25,10 @@ class QuestionController extends Controller
         $questions = $this->questionUseCase->createQuestion($this->request());
         $this->response($questions);
     }
+
+    public function getQuestion(string $id) {
+        $response = $this->questionUseCase->getOneQuestion($id);
+        $this->response($response);
+    }
+
 }

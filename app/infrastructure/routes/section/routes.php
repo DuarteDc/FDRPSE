@@ -9,8 +9,6 @@ use App\application\section\SectionUseCase;
 use App\infrastructure\controllers\SectionController;
 use App\infrastructure\repositories\section\SectionRepository;
 
-
-
 function router(Router $router)
 {
     $sectionRepository  = new SectionRepository(new Section);

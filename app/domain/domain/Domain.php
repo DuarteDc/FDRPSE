@@ -13,6 +13,6 @@ class Domain extends Model
 
     public function questions()
     {
-        return $this->belongsTo(Question::class, 'questionable');
+        return $this->hasMany(Question::class);
     }
 }

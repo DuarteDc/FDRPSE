@@ -12,6 +12,8 @@
             "app/infrastructure/routes/section/routes.php",
             "app/infrastructure/routes/domain/routes.php",
             "app/infrastructure/routes/qualification/routes.php",
+            "app/infrastructure/routes/dimension/routes.php",
+            "app/infrastructure/routes/survey/routes.php",
             "app/infrastructure/routes/routes.php"
         ]
     },

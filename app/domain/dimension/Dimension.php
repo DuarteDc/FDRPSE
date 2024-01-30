@@ -1,15 +1,14 @@
 <?php
 
+namespace App\domain\dimension;
 
-namespace App\domain\category;
-
-use App\domain\question\Question;
 use Illuminate\Database\Eloquent\Model;
+use App\domain\question\Question;
 
-class Category extends Model
+class Dimension extends Model
 {
 
-    protected $table = 'categories';
+    protected $table = 'dimensions';
     protected $fillable = ['name'];
 
     public function questions()

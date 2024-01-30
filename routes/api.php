@@ -3,7 +3,7 @@
 use Bramus\Router\Router;
 
 use function App\infrastructure\routes\MainRouter\{
-    categoryRouter, sectionRouter, domainRouter, qualificationRouter, questionRouter
+    categoryRouter, sectionRouter, domainRouter, qualificationRouter, questionRouter, dimensionRouter, surveyRoutes
 };
 
 $router = new Router();
@@ -43,10 +43,18 @@ $router->mount('/api.*', function () use ($router) {
         qualificationRouter($router);
     });
 
+    $router->mount('/dimensions', function () use ($router) {
+        dimensionRouter($router);
+    });
+
     $router->mount('/questions', function () use ($router) {
         questionRouter($router);
     });
     
+    $router->mount('/surveys', function() use($router){
+        surveyRoutes($router);
+    });
+
 });
 
 

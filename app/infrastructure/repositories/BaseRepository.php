@@ -2,17 +2,15 @@
 
 namespace App\infrastructure\repositories;
 
-use App\domain\BaseRepository as DomainBaseRepository;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+
+use App\domain\BaseRepository as DomainBaseRepository;
 
 abstract class BaseRepository implements DomainBaseRepository
 {
-    private readonly Model $model;
-
-    public function __construct(Model $model)
+    public function __construct(private readonly Model $model)
     {
-        $this->model = $model;
     }
 
     public function findAll(): Collection
@@ -22,13 +20,21 @@ abstract class BaseRepository implements DomainBaseRepository
 
     public function findOne(string $id): Model | null
     {
+        if(!is_numeric($id)) return null;
         return $this->model::find($id);
     }
 
-    public function create(array $body): Model
+    public function create(mixed $body): Model
     {
         $record = new $this->model((array) $body);
         $record->save();
         return $record;
     }
+
+    public function getOneWithRelations(string $id): ?Model
+    {
+        if(!is_numeric($id)) return null;
+        return $this->model->getOneWithRelations($id);
+    }
+
 }

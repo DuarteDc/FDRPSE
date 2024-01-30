@@ -2,9 +2,9 @@
 
 namespace App\application\question;
 
-use App\domain\question\QuestionRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use App\domain\question\QuestionRepository;
 
 class QuestionUseCase
 {
@@ -29,8 +29,14 @@ class QuestionUseCase
             if ($domain instanceof Exception) return $domain;
         }
 
-        $question =  $this->questionRepository->create((array) $body);
+        $question =  $this->questionRepository->create($body);
 
         return $question ? ['message'=> 'La pregunta se agrego correctamente'] : new Exception('Parece que hubo un error al crear la pregunta', 500);       
     }
+
+    public function getOneQuestion(string $id) {
+        $question = $this->questionRepository->getOneWithRelations($id);
+        return $question ? ['question' => $question] : new Exception('La pregunta que intentas buscar no existe', 404);
+    }
+
 }

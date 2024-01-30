@@ -9,6 +9,8 @@ namespace App\infrastructure\routes\MainRouter {
     use function App\infrastructure\routes\section\router as routesSection;
     use function App\infrastructure\routes\qualification\router as routesQualification;
     use function App\infrastructure\routes\questions\router as routesQuestions;
+    use function App\infrastructure\routes\dimension\router as routesDimensions;
+    use function App\infrastructure\routes\survey\router as routesSurvey;
 
     function categoryRouter(Router $router)
     {
@@ -33,5 +35,15 @@ namespace App\infrastructure\routes\MainRouter {
     function questionRouter(Router $router)
     {
         routesQuestions($router);
+    }
+
+    function dimensionRouter(Router $router)
+    {
+        routesDimensions($router);
+    }
+
+    function surveyRoutes(Router $router)
+    {
+        routesSurvey($router);
     }
 };

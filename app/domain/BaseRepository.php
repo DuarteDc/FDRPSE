@@ -10,5 +10,6 @@ interface BaseRepository
     public function findAll(): Collection;
     public function findOne(string $id): Model | null;
     public function create(array $body): Model;
+    public function getOneWithRelations(string $id): Model | null;
     // public function deleteOne(string $id): void;
 }

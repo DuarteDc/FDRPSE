@@ -12,11 +12,6 @@ class User extends Model
     protected $connection = 'second_db';
     protected $fillable = ['name', 'last_name', 'email', 'password'];
 
-    public function questions()
-    {
-        return $this->belongsTo(Question::class);
-    }
-
     public function getUppercaseName()
     {
         return strtoupper($this->name);

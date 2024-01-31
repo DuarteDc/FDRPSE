@@ -2,7 +2,6 @@
 
 namespace App\infrastructure\repositories\surveyUser;
 
-use App\domain\survey\Survey;
 use App\domain\surveyUser\SurveyUser;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,7 +34,7 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
 
     public function saveAnswer(SurveyUser $surveyUser, mixed $body): SurveyUser
     {
-        $surveyUser->answers = $body;
+        $surveyUser->answer = $body;
         return $surveyUser;
         return  $surveyUser->survey->save();
     }

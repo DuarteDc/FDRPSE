@@ -31,10 +31,4 @@ abstract class BaseRepository implements DomainBaseRepository
         return $record;
     }
 
-    public function getOneWithRelations(string $id): ?Model
-    {
-        if(!is_numeric($id)) return null;
-        return $this->model->getOneWithRelations($id);
-    }
-
 }

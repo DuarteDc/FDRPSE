@@ -4,6 +4,7 @@ namespace App\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
 use App\application\survey\SurveyUseCase;
+use App\domain\section\Section;
 
 class SurveyController extends Controller
 {

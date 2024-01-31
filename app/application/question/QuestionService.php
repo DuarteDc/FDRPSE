@@ -6,12 +6,14 @@ use App\application\question\QuestionServiceRepository;
 use App\domain\category\CategoryRepository;
 use App\domain\domain\DomainRepository;
 use App\domain\qualification\QualificationRepository;
+use App\domain\section\Section;
 use App\domain\section\SectionRepository;
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use stdClass;
 
-class QuestionService  implements QuestionServiceRepository
+class QuestionService implements QuestionServiceRepository
 {
 
     public function __construct(
@@ -48,15 +50,29 @@ class QuestionService  implements QuestionServiceRepository
         return $domain ? $domain : new Exception('El dominio no es valido', 400);
     }
 
+    public function getQuestionsBySections(): Collection
+    {
+        return $this->sectionRepository->findSectionsWithQuestions();
+    }
+
+    public function getQuestionBySection(string $page): Paginator | null
+    {
+        return $this->sectionRepository->findSectionWithQuestions($page);
+    }
+
+    public function getTotalSections (): int {
+        return $this->sectionRepository->countTotalSections();
+    }
+
     public function prepareDataToInsert(mixed $body): Exception | array
     {
         $existCategory = $this->categoryIsValid($body->category_id);
         $exitQualification = $this->qualificationIsValid($body->qualification_id);
         $exitSection = $this->sectionIsValid($body->section_id);
 
-        if($existCategory instanceof Exception) return $existCategory;
-        if($exitQualification instanceof Exception) return $exitQualification;
-        if($exitSection instanceof Exception) return $exitSection;
+        if ($existCategory instanceof Exception) return $existCategory;
+        if ($exitQualification instanceof Exception) return $exitQualification;
+        if ($exitSection instanceof Exception) return $exitSection;
 
         return [
             'category' => $existCategory,

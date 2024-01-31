@@ -3,7 +3,6 @@
 namespace App\domain\survey;
 
 use App\domain\surveyUser\SurveyUser;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Survey extends Model

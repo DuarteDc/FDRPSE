@@ -13,12 +13,12 @@ abstract class Request extends Response implements HttpRequest
 
     public static function request(): mixed
     {
-        return (object) json_decode(file_get_contents('php://input'), true) ?? $_POST;
+        return (object) json_decode(file_get_contents('php://input'), true) ?? json_decode(json_encode($_POST));
     }
 
     public static function post(string $param): string | null
     {
-        return isset(static::request()[$param]) ? static::request()[$param] : null;
+        return isset(static::request()->$param) ? static::request()->$param : null;
     }
 
     public static function get(string $param): string | null

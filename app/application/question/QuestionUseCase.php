@@ -31,12 +31,26 @@ class QuestionUseCase
 
         $question =  $this->questionRepository->create($body);
 
-        return $question ? ['message'=> 'La pregunta se agrego correctamente'] : new Exception('Parece que hubo un error al crear la pregunta', 500);       
+        return $question ? ['message' => 'La pregunta se agrego correctamente'] : new Exception('Parece que hubo un error al crear la pregunta', 500);
     }
 
-    public function getOneQuestion(string $id) {
-        $question = $this->questionRepository->getOneWithRelations($id);
+    public function getOneQuestion(string $id): Exception | array
+    {
+        $question = $this->questionRepository->getQuestionDetail($id);
         return $question ? ['question' => $question] : new Exception('La pregunta que intentas buscar no existe', 404);
     }
 
+    public function getQuestionsBySections(): mixed
+    {
+        $sections = $this->questionService->getQuestionsBySections();
+        return ['sections' => $sections];
+    }
+
+    public function getQuestionsBySectionAndTotalSections(string $page)
+    {
+        $section = $this->questionService->getQuestionBySection($page);
+        // $totalSections = $this->questionService->getTotalSections();
+
+        return $section ? $section : new Exception('La sección que intentas buscar no existe', 404);
+    }
 }

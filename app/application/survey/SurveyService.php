@@ -40,6 +40,12 @@ class SurveyService
         return $this->surveyUserRepository->saveAnswer($surveyUser, $isValidRequest);
     }
 
+    public function getQuestionInsideSection()
+    {
+        return $this->questionRepository->getQuestionBySection();
+    }
+
+
     private function validateQuestions(mixed $body)
     {
         return array_map(function ($currentQuestion) {
@@ -53,12 +59,12 @@ class SurveyService
                     'name' => $question->category->name ?? '',
                 ],
                 'section' => [
-                    'id' => $question->section->id,
-                    'name' => $question->section->name,
+                    'id' => $question->section->id ?? '',
+                    'name' => $question->section->name ?? '',
                 ],
                 'domain' => [
                     'id' => $question->domain->id ?? '',
-                    'name' => $question->domain->id ?? '',
+                    'name' => $question->domain->name ?? '',
                 ],
                 'dimension' => [
                     'id' => $question->dimension->id ?? '',

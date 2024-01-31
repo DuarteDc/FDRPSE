@@ -36,6 +36,9 @@ function router(Router $router)
         $surveyController->saveUserAnswers($surveyId);
     });    
 
+    $router->get('/questions', function () use ($surveyController) {
+        $surveyController->getQuestions();
+    });    
 
 }
 

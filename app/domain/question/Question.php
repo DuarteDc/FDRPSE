@@ -39,12 +39,6 @@ class Question  extends Model
         return $this->belongsTo(Domain::class);
     }
 
-
-    public function getOneWithRelations(string $id)
-    {
-        return $this->with('section', 'qualification')->where('id', $id)->first();
-    }
-
     // public function qualificationQuestions()
     // {
     //     return $this->belongsTo(QualificationOption::class);

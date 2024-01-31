@@ -14,6 +14,7 @@
             "app/infrastructure/routes/qualification/routes.php",
             "app/infrastructure/routes/dimension/routes.php",
             "app/infrastructure/routes/survey/routes.php",
+            "app/infrastructure/routes/authentication/routes.php",
             "app/infrastructure/routes/routes.php"
         ]
     },
@@ -28,7 +29,8 @@
         "vlucas/phpdotenv": "^5.6",
         "firebase/php-jwt": "^6.10",
         "rakit/validation": "^1.4",
-        "bramus/router": "~1.6"
+        "bramus/router": "~1.6",
+        "illuminate/pagination": "^10.43"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5"

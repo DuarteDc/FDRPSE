@@ -11,6 +11,7 @@ namespace App\infrastructure\routes\MainRouter {
     use function App\infrastructure\routes\questions\router as routesQuestions;
     use function App\infrastructure\routes\dimension\router as routesDimensions;
     use function App\infrastructure\routes\survey\router as routesSurvey;
+    use function App\infrastructure\routes\authentication\router as routesAuthentication;
 
     function categoryRouter(Router $router)
     {
@@ -45,5 +46,9 @@ namespace App\infrastructure\routes\MainRouter {
     function surveyRoutes(Router $router)
     {
         routesSurvey($router);
+    }
+    function authenticationRoutes(Router $router)
+    {
+        routesAuthentication($router);
     }
 };

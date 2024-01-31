@@ -17,9 +17,13 @@ class SurveyUseCase
         return $this->surveyService->startSurvey();
     }
 
-
-    public function saveAnswers(string $surveyId, mixed $body) {
+    public function saveAnswers(string $surveyId, mixed $body)
+    {
         return $this->surveyService->saveAnswersByUser($surveyId, $body);
     }
 
+    public function getQuestionsByUser()
+    {
+        return $this->surveyService->getQuestionInsideSection();
+    }
 }

@@ -2,11 +2,14 @@
 
 namespace App\Traits;
 
+use App\domain\user\User;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use stdClass;
 
-trait Auth {
+trait Auth
+{
 
     public static function auth()
     {
@@ -16,7 +19,7 @@ trait Auth {
         return $decode->user;
     }
 
-    public static function createSession($payload)
+    public static function createSession(User $payload)
     {
         $key = getenv('JWT_SECRET_KEY');
         $data = [
@@ -27,15 +30,15 @@ trait Auth {
         return ['user' => $payload, 'session' => $token];
     }
 
-    public static function check(string $token)
+    public static function check(string $token): ?stdClass
     {
         try {
+            if (!isset($token)) return null;
             $key = getenv('JWT_SECRET_KEY');
-            $decode = JWT::decode($token, new Key($key, 'HS256'));
-            return self::createSession($decode->user);
+            $session = JWT::decode($token, new Key($key, 'HS256'));
+            return $session ? $session->user : null;
         } catch (Exception $e) {
-            return new Exception($e->getMessage());
+            return null;
         }
     }
-
 }

@@ -25,7 +25,7 @@ class SectionUseCase
             return ['section' => $section, 'message' => 'La sección se creo correctamente'];
         }
         
-        if(!isset($body->question)) return new Exception("Para poder crear una sección es necesaria la pregunta anidada", 400);
+        if(!isset($body->question)) return new Exception('Para poder crear una sección es necesaria la pregunta anidada', 400);
 
         $section = $this->sectionRepository->create(['name' => $body->name, 'binary' => $body->binary, 'question' => $body->question]);
         return ['section' => $section, 'message' => 'La sección se creo correctamente'];

@@ -49,8 +49,13 @@ class QuestionUseCase
     public function getQuestionsBySectionAndTotalSections(string $page)
     {
         $section = $this->questionService->getQuestionBySection($page);
-        // $totalSections = $this->questionService->getTotalSections();
-
-        return $section ? $section : new Exception('La sección que intentas buscar no existe', 404);
+        $totalSections = $this->questionService->getTotalSections();
+        return $section ? [
+            'current_page'  => $section->currentPage(),
+            'section'       => $section[0] ?? [],
+            'next_page'     => $section->nextPageUrl(),
+            'previous_page' => $section->previousPageUrl(),
+            'total_pages'   => $totalSections,
+        ] : new Exception('La sección que intentas buscar no existe', 404);
     }
 }

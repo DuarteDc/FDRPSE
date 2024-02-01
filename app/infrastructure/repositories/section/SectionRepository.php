@@ -24,7 +24,12 @@ class SectionRepository extends BaseRepository implements ConfigSectionRepositor
 
     public function findSectionWithQuestions(string $page): Paginator | null
     {
-        return $this->section::with('questions:id,name,section_id')->simplePaginate(1, ['id', 'name', 'binary','question'], null, $page);
+        return $this->section::with(
+            [
+                'questions:id,name,section_id,qualification_id',
+                'questions.qualification:id,name,always_op,almost_alwyas_op,sometimes_op,almost_never_op,never_op'
+            ]
+        )->simplePaginate(1, ['id', 'name', 'binary', 'question'], 'page', $page);
     }
 
     public function countTotalSections(): int

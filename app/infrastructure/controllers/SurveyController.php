@@ -5,6 +5,7 @@ namespace App\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use App\application\survey\SurveyUseCase;
 use App\domain\section\Section;
+use App\infrastructure\requests\survey\SaveQuestionRequest;
 
 class SurveyController extends Controller
 {
@@ -18,9 +19,9 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->startNewSurvey());
     }
 
-    public function saveUserAnswers(string $surveyId) {
-        //TODO request to insert questions
+    public function saveUserAnswers(string $surveyId)
+    {
+        $this->validate(SaveQuestionRequest::rules(), SaveQuestionRequest::messages());
         $this->response($this->surveyUseCase->saveAnswers($surveyId, $this->request()));
     }
-
 }

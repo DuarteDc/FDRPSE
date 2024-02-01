@@ -45,7 +45,6 @@ class SurveyService
         return $this->questionRepository->getQuestionBySection();
     }
 
-
     private function validateQuestions(mixed $body)
     {
         return array_map(function ($currentQuestion) {
@@ -72,6 +71,6 @@ class SurveyService
                 ],
                 'qualification' => $currentQuestion['qualification']
             ];
-        }, (array) $body);
+        }, (array) $body->questions);
     }
 }

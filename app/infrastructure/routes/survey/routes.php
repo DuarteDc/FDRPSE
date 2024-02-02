@@ -32,13 +32,13 @@ function router(Router $router)
         $surveyController->startSurvey();
     });    
 
-    $router->post('/save-questions/{surveyId}', function ($surveyId) use ($surveyController) {
-        $surveyController->saveUserAnswers($surveyId);
+    $router->post('/save-questions', function () use ($surveyController) {
+        $surveyController->saveUserAnswers();
     });    
 
-    $router->get('/questions', function () use ($surveyController) {
-        $surveyController->getQuestions();
-    });    
+    // $router->get('/questions', function () use ($surveyController) {
+    //     $surveyController->getQuestions();
+    // });    
 
 }
 

@@ -5,11 +5,14 @@ namespace App\application\survey;
 use App\domain\question\QuestionRepository;
 use App\domain\survey\Survey;
 use App\domain\survey\SurveyRepository;
+use App\domain\surveyUser\SurveyUser;
 use App\domain\surveyUser\SurveyUserRepository;
+use App\Traits\Auth;
 use Exception;
 
 class SurveyService
 {
+    use Auth;
 
     public function __construct(private readonly SurveyRepository $surveyRepository, private readonly SurveyUserRepository $surveyUserRepository, private readonly QuestionRepository $questionRepository)
     {
@@ -27,22 +30,43 @@ class SurveyService
         $this->surveyUserRepository->setUser($surveyUserId, $userId);
     }
 
-    public function saveAnswersByUser(string $surveyId, mixed $body)
+    public function saveAnswersByUser(mixed $body)
     {
-        $survey = $this->surveyRepository->findOne($surveyId);
-        if (!$survey) return new Exception('Parece que hubo un error al registar la respusta');
+        $survey = $this->surveyRepository->getCurrentSurvey();
+        if (!$survey) return new Exception('Parece que hubo un error al registar la respusta', 400);
         $isValidRequest = $this->validateQuestions($body);
 
         if (in_array(false, $isValidRequest)) return new Exception('Las preguntas que intentas guardar no exiten', 400);
 
-        $surveyUser = $this->surveyUserRepository->getCurrentSurveyUser($surveyId, 2);
+        $surveyUser = $this->surveyUserRepository->getCurrentSurveyUser($survey->id, $this->auth()->id);
 
-        return $this->surveyUserRepository->saveAnswer($surveyUser, $isValidRequest);
+        if ($surveyUser->answers != "")  $body = $this->hasPreviousQuestion($surveyUser->answers, $isValidRequest);
+
+        else $body = $isValidRequest;
+
+        $this->surveyUserRepository->saveAnswer($surveyUser, $body);
+        return ['message' => 'La preguntas se guardaron correctmente'];
     }
 
     public function getQuestionInsideSection()
     {
         return $this->questionRepository->getQuestionBySection();
+    }
+
+    private function hasPreviousQuestion(mixed $answers, mixed $newBody)
+    {
+
+        $answers = json_decode($answers);
+
+        foreach ($answers as $key => $answer) {
+            foreach ($newBody as $key => $newQuestion) {
+                if($answer->question_id == $newQuestion['question_id']) {
+                    $answers[$key] = $newQuestion;
+                    unset($newBody[$key]);
+                }
+            }
+        }
+        return [...$answers, ...$newBody];
     }
 
     private function validateQuestions(mixed $body)

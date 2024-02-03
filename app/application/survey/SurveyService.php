@@ -2,13 +2,12 @@
 
 namespace App\application\survey;
 
-use App\domain\question\QuestionRepository;
+use Exception;
+use App\Traits\Auth;
 use App\domain\survey\Survey;
 use App\domain\survey\SurveyRepository;
-use App\domain\surveyUser\SurveyUser;
 use App\domain\surveyUser\SurveyUserRepository;
-use App\Traits\Auth;
-use Exception;
+use App\domain\question\QuestionRepository;
 
 class SurveyService
 {
@@ -56,12 +55,13 @@ class SurveyService
     private function hasPreviousQuestion(mixed $answers, mixed $newBody)
     {
 
-        $answers = json_decode($answers);
+        $answers = json_decode($answers); 
 
-        foreach ($answers as $key => $answer) {
+
+        foreach ($answers as $index => $answer) {
             foreach ($newBody as $key => $newQuestion) {
                 if($answer->question_id == $newQuestion['question_id']) {
-                    $answers[$key] = $newQuestion;
+                    $answers[$index] = $newQuestion; 
                     unset($newBody[$key]);
                 }
             }

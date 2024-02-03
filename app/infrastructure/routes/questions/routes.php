@@ -11,12 +11,16 @@ use App\domain\category\Category;
 use App\domain\domain\Domain;
 use App\domain\qualification\Qualification;
 use App\domain\section\Section;
+use App\domain\surveyUser\SurveyUser;
+use App\domain\user\User;
 use App\infrastructure\controllers\QuestionController;
 use App\infrastructure\repositories\category\CategoryRepository;
 use App\infrastructure\repositories\domain\DomainRepository;
 use App\infrastructure\repositories\qualification\QualificationRepository;
 use App\infrastructure\repositories\question\QuestionRepository;
 use App\infrastructure\repositories\section\SectionRepository;
+use App\infrastructure\repositories\surveyUser\SurveyUserRepository;
+use App\infrastructure\repositories\user\UserRepository;
 
 function router(Router $router)
 {
@@ -26,7 +30,8 @@ function router(Router $router)
     $domainRepository           = new DomainRepository(new Domain);
     $questionRepository         = new QuestionRepository(new Question);
     $questionService            = new QuestionService($categoryRepository, $qualificationRepository, $sectionRepository, $domainRepository);
-    $questionUseCase            = new QuestionUseCase($questionRepository, $questionService);
+    $surveyUserRespository      = new SurveyUserRepository(new SurveyUser);
+    $questionUseCase            = new QuestionUseCase($questionRepository, $questionService, $surveyUserRespository);
     $questionController         = new QuestionController($questionUseCase);
 
     $router->get('/', function () use ($questionController) {

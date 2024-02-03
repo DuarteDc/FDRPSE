@@ -39,7 +39,8 @@ class QuestionController extends Controller
     public function getQuestionsBySection() 
     {
         $page = (int) $this->get('page');
-        $this->response($this->questionUseCase->getQuestionsBySectionAndTotalSections($page));
+        $userId = $this->auth()->id;
+        $this->response($this->questionUseCase->getQuestionsBySectionAndTotalSections($page, $userId));
     }
 
 }

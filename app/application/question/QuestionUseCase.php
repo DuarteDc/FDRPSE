@@ -5,10 +5,14 @@ namespace App\application\question;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use App\domain\question\QuestionRepository;
+use App\domain\survey\SurveyRepository;
+use App\domain\surveyUser\SurveyUserRepository;
+use App\domain\user\User;
+use App\domain\user\UserRepository;
 
 class QuestionUseCase
 {
-    public function __construct(private readonly QuestionRepository $questionRepository, private readonly QuestionService $questionService)
+    public function __construct(private readonly QuestionRepository $questionRepository, private readonly QuestionService $questionService, private readonly SurveyUserRepository $surveyUserRepository)
     {
     }
 
@@ -46,8 +50,15 @@ class QuestionUseCase
         return ['sections' => $sections];
     }
 
-    public function getQuestionsBySectionAndTotalSections(string $page)
+    public function getQuestionsBySectionAndTotalSections(string $page, int $userId)
     {
+        $surveyUser = $this->surveyUserRepository->getUserAnwserInCurrentSurvey($userId);
+
+        if ($surveyUser && $surveyUser->answers) {
+            $lastSection = $this->getLastSection($surveyUser->answers)->id;
+            if($page > $lastSection) $page = $lastSection + 1;
+        }
+
         $section = $this->questionService->getQuestionBySection($page);
         $totalSections = $this->questionService->getTotalSections();
         return $section ? [
@@ -57,5 +68,11 @@ class QuestionUseCase
             'previous_page' => $section->previousPageUrl(),
             'total_pages'   => $totalSections,
         ] : new Exception('La sección que intentas buscar no existe', 404);
+    }
+
+    private function getLastSection(string $anwers): mixed
+    {
+        $anwers = json_decode($anwers);
+        return max(array_map(fn ($question): mixed => $question->section,  $anwers));
     }
 }

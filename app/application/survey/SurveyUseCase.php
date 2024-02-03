@@ -3,8 +3,6 @@
 
 namespace App\application\survey;
 
-use App\domain\survey\SurveyRepository;
-
 class SurveyUseCase
 {
 

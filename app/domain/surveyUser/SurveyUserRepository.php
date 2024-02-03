@@ -3,7 +3,6 @@
 namespace App\domain\surveyUser;
 
 use App\domain\BaseRepository;
-use App\domain\survey\Survey;
 
 interface SurveyUserRepository extends BaseRepository
 {
@@ -12,5 +11,8 @@ interface SurveyUserRepository extends BaseRepository
 
     public function getCurrentSurveyUser(string $surveyId, string $userId);
     public function saveAnswer(SurveyUser $surveyUser, mixed $body): SurveyUser;
+
+    public function getUserAnwserInCurrentSurvey(string $userId): ?SurveyUser;
+
 }
 

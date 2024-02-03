@@ -37,4 +37,10 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
         $surveyUser->save();
         return $surveyUser;
     }
+
+    public function getUserAnwserInCurrentSurvey(string $userId): ?SurveyUser
+    {
+        return $this->surveyUser::where('status', false)->where('user_id', $userId)->first();
+    }
+    
 }

@@ -15,7 +15,6 @@ class Survey extends Model
 
     public function surveyUser()
     {
-        //TODO survey user relation
         return $this->belongsToMany(SurveyUser::class);
     }
 }

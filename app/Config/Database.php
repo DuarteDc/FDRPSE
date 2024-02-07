@@ -47,25 +47,24 @@ class Database
             $this->addConnection();
 
         } catch (Exception $e) {
-            new Exception($e->getMessage());
+            new Exception($e->getMessage(), 500);
         }
     }
 
     private function addConnection()
     {
         $this->capsule->addConnection([
-            'driver'    => getenv('DBDRIVER'),
-            'host'      => 'localhost',
-            'database'  => 'test',
-            'username'  => 'postgres',
-            'password'  => 'password',
+            'driver'    => getenv('DBDRIVER'),                        
+            'host'      => getenv('USER_HOST'),
+            'database'  => getenv('USER_DATABASE'),
+            'username'  => getenv('USER_USERNAME'),
+            'password'  => getenv('USER_PASSWORD'),
             'charset'   => 'utf8',
-            'port'      => 5431,
-            'collation' => '',
+            'collation' => '',        
             'prefix'    => '',
             'schema'    => 'public',
             'sslmode'   => 'prefer',
-        ], 'second_db');
+        ], 'user_db');
 
         $this->capsule->setAsGlobal();
         $this->capsule->bootEloquent();

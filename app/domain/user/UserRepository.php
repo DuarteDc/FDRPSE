@@ -7,5 +7,5 @@ use App\domain\user\User;
 
 interface UserRepository extends BaseRepository
 {
-    public function findByEmail(string $email): User | null;
+    public function findByUsername(string $username): User | null;
 }

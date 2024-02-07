@@ -52,11 +52,15 @@ class SurveyService
         return $this->questionRepository->getQuestionBySection();
     }
 
-    private function hasPreviousQuestion(mixed $answers, mixed $newBody)
+    public function changeToPendingStatus() 
+    {
+        
+    }
+
+    private function hasPreviousQuestion(mixed $answers, mixed $newBody): array
     {
 
         $answers = json_decode($answers); 
-
 
         foreach ($answers as $index => $answer) {
             foreach ($newBody as $key => $newQuestion) {
@@ -67,6 +71,7 @@ class SurveyService
             }
         }
         return [...$answers, ...$newBody];
+
     }
 
     private function validateQuestions(mixed $body)

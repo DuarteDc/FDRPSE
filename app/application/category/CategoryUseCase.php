@@ -1,7 +1,9 @@
 <?php
 
 namespace App\application\category;
+
 use App\domain\category\CategoryRepository;
+use Exception;
 
 class CategoryUseCase
 {
@@ -18,7 +20,10 @@ class CategoryUseCase
 
     public function createCategory(mixed $body): mixed
     {
-        $category = $this->categoryRepository->create($body);
-        return ['category' => $category];
+        $name = mb_strtoupper(trim($body->name));
+        $category = $this->categoryRepository->findByName($name);
+        if($category) return new Exception('Ya existe una categoría con ese nombre', 400);
+        $category = $this->categoryRepository->create(['name' => $name]);
+        return ['message' => 'La categoría se creo correctamente'];
     }
 }

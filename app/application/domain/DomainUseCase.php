@@ -3,6 +3,7 @@
 namespace App\application\domain;
 
 use App\domain\domain\DomainRepository;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
 class DomainUseCase
@@ -17,9 +18,12 @@ class DomainUseCase
         return ['domains' => $domains];
     }
 
-    public function createDomain(mixed $body)
+    public function createDomain(mixed $body): Exception | array
     {
-        $domain =  $this->domainRepository->create($body);
+        $name = mb_strtoupper(trim($body->name));
+        $domain = $this->domainRepository->findByName($name);
+        if ($domain) return new Exception('Ya existe un dominio con ese nombre', 400);
+        $domain = $this->domainRepository->create(['name' => $name]);
         return ['message' => 'El dominio se creo correctamente', 'domain' => $domain];
     }
 }

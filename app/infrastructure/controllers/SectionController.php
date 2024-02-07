@@ -20,7 +20,7 @@ class SectionController extends Controller
 
     public function createSection() {
         $this->validate(CreateSectionRequest::rules(), CreateSectionRequest::messages());
-        $this->response($this->sectionUseCase->createSection($this->request()));
+        $this->response($this->sectionUseCase->createSection($this->request()), 201);
     }
 
 }

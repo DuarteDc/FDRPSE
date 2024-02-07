@@ -2,10 +2,11 @@
 
 namespace App\infrastructure\repositories\user;
 
-use App\domain\user\User;
-use App\domain\user\UserRepository as ConfigUserRepository;
-use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Model;
+
+use App\domain\user\User;
+use App\infrastructure\repositories\BaseRepository;
+use App\domain\user\UserRepository as ConfigUserRepository;
 
 class UserRepository extends BaseRepository implements ConfigUserRepository
 {
@@ -15,8 +16,9 @@ class UserRepository extends BaseRepository implements ConfigUserRepository
         parent::__construct($model);
     }
 
-    public function findByEmail(string $email): ?User
+    public function findByUsername(string $username): ?User
     {
-        return $this->model::Where('email', $email)->first();
+        return $this->model::Where('userName', $username)->first();
     }
+
 }

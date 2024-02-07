@@ -24,4 +24,9 @@ class SurveyUseCase
     {
         return $this->surveyService->getQuestionInsideSection();
     }
+
+    public function startSurveyByUser(string $userId)
+    {
+        
+    }
 }

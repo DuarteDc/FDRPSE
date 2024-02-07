@@ -12,12 +12,11 @@ class AuthenticationUseCase
     {
     }
 
-    public function signin(string $email, string $password)
+    public function signin(string $username, string $password)
     {
-        $user = $this->userRepository->findByEmail($email);
+        $user = $this->userRepository->findByUsername($username);
         if (!$user) return new Exception('El usuario o contraseña no es valido', 400);
-        //TODO validate user password
-        return $user;
+        return md5($password) === $user->contrasenia ? $user : new Exception('El usuario o contraseña no es valido', 400); 
     }
 
     public function checkUserSession(mixed $user)
@@ -26,4 +25,5 @@ class AuthenticationUseCase
         $user = $this->userRepository->findOne($user->id);
         return $user ? $user : new Exception('Unauthorized', 401);
     }
+    
 }

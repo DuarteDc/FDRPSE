@@ -17,8 +17,7 @@ class AuthenticationController extends Controller
     public function login()
     {
         $this->validate(LoginRequest::rules(), LoginRequest::messages());
-
-        $user = $this->authenticationUseCase->signin($this->post('email'), $this->post('email'));
+        $user = $this->authenticationUseCase->signin($this->post('username'), $this->post('password'));
         if (!($user instanceof Exception)) return $this->response($this->createSession($user));
         $this->response($user);
     }

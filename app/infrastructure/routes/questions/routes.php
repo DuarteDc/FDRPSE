@@ -12,7 +12,7 @@ use App\domain\domain\Domain;
 use App\domain\qualification\Qualification;
 use App\domain\section\Section;
 use App\domain\surveyUser\SurveyUser;
-use App\domain\user\User;
+
 use App\infrastructure\controllers\QuestionController;
 use App\infrastructure\repositories\category\CategoryRepository;
 use App\infrastructure\repositories\domain\DomainRepository;
@@ -20,7 +20,6 @@ use App\infrastructure\repositories\qualification\QualificationRepository;
 use App\infrastructure\repositories\question\QuestionRepository;
 use App\infrastructure\repositories\section\SectionRepository;
 use App\infrastructure\repositories\surveyUser\SurveyUserRepository;
-use App\infrastructure\repositories\user\UserRepository;
 
 function router(Router $router)
 {

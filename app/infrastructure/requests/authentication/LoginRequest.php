@@ -11,7 +11,7 @@ class LoginRequest extends Request implements HttpRulesRequest
     public static function rules(): array
     {
         return  [
-            'email' => 'email|required',
+            'username' => 'required',
             'password' => 'required|min:8'
         ];
     }

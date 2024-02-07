@@ -5,10 +5,7 @@ namespace App\application\question;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use App\domain\question\QuestionRepository;
-use App\domain\survey\SurveyRepository;
 use App\domain\surveyUser\SurveyUserRepository;
-use App\domain\user\User;
-use App\domain\user\UserRepository;
 
 class QuestionUseCase
 {

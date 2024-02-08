@@ -18,7 +18,14 @@ function router(Router $router)
     $router->get('/', function ()  use ($sectionController) {
         $sectionController->getAllSections();
     });
+
+    $router->get('/questions', function () use ($sectionController) {
+        $sectionController->getSectionsWithQuestions();
+    });    
+
     $router->post('/create', function () use ($sectionController) {
         $sectionController->createSection();
     });    
+
+
 }

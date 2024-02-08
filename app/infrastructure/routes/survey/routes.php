@@ -24,9 +24,9 @@ function router(Router $router)
     $surveyUseCase          = new SurveyUseCase($surveyService);
     $surveyController       = new SurveyController($surveyUseCase);
 
-    // $router->get('/', function ()  use ($surveyController) {
-    //     $surveyController->getAllSections();
-    // });
+    $router->get('/', function ()  use ($surveyController) {
+        $surveyController->getAllSurveys();
+    });
 
     $router->post('/start', function () use ($surveyController) {
         $surveyController->startSurvey();

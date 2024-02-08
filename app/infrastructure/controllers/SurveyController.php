@@ -13,6 +13,11 @@ class SurveyController extends Controller
     {
     }
 
+    public function getAllSurveys()
+    {
+        $this->response($this->surveyUseCase->getAllSurveys());
+    }
+
     public function startSurvey()
     {
         $this->response($this->surveyUseCase->startNewSurvey());
@@ -22,11 +27,5 @@ class SurveyController extends Controller
     {
         $this->validate(SaveQuestionRequest::rules(), SaveQuestionRequest::messages());
         $this->response($this->surveyUseCase->saveAnswers($this->request()));
-    }
-
-    public function startUserSurvey()
-    {
-            
-
     }
 }

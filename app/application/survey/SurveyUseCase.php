@@ -10,6 +10,11 @@ class SurveyUseCase
     {
     }
 
+    public function getAllSurveys()
+    {
+        return $this->surveyService->getSurvys();
+    }
+
     public function startNewSurvey()
     {
         return $this->surveyService->startSurvey();
@@ -27,6 +32,5 @@ class SurveyUseCase
 
     public function startSurveyByUser(string $userId)
     {
-        
     }
 }

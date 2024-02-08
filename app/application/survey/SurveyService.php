@@ -17,6 +17,11 @@ class SurveyService
     {
     }
 
+    public function getSurvys()
+    {
+        return $this->surveyRepository->findAllSurveys();
+    }
+
     public function startSurvey()
     {
         if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay una encuesta en progreso por lo que no se puede comenzar la nueva encuesta', 400);
@@ -52,26 +57,24 @@ class SurveyService
         return $this->questionRepository->getQuestionBySection();
     }
 
-    public function changeToPendingStatus() 
+    public function changeToPendingStatus()
     {
-        
     }
 
     private function hasPreviousQuestion(mixed $answers, mixed $newBody): array
     {
 
-        $answers = json_decode($answers); 
+        $answers = json_decode($answers);
 
         foreach ($answers as $index => $answer) {
             foreach ($newBody as $key => $newQuestion) {
-                if($answer->question_id == $newQuestion['question_id']) {
-                    $answers[$index] = $newQuestion; 
+                if ($answer->question_id == $newQuestion['question_id']) {
+                    $answers[$index] = $newQuestion;
                     unset($newBody[$key]);
                 }
             }
         }
         return [...$answers, ...$newBody];
-
     }
 
     private function validateQuestions(mixed $body)

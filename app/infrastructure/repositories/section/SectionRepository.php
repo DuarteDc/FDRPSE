@@ -17,9 +17,14 @@ class SectionRepository extends BaseRepository implements ConfigSectionRepositor
         parent::__construct($section);
     }
 
+    public function getAllSections(): Collection
+    {
+        return $this->section::orderBy('id', 'desc')->get();
+    }
+
     public function findSectionsWithQuestions(): Collection
     {
-        return $this->section::with('questions:id,name,section_id')->get(['id', 'name', 'binary', 'question']);
+        return $this->section::has('questions', '>', 0)->get(['id', 'name', 'binary', 'question']);
     }
 
     public function findSectionWithQuestions(string $page): Paginator | null
@@ -29,11 +34,12 @@ class SectionRepository extends BaseRepository implements ConfigSectionRepositor
                 'questions:id,name,section_id,qualification_id',
                 'questions.qualification:id,name,always_op,almost_alwyas_op,sometimes_op,almost_never_op,never_op'
             ]
-        )->simplePaginate(1, ['id', 'name', 'binary', 'question'], 'page', $page);
+        )->has('questions', '>', 0)
+        ->simplePaginate(1, ['id', 'name', 'binary', 'question'], 'page', $page);
     }
 
     public function countTotalSections(): int
     {
-        return $this->section::count();
+        return $this->section::with('questions')->has('questions', '>', 0)->count();
     }
 }

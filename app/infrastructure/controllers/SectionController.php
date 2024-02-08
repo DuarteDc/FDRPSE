@@ -22,5 +22,9 @@ class SectionController extends Controller
         $this->validate(CreateSectionRequest::rules(), CreateSectionRequest::messages());
         $this->response($this->sectionUseCase->createSection($this->request()), 201);
     }
-
+    
+    public function getSectionsWithQuestions() 
+    {
+        $this->response($this->sectionUseCase->getSectionsWhereHaveQuestions());
+    }
 }

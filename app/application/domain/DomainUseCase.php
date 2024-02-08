@@ -2,9 +2,8 @@
 
 namespace App\application\domain;
 
-use App\domain\domain\DomainRepository;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
+use App\domain\domain\DomainRepository;
 
 class DomainUseCase
 {

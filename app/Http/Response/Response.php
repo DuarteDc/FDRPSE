@@ -19,9 +19,12 @@ abstract class Response implements HttpResponse
 
     public static function responseJson($data = [], int $status = 200, array $headers = []): void
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Cache-Control: no-transform,public,max-age=300,s-maxage=900");
-        header("Content-Type: application/json;  charset=UTF-8");
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=utf-8');
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", "false");
+        header_remove('X-Powered-By');
+        header("Pragma: no-cache");
         http_response_code($status);
         header("Status:" . self::$codes[$status]);
         echo json_encode($data);

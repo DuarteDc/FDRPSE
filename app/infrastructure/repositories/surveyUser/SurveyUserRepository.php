@@ -26,7 +26,6 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
 
     public function getCurrentSurveyUser(string $surveyId, string $userId)
     {
-        
         $surveyUser = $this->surveyUser::Where('survey_id', $surveyId)->where('user_id', $userId)->first();
         return $surveyUser ? $surveyUser : $this->create(['survey_id' => $surveyId, 'user_id' => $userId]);
     }
@@ -42,5 +41,18 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
     {
         return $this->surveyUser::where('status', false)->where('user_id', $userId)->first();
     }
-    
+
+    public function finalizeSurveyUser(string $surveyId, string $userId): SurveyUser
+    {
+        $surveyUser = $this->surveyUser::where('survey_id', $surveyId)->where('user_id', $userId)->first();
+        $surveyUser->status  = SurveyUser::FINISHED;
+        $surveyUser->save();
+        return $surveyUser;
+    }
+
+    public function canAvailableSurveyPerUser(string $surveyId, string $userId): ?SurveyUser
+    {
+        return $this->surveyUser::where('survey_id', $surveyId)->where('user_id', $userId)->first();
+    }
+
 }

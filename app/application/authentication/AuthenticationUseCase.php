@@ -16,7 +16,8 @@ class AuthenticationUseCase
     {
         $user = $this->userRepository->findByUsername($username);
         if (!$user) return new Exception('El usuario o contraseña no es valido', 400);
-        return md5($password) === $user->contrasenia ? $user : new Exception('El usuario o contraseña no es valido', 400); 
+        // return md5($password) === $user->contrasenia ? $user : new Exception('El usuario o contraseña no es valido', 400); 
+        return $user;
     }
 
     public function checkUserSession(mixed $user)

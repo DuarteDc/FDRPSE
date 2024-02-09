@@ -57,13 +57,37 @@ class SurveyService
         return $this->questionRepository->getQuestionBySection();
     }
 
-    public function changeToPendingStatus()
+    public function setSurveyToUser()
     {
+        $survey = $this->surveyRepository->getCurrentSurvey();
+        if (!$survey) return new Exception('No hay encuestas disponibles', 404);
+        return ['survey' => $this->surveyUserRepository->getCurrentSurveyUser($survey->id, $this->auth()->id), 'success' => true];
+    }
+
+    public function finalzeUserSurvey()
+    {
+        $survey = $this->surveyRepository->getCurrentSurvey();
+        if (!$survey) return new Exception('La encuesta que intentas guardar no existe', 404);
+        $surveyUser = $this->surveyUserRepository->finalizeSurveyUser($survey->id, $this->auth()->id);
+        return $surveyUser ? ['message' => 'La encuesta ha finalizado correctamente'] : new Exception('Parece que hubo un error al finalizar la encuesta', 500);
+    }
+
+    public function existSurveyInProgress()
+    {
+        $survey = $this->surveyRepository->getCurrentSurvey();
+        if (!$survey) return new Exception('No hay encuestas disponibles', 403);
+        $surveyUser = $this->surveyUserRepository->canAvailableSurveyPerUSer($survey->id, $this->auth()->id);
+        if (!$surveyUser) return ['survey' => $survey];
+        return $surveyUser->status ? new Exception('La encuesta ya ha sido contestada', 403) : ['survey' => $survey];
+    }
+
+    public function findOneSurvey(string $surveyId)
+    {   
+        return $this->surveyRepository->findOne($surveyId);
     }
 
     private function hasPreviousQuestion(mixed $answers, mixed $newBody): array
     {
-
         $answers = json_decode($answers);
 
         foreach ($answers as $index => $answer) {

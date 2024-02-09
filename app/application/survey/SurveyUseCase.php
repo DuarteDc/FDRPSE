@@ -3,6 +3,8 @@
 
 namespace App\application\survey;
 
+use Exception;
+
 class SurveyUseCase
 {
 
@@ -30,7 +32,24 @@ class SurveyUseCase
         return $this->surveyService->getQuestionInsideSection();
     }
 
-    public function startSurveyByUser(string $userId)
+    public function startSurveyByUser()
     {
+        return $this->surveyService->setSurveyToUser();
+    }
+
+    public function finalizeSurveyByUser()
+    {
+        return $this->surveyService->finalzeUserSurvey();
+    }
+
+    public function getInProgressSurvey()
+    {
+        return $this->surveyService->existSurveyInProgress();
+    }
+
+    public function findSurveyById(string $surveyId)
+    {
+        $survey =  $this->surveyService->findOneSurvey($surveyId);
+        return $survey ? ['survey' => $survey]  : new Exception('La encuesta no existe o no esta disponible', 404);
     }
 }

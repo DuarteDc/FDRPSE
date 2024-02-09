@@ -36,9 +36,20 @@ function router(Router $router)
         $surveyController->saveUserAnswers();
     });    
 
-    // $router->get('/questions', function () use ($surveyController) {
-    //     $surveyController->getQuestions();
-    // });    
+    $router->post('/start-user', function () use ($surveyController) {
+        $surveyController->startSurveyByUser();
+    });    
 
+    $router->post('/end-user', function () use ($surveyController) {
+        $surveyController->finishUserSurvey();
+    });    
+
+    $router->get('/current', function () use($surveyController) {
+        $surveyController->getCurrentSurvey();
+    });
+
+    $router->get('/{id}', function (string $id) use($surveyController) {
+        $surveyController->getSurveyById($id);
+    });
 }
 

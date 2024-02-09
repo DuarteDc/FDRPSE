@@ -5,6 +5,7 @@ namespace App\domain\section;
 use Illuminate\Database\Eloquent\Collection;
 
 use App\domain\BaseRepository;
+use App\domain\section\Section;
 use Illuminate\Contracts\Pagination\Paginator;
 
 interface SectionRepository extends BaseRepository
@@ -13,4 +14,5 @@ interface SectionRepository extends BaseRepository
     public function findSectionsWithQuestions(): Collection;
     public function findSectionWithQuestions(string $page): Paginator | null;
     public function countTotalSections(): int;
+    public function findByName(string $name): ?Section;
 }

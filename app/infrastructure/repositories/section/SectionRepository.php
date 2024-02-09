@@ -3,11 +3,11 @@
 namespace App\infrastructure\repositories\section;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\Paginator;
 
 use App\domain\section\Section;
 use App\domain\section\SectionRepository as ConfigSectionRepository;
 use App\infrastructure\repositories\BaseRepository;
-use Illuminate\Contracts\Pagination\Paginator;
 
 class SectionRepository extends BaseRepository implements ConfigSectionRepository
 {
@@ -34,12 +34,19 @@ class SectionRepository extends BaseRepository implements ConfigSectionRepositor
                 'questions:id,name,section_id,qualification_id',
                 'questions.qualification:id,name,always_op,almost_alwyas_op,sometimes_op,almost_never_op,never_op'
             ]
-        )->has('questions', '>', 0)
-        ->simplePaginate(1, ['id', 'name', 'binary', 'question'], 'page', $page);
+        )
+            ->has('questions', '>', 0)
+            ->simplePaginate(1, ['id', 'name', 'binary', 'question'], 'page', $page);
     }
 
     public function countTotalSections(): int
     {
         return $this->section::with('questions')->has('questions', '>', 0)->count();
     }
+
+    public function findByName(string $name): ?Section
+    {
+        return $this->section::where('name', $name)->first();
+    }
+
 }

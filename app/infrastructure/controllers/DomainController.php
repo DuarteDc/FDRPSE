@@ -2,8 +2,8 @@
 
 namespace App\infrastructure\controllers;
 
+use App\kernel\controllers\Controller;
 use App\application\domain\DomainUseCase;
-use App\Http\Controllers\Controller;
 use App\infrastructure\requests\domain\CreateDomainRequest;
 
 class DomainController extends Controller
@@ -13,13 +13,14 @@ class DomainController extends Controller
     {
     }
 
-    public function getAllDomains() {
+    public function getAllDomains()
+    {
         $this->response($this->domainUseCase->findAllDomains());
     }
 
-    public function createDomain() {
+    public function createDomain()
+    {
         $this->validate(CreateDomainRequest::rules(), CreateDomainRequest::messages());
         $this->response($this->domainUseCase->createDomain($this->request()), 201);
     }
-
 }

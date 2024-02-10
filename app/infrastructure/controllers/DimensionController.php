@@ -3,7 +3,7 @@
 
 namespace App\infrastructure\controllers;
 
-use App\Http\Controllers\Controller;
+use App\kernel\controllers\Controller;
 use App\application\dimension\DimensionUseCase;
 use App\infrastructure\requests\dimension\CreateDimensionRequest;
 

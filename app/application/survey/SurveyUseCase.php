@@ -50,6 +50,6 @@ class SurveyUseCase
     public function findSurveyById(string $surveyId)
     {
         $survey =  $this->surveyService->findOneSurvey($surveyId);
-        return $survey ? ['survey' => $survey]  : new Exception('La encuesta no existe o no esta disponible', 404);
+        return $survey ? ['survey' => $survey] : new Exception('La encuesta no existe o no esta disponible', 404);
     }
 }

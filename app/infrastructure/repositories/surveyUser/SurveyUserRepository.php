@@ -42,10 +42,11 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
         return $this->surveyUser::where('status', false)->where('user_id', $userId)->first();
     }
 
-    public function finalizeSurveyUser(string $surveyId, string $userId): SurveyUser
+    public function finalizeSurveyUser(string $surveyId, string $userId, int $userQualification): SurveyUser
     {
         $surveyUser = $this->surveyUser::where('survey_id', $surveyId)->where('user_id', $userId)->first();
-        $surveyUser->status  = SurveyUser::FINISHED;
+        $surveyUser->status = SurveyUser::FINISHED;
+        $surveyUser->total  = $userQualification;
         $surveyUser->save();
         return $surveyUser;
     }

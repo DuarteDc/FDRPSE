@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Response;
-
-use App\Http\Interfaces\HttpResponse;
+namespace App\kernel\response;
+use App\kernel\response\HttpResponse;
 
 abstract class Response implements HttpResponse
 {

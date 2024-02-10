@@ -2,8 +2,8 @@
 
 namespace App\infrastructure\requests\authentication;
 
-use App\Http\Interfaces\HttpRulesRequest;
-use App\Http\Requests\Request;
+use App\kernel\request\Request;
+use App\kernel\request\HttpRulesRequest;
 
 class LoginRequest extends Request implements HttpRulesRequest
 {

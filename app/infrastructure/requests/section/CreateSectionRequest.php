@@ -2,8 +2,8 @@
 
 namespace App\infrastructure\requests\section;
 
-use App\Http\Interfaces\HttpRulesRequest;
-use App\Http\Requests\Request;
+use App\kernel\request\Request;
+use App\kernel\request\HttpRulesRequest;
 
 class CreateSectionRequest extends Request implements HttpRulesRequest
 {

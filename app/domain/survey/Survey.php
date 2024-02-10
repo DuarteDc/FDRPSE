@@ -2,8 +2,10 @@
 
 namespace App\domain\survey;
 
-use App\domain\surveyUser\SurveyUser;
 use Illuminate\Database\Eloquent\Model;
+
+use App\domain\surveyUser\SurveyUser;
+use App\domain\qualifications\Qualifications;
 
 class Survey extends Model
 {
@@ -16,5 +18,10 @@ class Survey extends Model
     public function surveyUser()
     {
         return $this->belongsToMany(SurveyUser::class);
+    }
+
+    public function qualifications()
+    {
+        return $this->morphMany(Qualifications::class, 'qualificationable');
     }
 }

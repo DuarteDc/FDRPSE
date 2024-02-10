@@ -8,7 +8,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 /* -------- load environments -------- */
 
-use App\Config\Database;
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createUnsafeImmutable(__DIR__ . '/../');
@@ -18,6 +17,7 @@ $dotenv->safeLoad();
 
 /* -------- Instance Database -------- */
 
+use App\infrastructure\database\Database;
 Database::getInstance()->connection();
 
 

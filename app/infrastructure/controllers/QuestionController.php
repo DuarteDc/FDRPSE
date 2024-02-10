@@ -2,9 +2,9 @@
 
 namespace App\infrastructure\controllers;
 
+use App\kernel\controllers\Controller;
 use App\application\question\QuestionUseCase;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Question\CreateQuestionRequest;
+use App\infrastructure\requests\question\CreateQuestionRequest;
 
 class QuestionController extends Controller
 {

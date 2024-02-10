@@ -20,10 +20,17 @@ class CategoryUseCase
 
     public function createCategory(mixed $body): mixed
     {
-        $name = mb_strtoupper(trim($body->name));
+        $isValidName = $this->validateName($body->name);
+        if ($isValidName instanceof Exception) return $isValidName;
+
+        $category = $this->categoryRepository->saveCategoryAndSetQualification((object)[...(array)$body, 'name' => $isValidName,]);
+        return ['message' => 'La categoría se creo correctamente', 'category' => $category];
+    }
+
+    private function validateName($name): Exception | string
+    {
+        $name = mb_strtoupper(trim($name));
         $category = $this->categoryRepository->findByName($name);
-        if($category) return new Exception('Ya existe una categoría con ese nombre', 400);
-        $category = $this->categoryRepository->create(['name' => $name]);
-        return ['message' => 'La categoría se creo correctamente'];
+        return $category ?  new Exception('Ya existe una categoría con ese nombre', 400) : $name;
     }
 }

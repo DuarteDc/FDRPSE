@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\kernel\controllers;
 
-use App\Http\Requests\Request;
-use App\Traits\Auth;
 use Exception;
+
+use App\kernel\authentication\Auth;
+use App\kernel\request\Request;
 
 abstract class Controller extends Request
 {

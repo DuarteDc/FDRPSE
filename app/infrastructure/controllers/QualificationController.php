@@ -2,8 +2,8 @@
 
 namespace App\infrastructure\controllers;
 
+use App\kernel\controllers\Controller;
 use App\application\qualification\qualificationUseCase;
-use App\Http\Controllers\Controller;
 
 class QualificationController extends Controller
 {

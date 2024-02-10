@@ -2,8 +2,8 @@
 
 namespace App\infrastructure\controllers;
 
+use App\kernel\controllers\Controller;
 use App\application\section\SectionUseCase;
-use App\Http\Controllers\Controller;
 use App\infrastructure\requests\section\CreateSectionRequest;
 
 class SectionController extends Controller

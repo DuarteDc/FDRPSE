@@ -3,8 +3,9 @@
 namespace App\infrastructure\controllers;
 
 use Exception;
+use App\kernel\controllers\Controller;
+
 use App\application\authentication\AuthenticationUseCase;
-use App\Http\Controllers\Controller;
 use App\infrastructure\requests\authentication\LoginRequest;
 
 class AuthenticationController extends Controller

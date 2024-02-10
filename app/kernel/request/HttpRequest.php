@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Interfaces;
+namespace App\kernel\request;
 
 interface HttpRequest
 {

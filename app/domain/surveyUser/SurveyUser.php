@@ -12,7 +12,7 @@ class SurveyUser extends Model
     const FINISHED   = true;
     
     protected $table = 'survey_users';
-    protected $fillable = ['survey_id', 'user_id', 'answers', 'status'];
+    protected $fillable = ['survey_id', 'user_id', 'answers', 'status', 'total'];
 
     public function survey()
     {

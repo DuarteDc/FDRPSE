@@ -3,11 +3,13 @@
 namespace App\application\survey;
 
 use Exception;
-use App\Traits\Auth;
+use App\kernel\authentication\Auth;
+
 use App\domain\survey\Survey;
 use App\domain\survey\SurveyRepository;
 use App\domain\surveyUser\SurveyUserRepository;
 use App\domain\question\QuestionRepository;
+use App\domain\surveyUser\SurveyUser;
 
 class SurveyService
 {
@@ -44,7 +46,7 @@ class SurveyService
 
         $surveyUser = $this->surveyUserRepository->getCurrentSurveyUser($survey->id, $this->auth()->id);
 
-        if ($surveyUser->answers != "")  $body = $this->hasPreviousQuestion($surveyUser->answers, $isValidRequest);
+        if ($surveyUser->answers != "") $body = $this->hasPreviousQuestion($surveyUser->answers, $isValidRequest);
 
         else $body = $isValidRequest;
 
@@ -68,7 +70,8 @@ class SurveyService
     {
         $survey = $this->surveyRepository->getCurrentSurvey();
         if (!$survey) return new Exception('La encuesta que intentas guardar no existe', 404);
-        $surveyUser = $this->surveyUserRepository->finalizeSurveyUser($survey->id, $this->auth()->id);
+        $userQualification = $this->calculateUserQualification($this->surveyUserRepository->getCurrentSurveyUser($survey->id, $this->auth()->id));
+        $surveyUser = $this->surveyUserRepository->finalizeSurveyUser($survey->id, $this->auth()->id, $userQualification);
         return $surveyUser ? ['message' => 'La encuesta ha finalizado correctamente'] : new Exception('Parece que hubo un error al finalizar la encuesta', 500);
     }
 
@@ -82,7 +85,7 @@ class SurveyService
     }
 
     public function findOneSurvey(string $surveyId)
-    {   
+    {
         return $this->surveyRepository->findOne($surveyId);
     }
 
@@ -128,5 +131,10 @@ class SurveyService
                 'qualification' => $currentQuestion['qualification']
             ];
         }, (array) $body->questions);
+    }
+
+    private function calculateUserQualification(SurveyUser $surveyUser): int
+    {
+        return array_reduce(json_decode($surveyUser->answers), fn($prev, $curr) => $prev + $curr->qualification);
     }
 }

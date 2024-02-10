@@ -2,8 +2,8 @@
 
 namespace App\infrastructure\requests\dimension;
 
-use App\Http\Interfaces\HttpRulesRequest;
-use App\Http\Requests\Request;
+use App\kernel\request\Request;
+use App\kernel\request\HttpRulesRequest;
 
 class CreateDimensionRequest extends Request implements HttpRulesRequest
 {

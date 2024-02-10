@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Http\Requests\Question;
+namespace App\infrastructure\requests\question;
 
-use App\Http\Interfaces\HttpRulesRequest;
-use App\Http\Requests\Request;
+use App\kernel\request\Request;
+use App\kernel\request\HttpRulesRequest;
 
 class CreateQuestionRequest extends Request implements HttpRulesRequest
 {

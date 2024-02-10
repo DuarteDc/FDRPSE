@@ -2,10 +2,9 @@
 
 namespace App\infrastructure\controllers;
 
+use App\kernel\controllers\Controller;
 use App\application\category\CategoryUseCase;
-use App\Http\Controllers\Controller;
 use App\infrastructure\requests\category\CreateCategoryRequest;
-use App\Models\Category;
 
 class CategoryController extends Controller
 {
@@ -22,6 +21,7 @@ class CategoryController extends Controller
     public function createCategory()
     {
         $this->validate(CreateCategoryRequest::rules(), CreateCategoryRequest::messages());
+        // return $this->response($this->request());
         $this->response($this->categoryUseCase->createCategory($this->request()));
     }
 }

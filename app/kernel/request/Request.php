@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\kernel\request;
 
-use App\Http\Interfaces\HttpRequest;
-use App\Http\Response\Response;
-use App\Traits\Auth;
 use Rakit\Validation\Validator;
+
+use App\kernel\authentication\Auth;
+use App\kernel\response\Response;
+use App\kernel\request\HttpRequest;
 
 abstract class Request extends Response implements HttpRequest
 {
@@ -39,7 +40,7 @@ abstract class Request extends Response implements HttpRequest
 
     private static function getFormError($errors)
     {
-        static::responseJson($errors->errors()->firstOfAll(), 400);
+        static::responseJson(['message' => $errors->errors()->all()[0]], 400);
         exit();
     }
 }

@@ -19,4 +19,24 @@ class CategoryRepository extends BaseRepository implements ConfigCategoryReposit
     {
         return $this->category::where('name', $name)->first();
     }
+
+    public function saveCategoryAndSetQualification(mixed $body): Category
+    {
+        $category = new $this->category(['name' => $body->name]);
+        $category->save();
+        return $this->setCategoryQualification($category, $body);
+    }
+
+    public function setCategoryQualification(Category $category, object $body): Category
+    {
+        $category->qualifications()->create([
+            'despicable' => $body->despicable, 
+            'low'        => $body->low,
+            'middle'     => $body->middle,
+            'high'       => $body->high,
+            'very_hight' => $body->very_hight,
+        ]);
+        return $category;
+    }
+
 }

@@ -48,8 +48,13 @@ function router(Router $router)
         $surveyController->getCurrentSurvey();
     });
 
+    $router->get('/{surveyId}/find-by-user', function (string $surveyId) use($surveyController) {
+        $surveyController->findSurveyDetailByUserName($surveyId);
+    });
+    
     $router->get('/{id}', function (string $id) use($surveyController) {
         $surveyController->getSurveyById($id);
     });
+
 }
 

@@ -18,7 +18,7 @@ class CategoryUseCase
         return ['categories' => $categories];
     }
 
-    public function createCategory(mixed $body): mixed
+    public function createCategory(mixed $body): object
     {
         $isValidName = $this->validateName($body->name);
         if ($isValidName instanceof Exception) return $isValidName;
@@ -31,6 +31,6 @@ class CategoryUseCase
     {
         $name = mb_strtoupper(trim($name));
         $category = $this->categoryRepository->findByName($name);
-        return $category ?  new Exception('Ya existe una categoría con ese nombre', 400) : $name;
+        return $category ? new Exception('Ya existe una categoría con ese nombre', 400) : $name;
     }
 }

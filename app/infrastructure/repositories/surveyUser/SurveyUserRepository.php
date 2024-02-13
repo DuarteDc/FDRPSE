@@ -56,4 +56,19 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
         return $this->surveyUser::where('survey_id', $surveyId)->where('user_id', $userId)->first();
     }
 
+    public function getDetailsSurveyUser(string $surveyId): array
+    {
+        return $this->surveyUser::where('survey_id', $surveyId)
+            ->with(['user:id,nombre,userName,id_area', 'user.area:id,nombreArea'])
+            ->get(['user_id', 'answers', 'total'])
+            ->toArray();
+    }
+
+    public function searchByName(string $surveyId, string $name)
+    {
+        $survey = $this->surveyUser::where('survey_id', $surveyId)->with('user')->get()->toArray();
+        return array(...array_filter($survey, function ($survey) use ($name) {
+            return str_contains($survey['user']['nombre'], $name) ? $survey : null;
+        }));
+    }
 }

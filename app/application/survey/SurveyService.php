@@ -89,13 +89,23 @@ class SurveyService
         return $this->surveyRepository->findOne($surveyId);
     }
 
+    public function getSurveyDetails(string $surveyId)
+    {
+        $suervey = $this->surveyRepository->findOne($surveyId);
+        if (!$suervey) return new Exception('El cuestionario no existe o no es valido', 404);
+        return $this->surveyUserRepository->getDetailsSurveyUser($surveyId);
+    }
+
+    public function findSurveyByName(string $surveyId, string $name)
+    {
+        return $this->surveyUserRepository->searchByName($surveyId, $name);
+    }
+
     private function hasPreviousQuestion(mixed $answers, mixed $newBody): array
     {
-        $answers = json_decode($answers);
-
         foreach ($answers as $index => $answer) {
             foreach ($newBody as $key => $newQuestion) {
-                if ($answer->question_id == $newQuestion['question_id']) {
+                if ($answer['question_id'] == $newQuestion['question_id']) {
                     $answers[$index] = $newQuestion;
                     unset($newBody[$key]);
                 }
@@ -135,6 +145,6 @@ class SurveyService
 
     private function calculateUserQualification(SurveyUser $surveyUser): int
     {
-        return array_reduce(json_decode($surveyUser->answers), fn($prev, $curr) => $prev + $curr->qualification);
+        return array_reduce($surveyUser->answers, fn ($prev, $curr) => $prev + $curr['qualification']);
     }
 }

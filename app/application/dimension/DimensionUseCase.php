@@ -20,12 +20,18 @@ class DimensionUseCase
     
     public function createDimension(mixed $body)
     {
-        $name = mb_strtoupper(trim($body->name));
-        $dimension = $this->dimensionRespository->findByName($name);
-
-        if($dimension) return new Exception('Ya existe una dimensión con ese nombre', 400);
+        $isValidName = $this->validateName($body->name);
+        if ($isValidName instanceof Exception) return $isValidName;
 
         $dimension = $this->dimensionRespository->create($body);
         return ['message' => 'La dimension se creo correctamente', 'dimension' => $dimension];
     }
+
+    private function validateName(string $name): Exception | string
+    {
+        $name = mb_strtoupper(trim($name));
+        $dimension = $this->dimensionRespository->findByName($name);
+        return $dimension ? new Exception('Ya existe una dimensión con ese nombre', 400) : $dimension;
+    }
+
 }

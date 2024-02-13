@@ -52,4 +52,15 @@ class SurveyUseCase
         $survey =  $this->surveyService->findOneSurvey($surveyId);
         return $survey ? ['survey' => $survey] : new Exception('La encuesta no existe o no esta disponible', 404);
     }
+
+    public function getOneSurvey(string $surveyId)  
+    {
+        return ['survey' => $this->surveyService->getSurveyDetails($surveyId)];
+    }
+
+    public function findSurveyByName(string $surveyId, string $name)
+    {
+        return $this->surveyService->findSurveyByName($surveyId, $name);
+    }
+
 }

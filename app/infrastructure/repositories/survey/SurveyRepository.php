@@ -42,6 +42,4 @@ class SurveyRepository extends BaseRepository implements ConfigSurveyRepository
         return $this->survey::where('status', false)->first();
     }
 
-    
-
 }

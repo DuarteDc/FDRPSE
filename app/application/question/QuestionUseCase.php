@@ -52,7 +52,7 @@ class QuestionUseCase
         $surveyUser = $this->surveyUserRepository->getUserAnwserInCurrentSurvey($userId);
 
         if ($surveyUser && $surveyUser->answers) {
-            $lastSection = $this->getLastSection($surveyUser->answers)->id;
+            $lastSection = $this->getLastSection($surveyUser->answers)['id'];
             if($page > $lastSection) $page = $lastSection + 1;
         }
 
@@ -67,9 +67,8 @@ class QuestionUseCase
         ] : new Exception('La sección que intentas buscar no existe', 404);
     }
 
-    private function getLastSection(string $anwers): mixed
+    private function getLastSection(array $anwers): mixed
     {
-        $anwers = json_decode($anwers);
-        return max(array_map(fn ($question): mixed => $question->section,  $anwers));
+        return max(array_map(fn ($question): mixed => $question['section'],  $anwers));
     }
 }

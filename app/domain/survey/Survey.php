@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\domain\surveyUser\SurveyUser;
 use App\domain\qualifications\Qualifications;
+use App\domain\user\User;
 
 class Survey extends Model
 {
@@ -15,9 +16,9 @@ class Survey extends Model
     protected $table = 'surveys';
     protected $fillable = ['start_date', 'end_date', 'answers', 'status'];
 
-    public function surveyUser()
+    public function users()
     {
-        return $this->belongsToMany(SurveyUser::class);
+        return $this->belongsToMany(User::class, 'survey_users', 'survey_id', 'user_id');
     }
 
     public function qualifications()

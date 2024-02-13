@@ -4,8 +4,6 @@ namespace App\infrastructure\controllers;
 
 use App\kernel\controllers\Controller;
 use App\application\survey\SurveyUseCase;
-use App\domain\survey\Survey;
-use App\domain\surveyUser\SurveyUser;
 use App\infrastructure\requests\survey\SaveQuestionRequest;
 
 class SurveyController extends Controller
@@ -48,15 +46,13 @@ class SurveyController extends Controller
 
     public function getSurveyById(string $surveyId)
     {
-        $suervey = Survey::find($surveyId);
-        $surveyUser = SurveyUser::where('survey_id', $suervey->id)->with('user:id,nombre,userName')->get(['user_id', 'answers', 'total'])->toArray();
-    
+        $this->response($this->surveyUseCase->getOneSurvey($surveyId));
+    }
 
-        $total = 0;
-        foreach ($surveyUser as $key => $survey) {
-            $total = $total + $survey['total'];
-        }
-         $this->response(['users' => $surveyUser, 'total' => $total/count($surveyUser)]);
-
+    public function findSurveyDetailByUserName(string $surveyId)
+    {
+        $name = $this->get('name');
+        $name = (string)trim(mb_strtoupper($name));
+        $this->response($this->surveyUseCase->findSurveyByName($surveyId, $name));
     }
 }

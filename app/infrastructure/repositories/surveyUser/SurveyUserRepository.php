@@ -59,16 +59,24 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
     public function getDetailsSurveyUser(string $surveyId): array
     {
         return $this->surveyUser::where('survey_id', $surveyId)
-            ->with(['user:id,nombre,userName,id_area', 'user.area:id,nombreArea'])
-            ->get(['user_id', 'answers', 'total'])
+            ->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
+            ->get(['user_id', 'total', 'status', 'answers'])
             ->toArray();
     }
 
-    public function searchByName(string $surveyId, string $name)
+    public function searchByName(string $surveyId, string $name, string $areaId)
     {
-        $survey = $this->surveyUser::where('survey_id', $surveyId)->with('user')->get()->toArray();
-        return array(...array_filter($survey, function ($survey) use ($name) {
-            return str_contains($survey['user']['nombre'], $name) ? $survey : null;
+        $survey =  $this->getDetailsSurveyUser($surveyId);
+        return array(...array_filter($survey, function ($survey) use ($name, $areaId) {
+            if (!$areaId) return (str_contains($survey['user']['nombre'], $name) || str_contains($survey['user']['apellidoP'], $name)) ? $survey : null;
+            return ((str_contains($survey['user']['nombre'], $name) || str_contains($survey['user']['apellidoP'], $name)) && $survey['user']['area']['id'] == $areaId) ? $survey : null;
         }));
+    }
+
+    public function getDetailsByUser(string $surveyId, string $userId): SurveyUser
+    {
+        return $this->surveyUser::where('survey_id', $surveyId)
+            ->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
+            ->first(['user_id', 'total', 'status', 'answers']);
     }
 }

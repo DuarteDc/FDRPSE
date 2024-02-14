@@ -96,9 +96,16 @@ class SurveyService
         return $this->surveyUserRepository->getDetailsSurveyUser($surveyId);
     }
 
-    public function findSurveyByName(string $surveyId, string $name)
+    public function findSurveyByName(string $surveyId, string $name, string $areaId)
     {
-        return $this->surveyUserRepository->searchByName($surveyId, $name);
+        return $this->surveyUserRepository->searchByName($surveyId, $name, $areaId);
+    }
+
+    public function getDetailsByUser(string $surveyId, string $userId) 
+    {
+        $survey = $this->surveyRepository->findOne($surveyId, $userId);
+        if (!$survey) return new Exception('El cuestionario no existe o no es valido', 404);
+        return $this->surveyUserRepository->getDetailsByUser($surveyId, $userId);
     }
 
     private function hasPreviousQuestion(mixed $answers, mixed $newBody): array

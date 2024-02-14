@@ -3,9 +3,9 @@
 namespace App\infrastructure\repositories\category;
 
 use App\domain\category\Category;
-use Illuminate\Database\Eloquent\Model;
 use App\domain\category\CategoryRepository as ConfigCategoryRepository;
 use App\infrastructure\repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 class CategoryRepository extends BaseRepository implements ConfigCategoryRepository
 {
@@ -30,13 +30,18 @@ class CategoryRepository extends BaseRepository implements ConfigCategoryReposit
     public function setCategoryQualification(Category $category, object $body): Category
     {
         $category->qualifications()->create([
-            'despicable' => $body->despicable, 
+            'despicable' => $body->despicable,
             'low'        => $body->low,
             'middle'     => $body->middle,
             'high'       => $body->high,
             'very_hight' => $body->very_hight,
         ]);
         return $category;
+    }
+
+    public function findWithQualifications(): Collection
+    {
+        return $this->category->with('qualifications')->get();
     }
 
 }

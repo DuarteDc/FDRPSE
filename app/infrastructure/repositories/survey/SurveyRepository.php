@@ -42,4 +42,9 @@ class SurveyRepository extends BaseRepository implements ConfigSurveyRepository
         return $this->survey::where('status', false)->first();
     }
 
+    public function getStatusUsers(string $surveyId): Collection
+    {
+        return $this->survey::where('id', $surveyId)->get();
+    }
+
 }

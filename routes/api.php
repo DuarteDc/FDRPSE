@@ -11,6 +11,7 @@ use function App\infrastructure\routes\MainRouter\{
     dimensionRouter,
     surveyRoutes,
     authenticationRoutes,
+    areaRoutes,
 };
 
 $router = new Router();
@@ -65,6 +66,11 @@ $router->mount('/api.*', function () use ($router) {
     $router->mount('/questions', function () use ($router) {
         questionRouter($router);
     });
+
+    $router->mount('/areas', function () use ($router) {
+        areaRoutes($router);
+    });
+
 });
 
 

@@ -14,5 +14,7 @@ interface SurveyUserRepository extends BaseRepository
     public function finalizeSurveyUser(string $surveyId, string $userId, int $userQualification): SurveyUser;
     public function canAvailableSurveyPerUser(string $surveyId, string $userId): ?SurveyUser;
     public function getDetailsSurveyUser(string $surveyId): array;
-    public function searchByName(string $surveyId, string $name);
+    public function searchByName(string $surveyId, string $name, string $areaId);
+    public function getDetailsByUser(string $surveyId, string $userId): SurveyUser;
+
 }

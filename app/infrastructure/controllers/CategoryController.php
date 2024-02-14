@@ -21,7 +21,11 @@ class CategoryController extends Controller
     public function createCategory()
     {
         $this->validate(CreateCategoryRequest::rules(), CreateCategoryRequest::messages());
-        // return $this->response($this->request());
         $this->response($this->categoryUseCase->createCategory($this->request()));
+    }
+
+    public function getCategoriesWithQualifications() 
+    {
+        $this->response($this->categoryUseCase->findCategoriesWithQualifications());
     }
 }

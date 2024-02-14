@@ -3,12 +3,13 @@
 
 namespace App\application\survey;
 
+use App\domain\user\UserRepository;
 use Exception;
 
 class SurveyUseCase
 {
 
-    public function __construct(private readonly SurveyService $surveyService)
+    public function __construct(private readonly SurveyService $surveyService, private readonly UserRepository $userRepository)
     {
     }
 
@@ -53,14 +54,27 @@ class SurveyUseCase
         return $survey ? ['survey' => $survey] : new Exception('La encuesta no existe o no esta disponible', 404);
     }
 
-    public function getOneSurvey(string $surveyId)  
+    public function getOneSurvey(string $surveyId)
     {
         return ['survey' => $this->surveyService->getSurveyDetails($surveyId)];
     }
 
-    public function findSurveyByName(string $surveyId, string $name)
+    public function findSurveyByName(string $surveyId, string $name, string $areaId)
     {
-        return $this->surveyService->findSurveyByName($surveyId, $name);
+        return ['survey' => $this->surveyService->findSurveyByName($surveyId, $name, $areaId)];
+    }
+
+    public function findUserDetails(string $surveyId, string $userId)
+    {
+        $surveyUser = $this->surveyService->getDetailsByUser($surveyId, $userId);
+        if ($surveyUser instanceof Exception) return $surveyUser;
+        return ['survey_user' => $surveyUser];
+    }
+
+    public function getUserWithoutSurvey()
+    {
+        $users = $this->userRepository->countTotalAvailableUsers();
+        return ['users' => $users];
     }
 
 }

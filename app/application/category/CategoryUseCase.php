@@ -18,7 +18,7 @@ class CategoryUseCase
         return ['categories' => $categories];
     }
 
-    public function createCategory(mixed $body): object
+    public function createCategory(mixed $body): mixed
     {
         $isValidName = $this->validateName($body->name);
         if ($isValidName instanceof Exception) return $isValidName;
@@ -26,6 +26,13 @@ class CategoryUseCase
         $category = $this->categoryRepository->saveCategoryAndSetQualification((object)[...(array)$body, 'name' => $isValidName,]);
         return ['message' => 'La categoría se creo correctamente', 'category' => $category];
     }
+
+    public function findCategoriesWithQualifications(): mixed
+    {
+        $categories = $this->categoryRepository->findWithQualifications();
+        return ['categories' => $categories];
+    }
+
 
     private function validateName($name): Exception | string
     {

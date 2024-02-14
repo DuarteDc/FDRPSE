@@ -18,7 +18,7 @@ class Survey extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'survey_users', 'survey_id', 'user_id');
+        return $this->belongsToMany(User::class, 'survey_users', 'survey_id', 'user_id')->using(SurveyUser::class);
     }
 
     public function qualifications()

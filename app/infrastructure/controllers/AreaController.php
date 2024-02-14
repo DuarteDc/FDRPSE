@@ -1,0 +1,19 @@
+<?php
+
+namespace App\infrastructure\controllers;
+
+use App\kernel\controllers\Controller;
+use App\application\area\AreaUseCase;
+
+class AreaController extends Controller
+{
+
+    public function __construct(private readonly AreaUseCase $areaUseCase) {
+        
+    }
+
+    public function getAreas()
+    {
+        $this->response($this->areaUseCase->findAllAreas());
+    }
+}

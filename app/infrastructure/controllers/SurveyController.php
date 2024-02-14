@@ -4,6 +4,7 @@ namespace App\infrastructure\controllers;
 
 use App\kernel\controllers\Controller;
 use App\application\survey\SurveyUseCase;
+use App\domain\category\Category;
 use App\infrastructure\requests\survey\SaveQuestionRequest;
 
 class SurveyController extends Controller
@@ -51,8 +52,20 @@ class SurveyController extends Controller
 
     public function findSurveyDetailByUserName(string $surveyId)
     {
-        $name = $this->get('name');
-        $name = (string)trim(mb_strtoupper($name));
-        $this->response($this->surveyUseCase->findSurveyByName($surveyId, $name));
+        $name = (string) $this->get('name') ?? '';
+        $areaId = $this->get('area') ?? '';
+        $name = trim(mb_strtoupper($name));
+        $this->response($this->surveyUseCase->findSurveyByName($surveyId, $name, $areaId));
     }
+
+    public function getDetailsByUser(string $surveyId,  string $userId)
+    {
+        $this->response($this->surveyUseCase->findUserDetails($surveyId, $userId));
+    }
+
+    public function getTotalUserInSurvey() 
+    {
+        $this->response($this->surveyUseCase->getUserWithoutSurvey());
+    }
+
 }

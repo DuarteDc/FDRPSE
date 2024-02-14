@@ -5,6 +5,7 @@ namespace App\domain\survey;
 use App\domain\survey\Survey;
 use App\domain\BaseRepository;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
 
 interface SurveyRepository extends BaseRepository
 {
@@ -12,4 +13,5 @@ interface SurveyRepository extends BaseRepository
     public function setSurvey(): void;
     public function canStartNewSurvey(): bool;
     public function getCurrentSurvey(): Survey | null;
+    public function getStatusUsers(string $surveyId): Collection;
 }

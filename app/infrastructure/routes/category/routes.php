@@ -20,8 +20,11 @@ function router(Router $router)
         $categoryController->getAllCategories();
     });
 
+    $router->get('/with/qualification', function () use ($categoryController) {
+        $categoryController->getCategoriesWithQualifications();
+    });
+
     $router->post('/create', function () use ($categoryController) {
         $categoryController->createCategory();
     });
-    
 }

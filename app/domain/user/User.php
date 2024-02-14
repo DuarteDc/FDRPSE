@@ -20,6 +20,6 @@ class User extends Model
 
     public function surveys()
     {
-        return $this->belongsToMany(Survey::class, 'survey_users', 'user_id', 'survey_id');
+        return $this->belongsToMany(Survey::class, 'survey_users', 'user_id', 'survey_id')->using(SurveyUser::class);
     }
 }

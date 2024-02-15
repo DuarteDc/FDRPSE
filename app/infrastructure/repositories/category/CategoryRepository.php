@@ -41,7 +41,7 @@ class CategoryRepository extends BaseRepository implements ConfigCategoryReposit
 
     public function findWithQualifications(): Collection
     {
-        return $this->category->with('qualifications')->get();
+        return $this->category->with('qualification')->get();
     }
 
 }

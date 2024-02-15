@@ -60,7 +60,7 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
     {
         return $this->surveyUser::where('survey_id', $surveyId)
             ->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
-            ->get(['user_id', 'total', 'status', 'answers'])
+            ->get(['user_id', 'total', 'status'])
             ->toArray();
     }
 
@@ -73,9 +73,9 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
         }));
     }
 
-    public function getDetailsByUser(string $surveyId, string $userId): SurveyUser
+    public function getDetailsByUser(string $surveyId, string $userId): ?SurveyUser
     {
-        return $this->surveyUser::where('survey_id', $surveyId)
+        return $this->surveyUser::where('survey_id', $surveyId)->where('user_id', $userId)
             ->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
             ->first(['user_id', 'total', 'status', 'answers']);
     }

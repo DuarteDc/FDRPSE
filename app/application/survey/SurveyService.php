@@ -105,7 +105,8 @@ class SurveyService
     {
         $survey = $this->surveyRepository->findOne($surveyId, $userId);
         if (!$survey) return new Exception('El cuestionario no existe o no es valido', 404);
-        return $this->surveyUserRepository->getDetailsByUser($surveyId, $userId);
+        $suerveyUser = $this->surveyUserRepository->getDetailsByUser($surveyId, $userId);
+        return !$suerveyUser ? new Exception('La encuesta no esta disponible', 404) : $suerveyUser;
     }
 
     private function hasPreviousQuestion(mixed $answers, mixed $newBody): array

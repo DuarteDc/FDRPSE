@@ -6,8 +6,11 @@ use Bramus\Router\Router;
 
 use App\domain\section\Section;
 use App\application\section\SectionUseCase;
+use App\domain\survey\Survey;
 use App\infrastructure\controllers\SectionController;
+use App\infrastructure\middlewares\CreateResourceMiddleware;
 use App\infrastructure\repositories\section\SectionRepository;
+use App\infrastructure\repositories\survey\SurveyRepository;
 
 function router(Router $router)
 {
@@ -24,6 +27,8 @@ function router(Router $router)
     });    
 
     $router->post('/create', function () use ($sectionController) {
+        $sc = new CreateResourceMiddleware(new SurveyRepository(new Survey));
+        $sc->canContinue();
         $sectionController->createSection();
     });    
 

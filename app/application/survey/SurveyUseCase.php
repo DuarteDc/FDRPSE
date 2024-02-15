@@ -20,7 +20,9 @@ class SurveyUseCase
 
     public function startNewSurvey()
     {
-        return $this->surveyService->startSurvey();
+        $survey = $this->surveyService->startSurvey();
+        if($survey instanceof Exception) return $survey;
+        return ['survey' => $survey, 'message' => 'El cuestionario se creo correctamente'];
     }
 
     public function saveAnswers(mixed $body)

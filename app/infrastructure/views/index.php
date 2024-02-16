@@ -10,8 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
   <script src="http://localhost:8097"></script>
   <title>Vite + React + TS</title>
-  <script type="module" crossorigin src="/cuestionario/public/assets/index-hpHUH-KC.js"></script>
-  <link rel="stylesheet" crossorigin href="/cuestionario/public/assets/index-MYFj73kf.css">
+  <script type="module" crossorigin src="/assets/index-7BRGwmPN.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-MYFj73kf.css">
 </head>
 
 <body>

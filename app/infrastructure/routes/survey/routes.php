@@ -68,6 +68,9 @@ function router(Router $router)
         $surveyController->getSurveyById($id);
     });
     
+    $router->post('/end/{id}', function (string $id) use($surveyController) {
+        $surveyController->finalizeSurvey($id);
+    });
     
 }
 

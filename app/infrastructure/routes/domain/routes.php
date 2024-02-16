@@ -6,8 +6,11 @@ use Bramus\Router\Router;
 
 use App\domain\domain\Domain;
 use App\application\domain\DomainUseCase;
+use App\domain\survey\Survey;
 use App\infrastructure\controllers\DomainController;
+use App\infrastructure\middlewares\CreateResourceMiddleware;
 use App\infrastructure\repositories\domain\DomainRepository;
+use App\infrastructure\repositories\survey\SurveyRepository;
 
 function router(Router $router)
 {
@@ -19,6 +22,12 @@ function router(Router $router)
         $domainController->getAllDomains();
     });
     $router->post('/create', function () use ($domainController) {
+        // $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
+        // $middleware->handle();
         $domainController->createDomain();
     });    
+
+    $router->get('/with/qualification', function () use ($domainController) {
+        $domainController->getDomainsWithQualifications();
+    });
 }

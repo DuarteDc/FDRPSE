@@ -9,5 +9,6 @@ interface QuestionRepository extends BaseRepository
 {
     public function getQuestionBySection(): Collection;
     public function getQuestionDetail(string $questionId) : Question | null;
+    public function countQuestions(): int;
 
 }

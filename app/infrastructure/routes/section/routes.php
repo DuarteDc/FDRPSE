@@ -27,8 +27,8 @@ function router(Router $router)
     });    
 
     $router->post('/create', function () use ($sectionController) {
-        $sc = new CreateResourceMiddleware(new SurveyRepository(new Survey));
-        $sc->canContinue();
+        $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
+        $middleware->handle();
         $sectionController->createSection();
     });    
 

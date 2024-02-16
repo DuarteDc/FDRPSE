@@ -13,7 +13,7 @@ class CreateQuestionRequest extends Request implements HttpRulesRequest
     {
         return [
             'name' => 'required|min:8|max:200',
-            'category_id' => 'required|numeric',
+            'dimension_id' => 'required|numeric',
             'qualification_id' => 'required|numeric',
             'section_id' => 'required|numeric',
         ];

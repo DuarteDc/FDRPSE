@@ -26,7 +26,8 @@ class SurveyService
 
     public function startSurvey()
     {
-        if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay una encuesta en progreso por lo que no se puede comenzar la nueva encuesta', 400);
+        if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay un cuestionatio en progreso por lo que no se puede comenzar la nueva encuesta', 400);
+        if ($this->questionRepository->countQuestions() <= 0) return new Exception('No se puede comenzar el cuestionario porque no existen preguntas', 403);
         return $this->surveyRepository->create(['start_date' => date('Y-m-d\TH:i:s.000'), 'status' => Survey::PENDING]);
     }
 
@@ -96,17 +97,28 @@ class SurveyService
         return $this->surveyUserRepository->getDetailsSurveyUser($surveyId);
     }
 
+    public function getTotalUsersInSurvey(string $surveyId)
+    {
+        return $this->surveyUserRepository->countSurveyUserAnswers($surveyId);
+    }
+
     public function findSurveyByName(string $surveyId, string $name, string $areaId)
     {
         return $this->surveyUserRepository->searchByName($surveyId, $name, $areaId);
     }
 
-    public function getDetailsByUser(string $surveyId, string $userId) 
+    public function getDetailsByUser(string $surveyId, string $userId)
     {
         $survey = $this->surveyRepository->findOne($surveyId, $userId);
         if (!$survey) return new Exception('El cuestionario no existe o no es valido', 404);
         $suerveyUser = $this->surveyUserRepository->getDetailsByUser($surveyId, $userId);
         return !$suerveyUser ? new Exception('La encuesta no esta disponible', 404) : $suerveyUser;
+    }
+
+    public function endSurvey(string $suerveyId)
+    {
+        $survey = $this->surveyRepository->endSurvey($suerveyId);
+        return ['survey' => $survey];
     }
 
     private function hasPreviousQuestion(mixed $answers, mixed $newBody): array

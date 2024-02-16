@@ -5,6 +5,7 @@ namespace App\infrastructure\repositories\domain;
 use App\domain\domain\Domain;
 use App\domain\domain\DomainRepository as ConfigDomainRepository;
 use App\infrastructure\repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 class DomainRepository extends BaseRepository implements ConfigDomainRepository
 {
@@ -38,5 +39,9 @@ class DomainRepository extends BaseRepository implements ConfigDomainRepository
         return $domain;
     }
 
+    public function findWithQualifications(): Collection
+    {
+        return $this->domain->with('qualification')->get();
+    }
 }
  

@@ -68,4 +68,9 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->getUserWithoutSurvey());
     }
 
+    public function finalizeSurvey(string $surveyId) 
+    {
+        $this->response($this->surveyUseCase->finalizeSurvey($surveyId));
+    }
+
 }

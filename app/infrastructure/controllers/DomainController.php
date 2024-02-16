@@ -23,4 +23,9 @@ class DomainController extends Controller
         $this->validate(CreateDomainRequest::rules(), CreateDomainRequest::messages());
         $this->response($this->domainUseCase->createDomain($this->request()), 201);
     }
+
+    public function getDomainsWithQualifications() 
+    {
+        $this->response($this->domainUseCase->findDomaisWithQualifications());
+    }
 }

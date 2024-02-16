@@ -11,10 +11,6 @@ abstract class Controller extends Request
 {
     use Auth;
 
-    private function __construct()
-    {
-    }
-
     protected function response(mixed $response, int $statusCode = 200)
     {
         if($response instanceof Exception) return $this->response(['message' => $response->getMessage()], $response->getCode());

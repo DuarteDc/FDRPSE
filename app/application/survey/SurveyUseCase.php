@@ -21,7 +21,7 @@ class SurveyUseCase
     public function startNewSurvey()
     {
         $survey = $this->surveyService->startSurvey();
-        if($survey instanceof Exception) return $survey;
+        if ($survey instanceof Exception) return $survey;
         return ['survey' => $survey, 'message' => 'El cuestionario se creo correctamente'];
     }
 
@@ -79,4 +79,22 @@ class SurveyUseCase
         return ['users' => $users];
     }
 
+    public function finalizeSurvey(string $surveyId)
+    {
+        $survey = $this->surveyService->findOneSurvey($surveyId);
+        if (!$survey) return new Exception('El cuestionario no existe o no esta disponible', 404);
+        if ($survey->status) return new Exception('El cuestionario ya ha sido finalizado', 404);
+        $totalSurveyUsers = $this->surveyService->getTotalUsersInSurvey($surveyId);
+        $totalUsers = $this->userRepository->countTotalAvailableUsers();
+        $users = $this->calculateUsersHaveToAnswers($totalUsers);
+        return $totalSurveyUsers >= $users ? $this->surveyService->endSurvey($surveyId) : new Exception("El cuestionario no puede ser finalizado, es necesario {$users} usuarios o más", 403);
+    }
+
+
+    private function calculateUsersHaveToAnswers(int $usersCount): int
+    {
+        $totalUsers = 0.9604 * $usersCount;
+        $totalConst = 0.0025 * ($usersCount - 1) + 0.9604;
+        return round($totalUsers / $totalConst);
+    }
 }

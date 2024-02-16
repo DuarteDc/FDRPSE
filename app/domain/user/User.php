@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
 
+    CONST ADMIN = 5;
+    CONST USER  = 1;
+    
     protected $table = 'usuarios';
     protected $connection = 'user_db';
 

@@ -22,7 +22,12 @@ class QuestionRepository extends BaseRepository implements ConfigQuestionReposit
     public function getQuestionDetail(string $questionId): Question | null
     {
         if(!is_numeric($questionId)) return null;
-        return $this->question::with(['section', 'qualification', 'category', 'dimesion', 'domain'])->where('id', $questionId)->first();
+        return $this->question::with(['section', 'qualification', 'category', 'dimension', 'domain'])->where('id', $questionId)->first();
     }
-    
+
+    public function countQuestions(): int
+    {
+        return $this->question::count();
+    }
+
 }

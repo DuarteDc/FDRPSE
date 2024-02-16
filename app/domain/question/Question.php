@@ -31,7 +31,7 @@ class Question  extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function dimesion() {
+    public function dimension() {
         return $this->belongsTo(Dimension::class);
     }
 

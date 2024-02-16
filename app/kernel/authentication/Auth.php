@@ -22,12 +22,13 @@ trait Auth
     public static function createSession(User $payload)
     {
         $key = getenv('JWT_SECRET_KEY');
+        $user = static::parseUserData($payload);
         $data = [
-            // 'exp' => strtotime('now') + 3600,
-            'user' => $payload,
+            'exp' => strtotime('now') + 3600,
+            'user' => $user,
         ];
         $token = JWT::encode($data, $key, 'HS256');
-        return ['user' => $payload, 'session' => $token];
+        return ['user' => $user, 'session' => $token];
     }
 
     public static function check(string $token): ?stdClass
@@ -40,5 +41,12 @@ trait Auth
         } catch (Exception $e) {
             return null;
         }
+    }
+
+
+    private static function parseUserData(User $user): mixed
+    {
+        ['apellidoM' => $apellidoM, 'apellidoP' => $apellidoP, 'id' => $id, 'nombre' => $nombre, 'userName' => $userName, 'tipo' => $tipo] = $user;
+        return ['apellidoM' => $apellidoM, 'apellidoP' => $apellidoP, 'id' => $id, 'nombre' => $nombre, 'userName' => $userName, 'tipo' => $tipo];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\infrastructure\middlewares\CheckAuthMiddleware;
 use Bramus\Router\Router;
 
 use function App\infrastructure\routes\MainRouter\{
@@ -16,7 +17,7 @@ use function App\infrastructure\routes\MainRouter\{
 
 $router = new Router();
 
-$router->setNamespace('App\infrastructure\Controllers');
+$router->setNamespace('App\infrastructure\controllers');
 
 function sendCorsHeaders()
 {
@@ -35,43 +36,53 @@ $router->options('/api/.*', function () {
 
 $router->mount('/api.*', function () use ($router) {
 
-    $router->mount('/auth', function () use ($router) {
-        authenticationRoutes($router);
+    authenticationRoutes($router);
+
+    $router->before('GET|POST|DELETE|PATCH', '/auth.*', function () {
+        $auth = new CheckAuthMiddleware();
+        $auth->handle();
     });
 
-    $router->mount('/surveys', function () use ($router) {
-        surveyRoutes($router);
-    });
+    $router->mount('/auth.*', function () use ($router) {
 
-    $router->mount('/categories', function () use ($router) {
-        categoryRouter($router);
-    });
+        $router->mount('/surveys', function () use ($router) {
+            surveyRoutes($router);
+        });
 
-    $router->mount('/sections', function () use ($router) {
-        sectionRouter($router);
-    });
+        $router->mount('/categories', function () use ($router) {
+            categoryRouter($router);
+        });
 
-    $router->mount('/domains', function () use ($router) {
-        domainRouter($router);
-    });
+        $router->mount('/sections', function () use ($router) {
+            sectionRouter($router);
+        });
 
-    $router->mount('/qualifications', function () use ($router) {
-        qualificationRouter($router);
-    });
+        $router->mount('/domains', function () use ($router) {
+            domainRouter($router);
+        });
 
-    $router->mount('/dimensions', function () use ($router) {
-        dimensionRouter($router);
-    });
+        $router->mount('/qualifications', function () use ($router) {
+            qualificationRouter($router);
+        });
 
-    $router->mount('/questions', function () use ($router) {
-        questionRouter($router);
-    });
+        $router->mount('/dimensions', function () use ($router) {
+            dimensionRouter($router);
+        });
 
-    $router->mount('/areas', function () use ($router) {
-        areaRoutes($router);
-    });
+        $router->mount('/questions', function () use ($router) {
+            questionRouter($router);
+        });
 
+        $router->mount('/areas', function () use ($router) {
+            areaRoutes($router);
+        });
+    });
 });
 
+$router->get('/.*', 'MainController@__invoke');
+
+$router->set404(function () {
+    header('HTTP/1.1 404 Not Found');
+});
 
 $router->run();

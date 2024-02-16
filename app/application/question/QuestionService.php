@@ -4,6 +4,7 @@ namespace App\application\question;
 
 use App\application\question\QuestionServiceRepository;
 use App\domain\category\CategoryRepository;
+use App\domain\dimension\DimensionRepository;
 use App\domain\domain\DomainRepository;
 use App\domain\qualification\QualificationRepository;
 use App\domain\section\Section;
@@ -20,9 +21,8 @@ class QuestionService implements QuestionServiceRepository
         private readonly CategoryRepository $categoryRepository,
         private readonly QualificationRepository $qualificationRepository,
         private readonly SectionRepository $sectionRepository,
-        private readonly DomainRepository $domainRepository
-        // TODO dimension repository
-        // private readonly DimensionRepository $dimensionRepository,
+        private readonly DomainRepository $domainRepository,
+        private readonly DimensionRepository $dimensionRepository,
     ) {
     }
 
@@ -50,6 +50,12 @@ class QuestionService implements QuestionServiceRepository
         return $domain ? $domain : new Exception('El dominio no es valido', 400);
     }
 
+    public function dimensionIsValid(string $id): Model | Exception
+    {
+        $dimension = $this->dimensionRepository->findOne($id);
+        return $dimension ? $dimension : new Exception('El dominio no es valido', 400);
+    }
+
     public function getQuestionsBySections(): Collection
     {
         return $this->sectionRepository->findSectionsWithQuestions();
@@ -63,21 +69,24 @@ class QuestionService implements QuestionServiceRepository
     public function getTotalSections (): int {
         return $this->sectionRepository->countTotalSections();
     }
-
+    
     public function prepareDataToInsert(mixed $body): Exception | array
     {
         $existCategory = $this->categoryIsValid($body->category_id);
         $exitQualification = $this->qualificationIsValid($body->qualification_id);
         $exitSection = $this->sectionIsValid($body->section_id);
+        $exitDimension = $this->dimensionIsValid($body->section_id);
 
         if ($existCategory instanceof Exception) return $existCategory;
         if ($exitQualification instanceof Exception) return $exitQualification;
         if ($exitSection instanceof Exception) return $exitSection;
+        if ($exitDimension instanceof Exception) return $exitDimension;
 
         return [
             'category' => $existCategory,
             'qualification' => $exitQualification,
             'section' => $exitSection,
+            'dimension' => $exitDimension,
         ];
     }
 }

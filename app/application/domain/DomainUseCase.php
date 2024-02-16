@@ -26,10 +26,17 @@ class DomainUseCase
         return ['message' => 'El dominio se creo correctamente', 'domain' => $domain];
     }
 
+    public function findDomaisWithQualifications() 
+    {
+        $domains = $this->domainRepository->findWithQualifications();
+        return ['domains' => $domains];
+    }
+
     private function validateDomainName(string $name): Exception | string
     {
         $name = mb_strtoupper(trim($name));
         $domain = $this->domainRepository->findByName($name);
         return $domain ? new Exception('Ya existe un dominio con ese nombre', 400) : $name;
     }
+    
 }

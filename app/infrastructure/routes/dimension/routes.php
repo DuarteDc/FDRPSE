@@ -6,8 +6,11 @@ use Bramus\Router\Router;
 
 use App\domain\dimension\Dimension;
 use App\application\dimension\DimensionUseCase;
+use App\domain\survey\Survey;
 use App\infrastructure\controllers\DimensionController;
+use App\infrastructure\middlewares\CreateResourceMiddleware;
 use App\infrastructure\repositories\dimension\DimensionRepository;
+use App\infrastructure\repositories\survey\SurveyRepository;
 
 function router(Router $router)
 {
@@ -21,6 +24,8 @@ function router(Router $router)
     });
 
     $router->post('/create', function () use ($dimensionController) {
+        $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
+        $middleware->handle();
         $dimensionController->createDimension();
     });
     

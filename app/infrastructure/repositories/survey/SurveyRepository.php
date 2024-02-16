@@ -11,24 +11,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class SurveyRepository extends BaseRepository implements ConfigSurveyRepository
 {
-    
-    public function __construct(private readonly Survey $survey) {
+
+    public function __construct(private readonly Survey $survey)
+    {
         parent::__construct($survey);
     }
 
     public function findAllSurveys(): Paginator
     {
-        return $this->survey::orderBy('id','desc')->simplePaginate();
+        return $this->survey::orderBy('id', 'desc')->simplePaginate();
     }
 
     public function startSurvey(): ?Model
     {
         return new Model;
-    }
-
-    public function setSurvey(): void
-    {
-
     }
 
     public function canStartNewSurvey(): bool
@@ -47,4 +43,12 @@ class SurveyRepository extends BaseRepository implements ConfigSurveyRepository
         return $this->survey::where('id', $surveyId)->get();
     }
 
+    public function endSurvey(string $surveyId): Survey
+    {
+        $survey = $this->survey::find($surveyId);
+        $survey->end_date = date('Y-m-d\TH:i:s.000');
+        $survey->status   = Survey::FINISHED;
+        $survey->save();
+        return $survey;
+    }
 }

@@ -22,4 +22,9 @@ class Domain extends Model
     {
         return $this->morphMany(Qualifications::class, 'qualificationable');
     }
+
+    public function qualification()
+    {
+        return $this->morphOne(Qualifications::class, 'qualificationable');
+    }
 }

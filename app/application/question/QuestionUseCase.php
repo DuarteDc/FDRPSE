@@ -24,10 +24,13 @@ class QuestionUseCase
         if ($isValidBody instanceof Exception) return $isValidBody;
 
         $domain = "";
+        $category = "";
 
-        if (isset($body->domain_id)) {
+        if (isset($body->domain_id) || isset($body->categoy_id)) {
             $domain = $this->questionService->domainIsValid($body->domain_id);
+            $category = $this->questionService->categoryIsValid($body->category_id);
             if ($domain instanceof Exception) return $domain;
+            if ($category instanceof Exception) return $category;
         }
 
         $question =  $this->questionRepository->create($body);

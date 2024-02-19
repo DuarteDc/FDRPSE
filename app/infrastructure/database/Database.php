@@ -30,10 +30,10 @@ class Database
         try {
             $this->capsule->addConnection([
                 'driver'    => getenv('DBDRIVER'),
-                'host'      => getenv('HOST'),
+                'host'      => getenv('USER_HOST'),
                 'database'  => getenv('DATABASE'),
-                'username'  => getenv('USERNAME'),
-                'password'  => getenv('PASSWORD'),
+                'username'  => getenv('USER_USERNAME'),
+                'password'  => getenv('USER_PASSWORD'),
                 'charset'   => 'utf8',
                 'collation' => '',
                 'prefix'    => '',

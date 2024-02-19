@@ -53,7 +53,7 @@ class QuestionService implements QuestionServiceRepository
     public function dimensionIsValid(string $id): Model | Exception
     {
         $dimension = $this->dimensionRepository->findOne($id);
-        return $dimension ? $dimension : new Exception('El dominio no es valido', 400);
+        return $dimension ? $dimension : new Exception('La dimensión no es valida', 400);
     }
 
     public function getQuestionsBySections(): Collection
@@ -72,18 +72,15 @@ class QuestionService implements QuestionServiceRepository
     
     public function prepareDataToInsert(mixed $body): Exception | array
     {
-        $existCategory = $this->categoryIsValid($body->category_id);
         $exitQualification = $this->qualificationIsValid($body->qualification_id);
         $exitSection = $this->sectionIsValid($body->section_id);
-        $exitDimension = $this->dimensionIsValid($body->section_id);
+        $exitDimension = $this->dimensionIsValid($body->dimension_id);
 
-        if ($existCategory instanceof Exception) return $existCategory;
         if ($exitQualification instanceof Exception) return $exitQualification;
         if ($exitSection instanceof Exception) return $exitSection;
         if ($exitDimension instanceof Exception) return $exitDimension;
 
         return [
-            'category' => $existCategory,
             'qualification' => $exitQualification,
             'section' => $exitSection,
             'dimension' => $exitDimension,

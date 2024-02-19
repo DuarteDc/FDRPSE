@@ -22,8 +22,8 @@ function router(Router $router)
         $domainController->getAllDomains();
     });
     $router->post('/create', function () use ($domainController) {
-        // $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
-        // $middleware->handle();
+        $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
+        $middleware->handle();
         $domainController->createDomain();
     });    
 

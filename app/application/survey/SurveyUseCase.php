@@ -87,7 +87,7 @@ class SurveyUseCase
         $totalSurveyUsers = $this->surveyService->getTotalUsersInSurvey($surveyId);
         $totalUsers = $this->userRepository->countTotalAvailableUsers();
         $users = $this->calculateUsersHaveToAnswers($totalUsers);
-        return $totalSurveyUsers >= $users ? $this->surveyService->endSurvey($surveyId) : new Exception("El cuestionario no puede ser finalizado, es necesario {$users} usuarios o más", 403);
+        return $totalSurveyUsers >= $users ? $this->surveyService->endSurvey($surveyId) : new Exception("El cuestionario no puede ser finalizado, es necesario {$users} usuarios o más", 400);
     }
 
 

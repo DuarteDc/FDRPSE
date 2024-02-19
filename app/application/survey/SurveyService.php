@@ -27,7 +27,7 @@ class SurveyService
     public function startSurvey()
     {
         if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay un cuestionatio en progreso por lo que no se puede comenzar la nueva encuesta', 400);
-        if ($this->questionRepository->countQuestions() <= 0) return new Exception('No se puede comenzar el cuestionario porque no existen preguntas', 403);
+        if ($this->questionRepository->countQuestions() <= 0) return new Exception('No se puede comenzar el cuestionario porque no existen preguntas', 400);
         return $this->surveyRepository->create(['start_date' => date('Y-m-d\TH:i:s.000'), 'status' => Survey::PENDING]);
     }
 
@@ -79,10 +79,10 @@ class SurveyService
     public function existSurveyInProgress()
     {
         $survey = $this->surveyRepository->getCurrentSurvey();
-        if (!$survey) return new Exception('No hay encuestas disponibles', 403);
+        if (!$survey) return new Exception('No hay encuestas disponibles', 400);
         $surveyUser = $this->surveyUserRepository->canAvailableSurveyPerUSer($survey->id, $this->auth()->id);
         if (!$surveyUser) return ['survey' => $survey];
-        return $surveyUser->status ? new Exception('La encuesta ya ha sido contestada', 403) : ['survey' => $survey];
+        return $surveyUser->status ? new Exception('La encuesta ya ha sido contestada', 400) : ['survey' => $survey];
     }
 
     public function findOneSurvey(string $surveyId)

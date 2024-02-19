@@ -16,7 +16,7 @@ class CreateResourceMiddleware extends Middleware
     public function handle(): void
     {
         if (!$this->surveyRepository->canStartNewSurvey()) {
-            $this->responseJson(['message' => 'No es posible continuar porque existe un cuestionario en curso'], 403);
+            $this->responseJson(['message' => 'No es posible continuar porque existe un cuestionario en curso'], 400);
             exit();
         }
     }

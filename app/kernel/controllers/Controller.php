@@ -6,10 +6,11 @@ use Exception;
 
 use App\kernel\authentication\Auth;
 use App\kernel\request\Request;
+use App\kernel\views\Views;
 
 abstract class Controller extends Request
 {
-    use Auth;
+    use Auth, Views;
 
     protected function response(mixed $response, int $statusCode = 200)
     {

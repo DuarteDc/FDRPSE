@@ -18,6 +18,7 @@ use function App\infrastructure\routes\MainRouter\{
 $router = new Router();
 
 $router->setNamespace('App\infrastructure\controllers');
+$router->setBasePath('/cuestionario');
 
 function sendCorsHeaders()
 {
@@ -81,8 +82,6 @@ $router->mount('/api.*', function () use ($router) {
 
 $router->get('/.*', 'MainController@__invoke');
 
-$router->set404(function () {
-    header('HTTP/1.1 404 Not Found');
-});
+$router->set404('/.*','NotFoundController@__invoke');
 
 $router->run();

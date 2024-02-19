@@ -8,9 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
   <title>Vite + React + TS</title>
-  <script type="module" crossorigin src="/assets/index-59ehrEST.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-MYFj73kf.css">
+  <script type="module" crossorigin src="/assets/index-6u7mw5mz.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Bp5maH9W.css">
 </head>
 
 <body>

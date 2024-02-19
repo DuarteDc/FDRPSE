@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 
   <title>Vite + React + TS</title>
-  <script type="module" crossorigin src="/assets/index-C6D7xECx.js"></script>
+  <script type="module" crossorigin src="/assets/index-vMROMG8o.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-Bp5maH9W.css">
 </head>
 

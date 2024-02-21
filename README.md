@@ -1,4 +1,4 @@
-__Aplicación de PHP implementando una arquitectura hexagoal__
+__Aplicación de PHP implementando una arquitectura hexagonal__
 
 ## 🛠️ Stack
 - [**PHP**](https://www.php.net/)

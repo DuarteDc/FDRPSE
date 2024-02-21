@@ -20,7 +20,7 @@ class LoginRequest extends Request implements HttpRulesRequest
     {
         return [
             'username:required'         => 'El nombre de usuario es requerido',
-            'name:min'                  => 'El nombre de usuario debe contener al menos 8 caracteres',
+            'username:min'                  => 'El nombre de usuario debe contener al menos 8 caracteres',
             'password:required'         => 'La contraseña es requerida',
             'password:min'              => 'La contraseña debe contener al menos 8 caracteres',
         ];

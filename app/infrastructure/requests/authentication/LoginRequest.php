@@ -11,7 +11,7 @@ class LoginRequest extends Request implements HttpRulesRequest
     public static function rules(): array
     {
         return  [
-            'username' => 'required|min:8',
+            'username' => 'required',
             'password' => 'required|min:4',
         ];
     }
@@ -20,7 +20,6 @@ class LoginRequest extends Request implements HttpRulesRequest
     {
         return [
             'username:required'         => 'El nombre de usuario es requerido',
-            'username:min'                  => 'El nombre de usuario debe contener al menos 8 caracteres',
             'password:required'         => 'La contraseña es requerida',
             'password:min'              => 'La contraseña debe contener al menos 8 caracteres',
         ];

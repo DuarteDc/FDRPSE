@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8" />
@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
   <title>Cuestionario de análisis de riesgos</title>
-  <script type="module" crossorigin src="/cuestionario/public/assets/index-PH_0JrAg.js"></script>
+  <script type="module" crossorigin src="/cuestionario/public/assets/index-u64I7mL1.js"></script>
   <link rel="stylesheet" crossorigin href="/cuestionario/public/assets/index-dJvwpmu7.css">
 </head>
 

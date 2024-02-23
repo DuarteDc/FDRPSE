@@ -11,6 +11,7 @@ use App\domain\question\Question;
 use App\domain\surveyUser\SurveyUser;
 use App\domain\user\User;
 use App\infrastructure\controllers\SurveyController;
+use App\infrastructure\adapters\PdfAdapter;
 use App\infrastructure\repositories\question\QuestionRepository;
 use App\infrastructure\repositories\survey\SurveyRepository;
 use App\infrastructure\repositories\surveyUser\SurveyUserRepository;
@@ -24,7 +25,8 @@ function router(Router $router)
     $userRepository         = new UserRepository(new User);
     $surveyService          = new SurveyService($surveyRepository, $surveyUserRepository, $questionRepository);
     $surveyUseCase          = new SurveyUseCase($surveyService, $userRepository);
-    $surveyController       = new SurveyController($surveyUseCase);
+    $pdfAdapter             = new PdfAdapter;
+    $surveyController       = new SurveyController($surveyUseCase, $pdfAdapter);
 
     $router->get('/', function ()  use ($surveyController) {
         $surveyController->getAllSurveys();
@@ -54,6 +56,9 @@ function router(Router $router)
         $surveyController->getDetailsByUser($id, $userId);
     });
     
+    $router->get('/report/{survey}/{user}', function (string $id, string $userId) use($surveyController) {
+        $surveyController->generateReportByUser($id, $userId);
+    });
 
     $router->get('/total-users', function () use($surveyController) {
         $surveyController->getTotalUserInSurvey();
@@ -72,5 +77,6 @@ function router(Router $router)
         $surveyController->finalizeSurvey($id);
     });
     
+
 }
 

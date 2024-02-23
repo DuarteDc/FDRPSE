@@ -2,15 +2,18 @@
 
 namespace App\infrastructure\controllers;
 
+use Exception;
 use App\kernel\controllers\Controller;
 use App\application\survey\SurveyUseCase;
-use App\domain\category\Category;
+use App\infrastructure\adapters\PdfAdapter;
+use App\infrastructure\adapters\PaperTypes;
+use App\infrastructure\adapters\OrientationTypes;
 use App\infrastructure\requests\survey\SaveQuestionRequest;
 
 class SurveyController extends Controller
 {
 
-    public function __construct(private readonly SurveyUseCase $surveyUseCase)
+    public function __construct(private readonly SurveyUseCase $surveyUseCase, private readonly PdfAdapter $pdfAdapter)
     {
     }
 
@@ -63,14 +66,21 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->findUserDetails($surveyId, $userId));
     }
 
-    public function getTotalUserInSurvey() 
+    public function getTotalUserInSurvey()
     {
         $this->response($this->surveyUseCase->getUserWithoutSurvey());
     }
 
-    public function finalizeSurvey(string $surveyId) 
+    public function finalizeSurvey(string $surveyId)
     {
         $this->response($this->surveyUseCase->finalizeSurvey($surveyId));
     }
 
+    public function generateReportByUser(string $surveyId, string $userId)
+    {
+        $surveyUser = $this->surveyUseCase->findUserDetails($surveyId, $userId);
+        if ($surveyUser instanceof Exception) return $this->response($surveyUser);
+        $view = $this->renderBufferView('pdf-user-answers', $surveyUser);
+        $this->pdfAdapter->generatePDF($view, PaperTypes::Letter, OrientationTypes::Portrait, 'Acuse de entraga');
+    }
 }

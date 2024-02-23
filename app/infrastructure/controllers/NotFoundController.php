@@ -9,7 +9,7 @@ class NotFoundController extends Controller {
     public function __invoke()
     {
         header('HTTP/1.1 404 Not Found');
-        $this->view('NotFound');
+        $this->view('not-found');
     }
 
 }

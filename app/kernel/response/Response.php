@@ -38,10 +38,10 @@ abstract class Response implements HttpResponse
         header('Content-Disposition: attachment; filename="' . basename($file) . '"');
         header('Expires: 0');
         header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
+
         http_response_code($status);
         header("Status:" . self::$codes[$status]);
-        readfile($file);
+    
         exit;
     }
 }

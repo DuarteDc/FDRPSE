@@ -2,6 +2,7 @@
 
 namespace App\infrastructure\repositories\question;
 
+use App\domain\qualification\Qualification;
 use App\domain\question\Question;
 use App\infrastructure\repositories\BaseRepository;
 use App\domain\question\QuestionRepository as ConfigQuestionRepository;
@@ -28,6 +29,11 @@ class QuestionRepository extends BaseRepository implements ConfigQuestionReposit
     public function countQuestions(): int
     {
         return $this->question::count();
+    }
+
+    public function getQualification(Question $question): Qualification
+    {
+        return $question->qualification()->first(['always_op','almost_alwyas_op','sometimes_op','almost_never_op','never_op']);
     }
 
 }

@@ -90,7 +90,6 @@ class SurveyUseCase
         return $totalSurveyUsers >= $users ? $this->surveyService->endSurvey($surveyId) : new Exception("El cuestionario no puede ser finalizado, es necesario {$users} usuarios o más", 400);
     }
 
-
     private function calculateUsersHaveToAnswers(int $usersCount): int
     {
         $totalUsers = 0.9604 * $usersCount;

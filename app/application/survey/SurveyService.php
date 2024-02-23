@@ -158,7 +158,8 @@ class SurveyService
                     'id' => $question->dimension->id ?? '',
                     'name' => $question->dimension->name ?? ''
                 ],
-                'qualification' => $currentQuestion['qualification']
+                'qualification' => $currentQuestion['qualification'],
+                'qualification_name' => $this->questionRepository->getQualification($question)
             ];
         }, (array) $body->questions);
     }

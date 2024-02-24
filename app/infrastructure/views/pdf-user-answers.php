@@ -13,7 +13,7 @@ const QUALIFICATION_NAME = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Resumen de cuestionario <?php echo $data->user->nombre . " " . $data->user->apellidoP . " " . $data->user->apellidoM ?? '' ?></title>
     <style>
         body {
             font-size: 11px;
@@ -74,12 +74,12 @@ const QUALIFICATION_NAME = [
             </thead>
             <tbody>
                 <?php
-                foreach ($data->survey_user->answers as $key => $question) {
+                foreach ($data->answers as $key => $question) {
                     echo "
                     <tr>
                         <td>" . $key + 1 . "</td>
                         <td>{$question->name}</td>
-                        
+                        <td>". QUALIFICATION_NAME[array_search($question->qualification, (array) $question->qualification_name)]."</td>
                     </tr>
                     ";
                 }
@@ -88,12 +88,12 @@ const QUALIFICATION_NAME = [
         </table>
         <footer>
             <div class="signature-line">
-                Yo, <b><?php echo $data->survey_user->user->nombre . " " . $data->survey_user->user->apellidoP . " " . $data->survey_user->user->apellidoM ?? '' ?></b> certifico que he contestado el cuestionario de manera
-                honesta y fidedigna, proporcionando respuestas precisas y veraces en cada pregunta.
+                Yo, <b><?php echo $data->user->nombre . " " . $data->user->apellidoP . " " . $data->user->apellidoM ?? '' ?></b> certifico que he contestado el cuestionario de manera
+                honesta y fidedigna, proporcionando respuestas veraces en cada pregunta.
             </div>
             <div class="signature-section">
                 <p> __________________________________</p>
-                <b><?php echo $data->survey_user->user->nombre . " " . $data->survey_user->user->apellidoP . " " . $data->survey_user->user->apellidoM ?? '' ?></b>
+                <b><?php echo $data->user->nombre . " " . $data->user->apellidoP . " " . $data->user->apellidoM ?? '' ?></b>
             </div>
         </footer>
     </main>

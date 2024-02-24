@@ -52,18 +52,17 @@ function router(Router $router)
         $surveyController->getCurrentSurvey();
     });
     
-    $router->get('/details/{surveid}/{userId}', function (string $id, string $userId) use($surveyController) {
+    $router->get('/details/{surveId}/{userId}', function (string $id, string $userId) use($surveyController) {
         $surveyController->getDetailsByUser($id, $userId);
     });
     
-    $router->get('/report/{survey}/{user}', function (string $id, string $userId) use($surveyController) {
-        $surveyController->generateReportByUser($id, $userId);
+    $router->get('/report', function () use($surveyController) {
+        $surveyController->generateReportByUser();
     });
 
     $router->get('/total-users', function () use($surveyController) {
         $surveyController->getTotalUserInSurvey();
     });
-    
 
     $router->get('/{surveyId}/find-by', function (string $surveyId) use($surveyController) {
         $surveyController->findSurveyDetailByUserName($surveyId);

@@ -80,6 +80,13 @@ class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRep
             ->first(['user_id', 'total', 'status', 'answers']);
     }
 
+    public function findCurrentSurveyUser(string $userId): SurveyUser
+    {
+        return $this->surveyUser::where('user_id', $userId)
+            ->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
+            ->first(['user_id', 'total', 'status', 'answers']);
+    }
+
     public function countSurveyUserAnswers(string $surveyId): int
     {
         return $this->surveyUser::where('survey_id', $surveyId)->count();

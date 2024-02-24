@@ -76,9 +76,9 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->finalizeSurvey($surveyId));
     }
 
-    public function generateReportByUser(string $surveyId, string $userId)
+    public function generateReportByUser()
     {
-        $surveyUser = $this->surveyUseCase->findUserDetails($surveyId, $userId);
+        $surveyUser = $this->surveyUseCase->getDataToGenerateSurveyUserResume($this->auth()->id);
         if ($surveyUser instanceof Exception) return $this->response($surveyUser);
         $view = $this->renderBufferView('pdf-user-answers', $surveyUser);
         $this->pdfAdapter->generatePDF($view, PaperTypes::Letter, OrientationTypes::Portrait, 'Acuse de entraga');

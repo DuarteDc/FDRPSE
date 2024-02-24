@@ -19,6 +19,11 @@ enum OrientationTypes: string
 
 class PdfAdapter
 {
+    public function __construct()
+    {
+        header("Access-Control-Allow-Origin: *");
+    }
+
     public function generatePDF(string $html, PaperTypes $paper, OrientationTypes $orientation, string $fileName, bool $download = true): void
     {
         $options = new Options();

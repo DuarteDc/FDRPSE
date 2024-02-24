@@ -96,4 +96,10 @@ class SurveyUseCase
         $totalConst = 0.0025 * ($usersCount - 1) + 0.9604;
         return round($totalUsers / $totalConst);
     }
+
+    public function getDataToGenerateSurveyUserResume(string $userId)
+    {
+        $surveyUser =  $this->surveyService->getLastSurveyByUser($userId);
+        return !$surveyUser ? new Exception('El cuestionario no esta disponible', 404) : $surveyUser;   
+    }
 }

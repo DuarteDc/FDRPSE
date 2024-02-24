@@ -164,6 +164,10 @@ class SurveyService
         }, (array) $body->questions);
     }
 
+    public function getLastSurveyByUser(string $userId) {
+        return $this->surveyUserRepository->findCurrentSurveyUser($userId);
+    }
+
     private function calculateUserQualification(SurveyUser $surveyUser): int
     {
         return array_reduce($surveyUser->answers, fn ($prev, $curr) => $prev + $curr['qualification']);

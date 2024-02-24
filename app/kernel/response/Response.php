@@ -27,15 +27,14 @@ abstract class Response implements HttpResponse
         http_response_code($status);
         header("Status:" . self::$codes[$status]);
         echo json_encode($data);
+        exit;
     }
 
     public static function responseDownload($file, int $status = 200, array $headers = []): void
     {
         header("Access-Control-Allow-Origin: *");
         header("Cache-Control: no-transform,public,max-age=300,s-maxage=900");
-        header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
         header('Expires: 0');
         header('Pragma: public');
 

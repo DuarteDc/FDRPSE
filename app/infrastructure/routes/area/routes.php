@@ -19,4 +19,8 @@ function router(Router $router)
     $router->get('/', function ()  use ($areaController) {
         $areaController->getAreas();
     });
+
+    $router->get('/detail/{id}', function (string $id)  use ($areaController) {
+        $areaController->getAreaDetail($id);
+    });
 }

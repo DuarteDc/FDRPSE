@@ -8,12 +8,17 @@ use App\application\area\AreaUseCase;
 class AreaController extends Controller
 {
 
-    public function __construct(private readonly AreaUseCase $areaUseCase) {
-        
+    public function __construct(private readonly AreaUseCase $areaUseCase)
+    {
     }
 
     public function getAreas()
     {
         $this->response($this->areaUseCase->findAllAreas());
+    }
+
+    public function getAreaDetail(string $areaId)
+    {
+        $this->response(($this->areaUseCase->getAreaDetailsById($areaId)));
     }
 }

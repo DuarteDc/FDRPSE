@@ -15,4 +15,10 @@ class AreaUseCase
         $areas = $this->areaRepository->findAreasWithUsers();
         return ['areas' => $areas];
     }
+
+    public function getAreaDetailsById(string $areaId)
+    {   
+        return $this->areaRepository->findAreaByIdAndGetChildAreas($areaId);
+
+    }
 }

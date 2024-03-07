@@ -22,7 +22,12 @@ class UserRepository extends BaseRepository implements ConfigUserRepository
 
     public function countTotalAvailableUsers(): int
     {
-        return $this->user->where('tipo', 1)->count();
+        return $this->user->where('tipo', 1)->where('activo', true)->count();
+    }
+
+    public function getAvailableUsers(): Collection
+    {
+        return $this->user->where('tipo', 1)->where('activo', true)->get();
     }
 
 }

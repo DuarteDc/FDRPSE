@@ -5,6 +5,7 @@ namespace App\infrastructure\controllers;
 use Exception;
 use App\kernel\controllers\Controller;
 use App\application\survey\SurveyUseCase;
+use App\domain\area\Area;
 use App\infrastructure\adapters\PdfAdapter;
 use App\infrastructure\adapters\PaperTypes;
 use App\infrastructure\adapters\OrientationTypes;
@@ -24,7 +25,8 @@ class SurveyController extends Controller
 
     public function startSurvey()
     {
-        $this->response($this->surveyUseCase->startNewSurvey());
+        $areas = $this->request()->areas;
+        $this->response($this->surveyUseCase->startNewSurvey($areas));
     }
 
     public function saveUserAnswers()

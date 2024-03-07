@@ -3,13 +3,16 @@
 
 namespace App\application\survey;
 
+use App\domain\area\Area;
+use App\domain\area\AreaRepository;
+use App\domain\user\User;
 use App\domain\user\UserRepository;
 use Exception;
 
 class SurveyUseCase
 {
 
-    public function __construct(private readonly SurveyService $surveyService, private readonly UserRepository $userRepository)
+    public function __construct(private readonly SurveyService $surveyService, private readonly UserRepository $userRepository, private readonly AreaRepository $areaRepository)
     {
     }
 
@@ -18,11 +21,23 @@ class SurveyUseCase
         return $this->surveyService->getSurvys();
     }
 
-    public function startNewSurvey()
+    public function startNewSurvey(mixed $areas)
     {
         $survey = $this->surveyService->startSurvey();
         if ($survey instanceof Exception) return $survey;
-        return ['survey' => $survey, 'message' => 'El cuestionario se creo correctamente'];
+        //return ['survey' => $survey, 'message' => 'El cuestionario se creo correctamente'];
+
+        $countAreas = $this->areaRepository->countAreasByAreasId(array_column($areas, 'id'));
+        if ($countAreas !== count($areas)) return new Exception('Por favor verifica que las areas sean correctas', 400);
+        $surveyUsers = [];
+        $users = $this->userRepository->getAvailableUsers();
+        $users->each(function (User $user) use($surveyUsers, $survey) {
+            $surveyUsers = [...$surveyUsers, ['user_id', $user->id, 'survey_id' => $survey->id]];
+        });
+
+        return $surveyUsers;
+
+
     }
 
     public function saveAnswers(mixed $body)
@@ -100,6 +115,6 @@ class SurveyUseCase
     public function getDataToGenerateSurveyUserResume(string $userId)
     {
         $surveyUser =  $this->surveyService->getLastSurveyByUser($userId);
-        return !$surveyUser ? new Exception('El cuestionario no esta disponible', 404) : $surveyUser;   
+        return !$surveyUser ? new Exception('El cuestionario no esta disponible', 404) : $surveyUser;
     }
 }

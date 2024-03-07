@@ -5,7 +5,6 @@ namespace App\infrastructure\repositories\area;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Builder;
 
-
 use App\domain\area\Area;
 use App\domain\area\AreaRepository as ConfgAreaRepository;
 
@@ -21,7 +20,7 @@ class AreaRepository extends BaseRepository implements ConfgAreaRepository
     public function findAreasWithUsers(): Collection
     {
         return $this->area::whereHas('users', function (Builder $query) {
-            return $query->where('tipo', 1)->where('activo', true);
+            return $query->where('tipo', 1)->where('activo', true); 
         })
             ->with([
                 'subdirections' => function ($query) {
@@ -46,6 +45,12 @@ class AreaRepository extends BaseRepository implements ConfgAreaRepository
                 },
                 'subdirections.departments'
             ])
-            ->find($areaId);
+            ->find([$areaId]);
     }
+
+    public function countAreasByAreasId(array $areasId): int
+    {
+        return $this->area->whereIn('id', $areasId)->pluck('id')->count();
+    }
+
 }

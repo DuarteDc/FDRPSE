@@ -7,11 +7,13 @@ use Bramus\Router\Router;
 
 use App\domain\survey\Survey;
 use App\application\survey\SurveyUseCase;
+use App\domain\area\Area;
 use App\domain\question\Question;
 use App\domain\surveyUser\SurveyUser;
 use App\domain\user\User;
 use App\infrastructure\controllers\SurveyController;
 use App\infrastructure\adapters\PdfAdapter;
+use App\infrastructure\repositories\area\AreaRepository;
 use App\infrastructure\repositories\question\QuestionRepository;
 use App\infrastructure\repositories\survey\SurveyRepository;
 use App\infrastructure\repositories\surveyUser\SurveyUserRepository;
@@ -24,7 +26,8 @@ function router(Router $router)
     $questionRepository     = new QuestionRepository(new Question);
     $userRepository         = new UserRepository(new User);
     $surveyService          = new SurveyService($surveyRepository, $surveyUserRepository, $questionRepository);
-    $surveyUseCase          = new SurveyUseCase($surveyService, $userRepository);
+    $areaRepository         = new AreaRepository(new Area);
+    $surveyUseCase          = new SurveyUseCase($surveyService, $userRepository, $areaRepository);
     $pdfAdapter             = new PdfAdapter;
     $surveyController       = new SurveyController($surveyUseCase, $pdfAdapter);
 

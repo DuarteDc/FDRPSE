@@ -10,4 +10,5 @@ interface UserRepository extends BaseRepository
 {
     public function findByUsername(string $username): User | null;
     public function countTotalAvailableUsers(): int;
+    public function getAvailableUsers(): Collection;
 }

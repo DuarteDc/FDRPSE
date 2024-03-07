@@ -10,5 +10,6 @@ interface AreaRepository extends BaseRepository {
     public function findAreasWithUsers(): Collection;
 
     public function findAreaByIdAndGetChildAreas(string $areaId): Collection;
+    public function countAreasByAreasId(array $areasId): int;
     
 }

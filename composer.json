@@ -16,6 +16,7 @@
             "app/infrastructure/routes/survey/routes.php",
             "app/infrastructure/routes/authentication/routes.php",
             "app/infrastructure/routes/area/routes.php",
+            "app/infrastructure/routes/guide/routes.php",
             "app/infrastructure/routes/routes.php"
         ]
     },

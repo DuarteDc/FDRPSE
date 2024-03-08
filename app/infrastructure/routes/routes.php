@@ -13,6 +13,7 @@ namespace App\infrastructure\routes\MainRouter {
     use function App\infrastructure\routes\survey\router as routesSurvey;
     use function App\infrastructure\routes\authentication\router as routesAuthentication;
     use function App\infrastructure\routes\area\router as routesAreas;
+    use function App\infrastructure\routes\guide\router as routesGuide;
 
     function categoryRouter(Router $router)
     {
@@ -58,4 +59,10 @@ namespace App\infrastructure\routes\MainRouter {
     {
         routesAreas($router);
     }
+
+    function guideRoutes(Router $router)
+    {
+        routesGuide($router);
+    }
+
 };

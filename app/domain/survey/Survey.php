@@ -2,6 +2,7 @@
 
 namespace App\domain\survey;
 
+use App\domain\guide\Guide;
 use Illuminate\Database\Eloquent\Model;
 
 use App\domain\surveyUser\SurveyUser;
@@ -14,15 +15,20 @@ class Survey extends Model
     const FINISHED = true;
 
     protected $table = 'surveys';
-    protected $fillable = ['start_date', 'end_date', 'answers', 'status'];
+    protected $fillable = ['start_date', 'end_date', 'status'];
 
     public function users()
     {
         return $this->belongsToMany(User::class, 'survey_users', 'survey_id', 'user_id')->using(SurveyUser::class);
     }
 
-    public function qualifications()
+    public function qualification()
     {
-        return $this->morphMany(Qualifications::class, 'qualificationable');
+        return $this->morphOne(Qualifications::class, 'qualificationable');
+    }
+
+    public function guides()
+    {
+        return $this->hasMany(Guide::class);
     }
 }

@@ -13,6 +13,7 @@ use function App\infrastructure\routes\MainRouter\{
     surveyRoutes,
     authenticationRoutes,
     areaRoutes,
+    guideRoutes
 };
 
 $router = new Router();
@@ -77,6 +78,11 @@ $router->mount('/api.*', function () use ($router) {
         $router->mount('/areas', function () use ($router) {
             areaRoutes($router);
         });
+
+        $router->mount('/guides', function () use ($router) {
+            guideRoutes($router);
+        });
+
     });
 });
 

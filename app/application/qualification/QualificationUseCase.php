@@ -11,7 +11,7 @@ class QualificationUseCase
     {
     }
 
-    public function findAllQualifications()
+    public function findAllQualifications(): mixed
     {
         $qualifications = $this->qualificationRepository->findAll();
         return ['qualifications' => $qualifications];

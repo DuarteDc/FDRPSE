@@ -18,13 +18,20 @@ class SectionController extends Controller
         $this->response($this->sectionUseCase->findAllSections());
     }
 
-    public function createSection() {
+    public function createSection()
+    {
         $this->validate(CreateSectionRequest::rules(), CreateSectionRequest::messages());
         $this->response($this->sectionUseCase->createSection($this->request()), 201);
     }
-    
-    public function getSectionsWithQuestions() 
+
+    public function getSectionsWithQuestions()
     {
         $this->response($this->sectionUseCase->getSectionsWhereHaveQuestions());
+    }
+
+    public function getSectionsBy()
+    {
+        $type = $this->get('type');
+        $this->response($this->sectionUseCase->getSectionsByCriteria($type));
     }
 }

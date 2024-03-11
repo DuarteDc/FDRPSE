@@ -27,6 +27,15 @@ class GuideUseCase
         return ['message' => 'EL cuestionario se creo correctamente', 'guide' => $guide];
     }
 
+    public function disableGuide(string $guideId)
+    {
+
+        $guide = $this->guideRepository->findOne($guideId);
+        if (!$guide) return new Exception('El cuestionario ya ha sidio desactivado');
+        $this->guideRepository->disableGuide($guideId);
+    }
+
+
     private function validateName(string $name): Exception | string
     {
         $name = trim(mb_strtoupper($name));

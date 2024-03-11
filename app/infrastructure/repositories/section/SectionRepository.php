@@ -49,4 +49,11 @@ class SectionRepository extends BaseRepository implements ConfigSectionRepositor
         return $this->section::where('name', $name)->first();
     }
 
+    public function findByCriteria(string $criteria): Collection
+    {
+        return $this->section::whereHas('questions', function ($query) use ($criteria) {
+            $criteria === $this->section::GRADABLE ? $query->where('type', $this->section::GRADABLE)
+                :   $query->where('type', $this->section::NONGRADABLE);
+        })->get();
+    }
 }

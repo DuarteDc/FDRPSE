@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 class Section extends Model
 {
 
+    const GRADABLE  = "gradable";
+    const NONGRADABLE  = "nongradable";
+
     protected $table = 'sections';
     protected $fillable = ['name', 'binary', 'question'];
     protected $withCount = ['questions'];

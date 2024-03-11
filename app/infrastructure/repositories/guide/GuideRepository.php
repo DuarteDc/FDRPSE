@@ -19,4 +19,10 @@ class GuideRepository extends BaseRepository implements ContractsGuideRepository
     {
         return $this->guide->where('name', $name)->first();
     }
+
+    public function disableGuide(string $guideId): Guide
+    {
+        return $this->guide::find($guideId)->update(['status' => false]);
+    }
+
 }

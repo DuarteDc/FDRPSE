@@ -26,6 +26,10 @@ function router(Router $router)
         $sectionController->getSectionsWithQuestions();
     });    
 
+    $router->get('/questions/by', function () use ($sectionController) {
+        $sectionController->getSectionsBy();
+    });    
+
     $router->post('/create', function () use ($sectionController) {
         $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
         $middleware->handle();

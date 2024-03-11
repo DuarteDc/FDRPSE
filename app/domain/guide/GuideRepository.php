@@ -7,5 +7,6 @@ use App\domain\BaseRepository;
 interface GuideRepository extends BaseRepository {
 
     public function findByName(string $name): ?Guide;
+    public function disableGuide(string $guideId): Guide;
 
 }

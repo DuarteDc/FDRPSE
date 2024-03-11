@@ -15,4 +15,5 @@ interface SectionRepository extends BaseRepository
     public function findSectionWithQuestions(string $page): Paginator | null;
     public function countTotalSections(): int;
     public function findByName(string $name): ?Section;
+    public function findByCriteria(string $criteria): Collection;
 }

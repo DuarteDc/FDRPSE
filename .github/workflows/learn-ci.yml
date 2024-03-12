@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     tags:
-    - 'v*' 
+      - 'v*'
 
 jobs:
   build-test:
@@ -28,3 +28,4 @@ jobs:
             - First Change
             - Second Change
           draft: false
+          prerelease: false

@@ -4,7 +4,8 @@
         "psr-4": {
             "App\\": "app/",
             "Bootstrap\\": "bootstrap/",
-            "Routes\\": "routes/"
+            "Routes\\": "routes/",
+            "Test\\": "test/"
         },
         "files": [
             "app/infrastructure/routes/questions/routes.php",

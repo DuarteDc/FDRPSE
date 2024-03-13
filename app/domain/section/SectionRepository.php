@@ -16,4 +16,8 @@ interface SectionRepository extends BaseRepository
     public function countTotalSections(): int;
     public function findByName(string $name): ?Section;
     public function findByCriteria(string $criteria): Collection;
+    public function findSectionByIdWithQuestions(string $sectionId): Section;
+    public function findMultipleSectionsWithQuestions(array $sectionsId): Collection;
+    public function countSectionsByArrayOfSectionsId(array $sectionId): int;
+
 }

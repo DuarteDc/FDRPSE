@@ -31,7 +31,18 @@ class SectionController extends Controller
 
     public function getSectionsBy()
     {
-        $type = $this->get('type');
+        $type = (string) $this->get('type');
         $this->response($this->sectionUseCase->getSectionsByCriteria($type));
+    }
+
+    public function getSectionWithQuestions(string $sectionId)
+    {
+        $this->response($this->sectionUseCase->getSectionWithQuestionById($sectionId));
+    }
+
+    public function getSectionsWithHisQuestions() 
+    {
+        $sectionsId = (array) $this->request()->sections;
+        $this->response($this->sectionUseCase->getSectionsWithHisQuestions($sectionsId));
     }
 }

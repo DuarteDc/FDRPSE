@@ -49,4 +49,20 @@ class SectionUseCase
         $sections = $this->sectionRepository->findByCriteria($criteria);
         return ['sections' => $sections];
     }
+
+    public function getSectionWithQuestionById(string $sectionId)
+    {
+        $section = $this->sectionRepository->findOne($sectionId);
+        if (!$section) return new Exception('La sección no existe o no es valida', 404);
+        $section = $this->sectionRepository->findSectionByIdWithQuestions($sectionId);
+        return ['section' => $section];
+    }
+
+    public function getSectionsWithHisQuestions(array $sectionsId)
+    {
+        $countValidIDs = $this->sectionRepository->countSectionsByArrayOfSectionsId($sectionsId);
+        if ($countValidIDs !== count($sectionsId)) return new Exception('Las secciones con las que intentas crear el cuestionario no son validas', 400);
+        $sections = $this->sectionRepository->findMultipleSectionsWithQuestions($sectionsId);
+        return ['sections' => $sections];
+    }
 }

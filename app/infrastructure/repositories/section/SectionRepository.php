@@ -56,4 +56,24 @@ class SectionRepository extends BaseRepository implements ConfigSectionRepositor
                 :   $query->where('type', $this->section::NONGRADABLE);
         })->get();
     }
+
+    public function findSectionByIdWithQuestions(string $sectionId): Section
+    {
+        return $this->section::with('questions')->find($sectionId);
+    }
+
+    public function findMultipleSectionsWithQuestions(array $sectionsId): Collection
+    {
+        return $this->section::with('questions')
+            ->has('questions')
+            ->find($sectionsId);
+    }
+
+    public function countSectionsByArrayOfSectionsId(array $sectionId): int
+    {
+        return $this->section::whereIn('id', $sectionId)
+        ->has('questions')
+        ->count();
+    }
+
 }

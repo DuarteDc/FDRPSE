@@ -31,8 +31,9 @@ class SectionController extends Controller
 
     public function getSectionsBy()
     {
-        $type = (string) $this->get('type');
-        $this->response($this->sectionUseCase->getSectionsByCriteria($type));
+        $gradable = (string) $this->get('type');
+        $gradable = json_decode(trim($gradable));
+        $this->response($this->sectionUseCase->getSectionsByCriteria($gradable));
     }
 
     public function getSectionWithQuestions(string $sectionId)
@@ -40,7 +41,7 @@ class SectionController extends Controller
         $this->response($this->sectionUseCase->getSectionWithQuestionById($sectionId));
     }
 
-    public function getSectionsWithHisQuestions() 
+    public function getSectionsWithHisQuestions()
     {
         $sectionsId = (array) $this->request()->sections;
         $this->response($this->sectionUseCase->getSectionsWithHisQuestions($sectionsId));

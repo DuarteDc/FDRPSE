@@ -49,10 +49,10 @@ class SectionRepository extends BaseRepository implements ConfigSectionRepositor
         return $this->section::where('name', $name)->first();
     }
 
-    public function findByCriteria(string $criteria): Collection
+    public function findByCriteria(bool $criteria): Collection
     {
         return $this->section::whereHas('questions', function ($query) use ($criteria) {
-            $criteria === $this->section::GRADABLE ? $query->where('type', $this->section::GRADABLE)
+            $criteria ? $query->where('type', $this->section::GRADABLE)
                 :   $query->where('type', $this->section::NONGRADABLE);
         })->get();
     }
@@ -64,7 +64,7 @@ class SectionRepository extends BaseRepository implements ConfigSectionRepositor
 
     public function findMultipleSectionsWithQuestions(array $sectionsId): Collection
     {
-        return $this->section::with('questions')
+        return $this->section::with('questions.qualification')
             ->has('questions')
             ->find($sectionsId);
     }

@@ -1,14 +1,22 @@
 name: CI
 
-on: [push]
-
+on: 
+  push:
+    branches: 
+      - master
+      - 'releases/**'
+    tags:
+      - v*
 jobs:
   build-test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
       - uses: php-actions/composer@v6
       - run: echo "Composer dependencies have been installed"
       - run: vendor/bin/phpunit ./test
++
+
+

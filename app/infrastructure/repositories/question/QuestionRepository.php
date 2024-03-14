@@ -5,10 +5,10 @@ namespace App\infrastructure\repositories\question;
 use App\domain\qualification\Qualification;
 use App\domain\question\Question;
 use App\infrastructure\repositories\BaseRepository;
-use App\domain\question\QuestionRepository as ConfigQuestionRepository;
+use App\domain\question\QuestionRepository as ContractsRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class QuestionRepository extends BaseRepository implements ConfigQuestionRepository
+class QuestionRepository extends BaseRepository implements ContractsRepository
 {
 
     public function __construct(private readonly Question $question) {

@@ -15,7 +15,7 @@ class CreateCategoryRequest extends Request implements HttpRulesRequest
             'low'        => "required|numeric|min:" . (int) static::post('despicable') + 1,
             'middle'     => "required|numeric|min:" . (int) static::post('low') + 1,
             'high'       => "required|numeric|min:" . (int) static::post('middle') + 1,
-            'very_hight' => "required|numeric|min:" . (int) static::post('high') + 1,
+            'very_high' => "required|numeric|min:" . (int) static::post('high') + 1,
         ];
     }
 
@@ -37,9 +37,9 @@ class CreateCategoryRequest extends Request implements HttpRulesRequest
             'high:required'         => 'La calificación alta es requerida',
             'high:numeric'          => 'La calificación alta debe ser un número',
             'high:min'              => 'La calificación alta debe ser al menos de valor '.      (int) static::post('middle') + 1,
-            'very_hight:required'   => 'La calificación más alta es requerida',
-            'very_hight:numeric'    => 'La calificación más alta debe ser un número',
-            'very_hight:min'        => 'La calificación más alta debe ser al menos de valor '.  (int) static::post('high') + 1,
+            'very_high:required'   => 'La calificación más alta es requerida',
+            'very_high:numeric'    => 'La calificación más alta debe ser un número',
+            'very_high:min'        => 'La calificación más alta debe ser al menos de valor '.  (int) static::post('high') + 1,
         ];
     }
 }

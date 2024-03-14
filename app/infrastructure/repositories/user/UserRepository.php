@@ -4,10 +4,10 @@ namespace App\infrastructure\repositories\user;
 
 use App\domain\user\User;
 use App\infrastructure\repositories\BaseRepository;
-use App\domain\user\UserRepository as ConfigUserRepository;
+use App\domain\user\UserRepository as ContractsRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class UserRepository extends BaseRepository implements ConfigUserRepository
+class UserRepository extends BaseRepository implements ContractsRepository
 {
 
     public function __construct(private readonly User $user)

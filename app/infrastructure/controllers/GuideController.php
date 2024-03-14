@@ -23,4 +23,13 @@ class GuideController extends Controller
         $this->validate(CreateGuideRequest::rules(), CreateGuideRequest::messages());
         $this->response($this->guideUseCase->createGuide($this->request()));
     }
+
+    public function getGuidesByCriteria()
+    {
+        $type = (string) $this->get('type');
+        $name = (string) $this->get('name');
+
+        $this->response($this->guideUseCase->searchGuidesByTypeAndName($type, $name));
+ 
+    }
 }

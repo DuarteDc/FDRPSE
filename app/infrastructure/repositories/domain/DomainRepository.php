@@ -3,11 +3,11 @@
 namespace App\infrastructure\repositories\domain;
 
 use App\domain\domain\Domain;
-use App\domain\domain\DomainRepository as ConfigDomainRepository;
+use App\domain\domain\DomainRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class DomainRepository extends BaseRepository implements ConfigDomainRepository
+class DomainRepository extends BaseRepository implements ContractsRepository
 {
 
     public function __construct(private readonly Domain $domain)
@@ -22,7 +22,7 @@ class DomainRepository extends BaseRepository implements ConfigDomainRepository
 
     public function saveDomainAndSetQualification(object $body): Domain
     {
-        $domain = new Domain(['name' => $body->name]);
+        $domain = new $this->domain(['name' => $body->name]);
         $domain->save();
         return $this->setDomainQualification($domain, $body);
     }
@@ -34,7 +34,7 @@ class DomainRepository extends BaseRepository implements ConfigDomainRepository
             'low'        => $body->low,
             'middle'     => $body->middle,
             'high'       => $body->high,
-            'very_hight' => $body->very_hight,
+            'very_high' => $body->very_high,
         ]);
         return $domain;
     }

@@ -19,6 +19,10 @@ function router(Router $router)
     $router->get('/', function ()  use ($guideController) {
         $guideController->getGuides();
     });
+    $router->get('/search', function() use($guideController) {
+        $guideController->getGuidesByCriteria();
+    });
+
     $router->post('/create', function () use ($guideController) {
         // $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
         // $middleware->handle();

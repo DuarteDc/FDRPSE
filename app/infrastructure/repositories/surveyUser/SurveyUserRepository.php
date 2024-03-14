@@ -4,9 +4,9 @@ namespace App\infrastructure\repositories\surveyUser;
 
 use App\domain\surveyUser\SurveyUser;
 use App\infrastructure\repositories\BaseRepository;
-use App\domain\surveyUser\SurveyUserRepository as ConfigSurveyUserRepository;
+use App\domain\surveyUser\SurveyUserRepository as ContractsRepository;
 
-class SurveyUserRepository extends BaseRepository implements ConfigSurveyUserRepository
+class SurveyUserRepository extends BaseRepository implements ContractsRepository
 {
 
     public function __construct(private readonly SurveyUser $surveyUser)

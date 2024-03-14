@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\Paginator;
 
 use App\domain\section\Section;
-use App\domain\section\SectionRepository as ConfigSectionRepository;
+use App\domain\section\SectionRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
 
-class SectionRepository extends BaseRepository implements ConfigSectionRepository
+class SectionRepository extends BaseRepository implements ContractsRepository
 {
 
     public function __construct(private readonly Section $section)

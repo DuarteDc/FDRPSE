@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Builder;
 
 use App\domain\area\Area;
-use App\domain\area\AreaRepository as ConfgAreaRepository;
+use App\domain\area\AreaRepository as ContractsRepository;
 
 use App\infrastructure\repositories\BaseRepository;
 
-class AreaRepository extends BaseRepository implements ConfgAreaRepository
+class AreaRepository extends BaseRepository implements ContractsRepository
 {
     public function __construct(private readonly Area $area)
     {

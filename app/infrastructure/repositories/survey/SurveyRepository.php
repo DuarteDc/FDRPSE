@@ -4,12 +4,12 @@ namespace App\infrastructure\repositories\survey;
 
 use App\domain\survey\Survey;
 use App\infrastructure\repositories\BaseRepository;
-use App\domain\survey\SurveyRepository as ConfigSurveyRepository;
+use App\domain\survey\SurveyRepository as ContractsRepository;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class SurveyRepository extends BaseRepository implements ConfigSurveyRepository
+class SurveyRepository extends BaseRepository implements ContractsRepository
 {
 
     public function __construct(private readonly Survey $survey)

@@ -3,11 +3,11 @@
 namespace App\infrastructure\repositories\category;
 
 use App\domain\category\Category;
-use App\domain\category\CategoryRepository as ConfigCategoryRepository;
+use App\domain\category\CategoryRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class CategoryRepository extends BaseRepository implements ConfigCategoryRepository
+class CategoryRepository extends BaseRepository implements ContractsRepository
 {
 
     public function __construct(private readonly Category $category)
@@ -34,7 +34,7 @@ class CategoryRepository extends BaseRepository implements ConfigCategoryReposit
             'low'        => $body->low,
             'middle'     => $body->middle,
             'high'       => $body->high,
-            'very_hight' => $body->very_hight,
+            'very_high' => $body->very_high,
         ]);
         return $category;
     }

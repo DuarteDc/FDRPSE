@@ -12,6 +12,9 @@ class Guide extends Model
     protected $fillable = ['name'];
     protected $table = 'guides';
 
+    const ACTIVE = 'active';
+    const DISABLE = 'disable';
+
     public function surveys()
     {
         return $this->belongsTo(Survey::class);

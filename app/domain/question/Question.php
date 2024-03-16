@@ -12,9 +12,11 @@ use App\domain\section\Section;
 
 class Question  extends Model
 {
+    const GRADABLE = 'gradable';
+    const NONGRADABLE = 'nongradable';
 
     protected $table = 'questions';
-    protected $fillable = ['name', 'qualification_id', 'category_id', 'dimension_id', 'domain_id', 'section_id'];
+    protected $fillable = ['name', 'qualification_id', 'category_id', 'dimension_id', 'domain_id', 'section_id', 'type'];
 
     public function section()
     {

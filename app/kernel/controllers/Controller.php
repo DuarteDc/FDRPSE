@@ -16,6 +16,6 @@ abstract class Controller extends Request
     {
         if($response instanceof Exception) return $this->response(['message' => $response->getMessage()], $response->getCode());
         $this->responseJson($response, $statusCode);
-        exit();
+        exit(0);
     }
 }

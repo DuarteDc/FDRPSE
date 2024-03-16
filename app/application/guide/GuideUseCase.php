@@ -29,9 +29,8 @@ class GuideUseCase
 
     public function disableGuide(string $guideId)
     {
-
         $guide = $this->guideRepository->findOne($guideId);
-        if (!$guide) return new Exception('El cuestionario ya ha sidio desactivado');
+        if (!$guide) return new Exception('El cuestionario ya ha sidio desactivado', 400);
         $this->guideRepository->disableGuide($guideId);
     }
 

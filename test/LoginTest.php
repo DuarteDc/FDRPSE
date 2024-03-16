@@ -2,6 +2,7 @@
 
 namespace Test;
 
+use Test\DatabaseServiceTest;
 use App\application\authentication\AuthenticationUseCase;
 use App\domain\user\User;
 use App\infrastructure\controllers\AuthenticationController;
@@ -9,21 +10,18 @@ use App\infrastructure\repositories\user\UserRepository;
 use PHPUnit\Framework\TestCase;
 use App\infrastructure\database\Database;
 
-final class LoginTest extends TestCase
+final class LoginTest extends DatabaseServiceTest
 {
-
 
     public function testLoginUSer() 
     {
 
-        // Database::getInstance()->connection();
-        // $userRepository = new UserRepository(new User);
-        // $authenticationUseCase = new AuthenticationUseCase($userRepository);
-        // // $authenticationController = new AuthenticationController($authenticationUseCase);
+        $userRepository = new UserRepository(new User);
+        $authenticationUseCase = new AuthenticationUseCase($userRepository);
 
-        // $user = $authenticationUseCase->signin('Eduardo Duarte', '7291073097');
+        $user = $authenticationUseCase->signin('Eduardo Duarte', '7291073097');
 
-        $this->assertSame('Eduardo Duarte', 'Eduardo Duarte');
+        $this->assertSame($user->nombre, 'Eduardo');
 
     }
 }

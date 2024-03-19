@@ -27,7 +27,7 @@ abstract class Response implements HttpResponse
         http_response_code($status);
         header("Status:" . self::$codes[$status]);
         echo json_encode($data);
-        exit;
+        exit();
     }
 
     public static function responseDownload($file, int $status = 200, array $headers = []): void
@@ -41,6 +41,6 @@ abstract class Response implements HttpResponse
         http_response_code($status);
         header("Status:" . self::$codes[$status]);
     
-        exit;
+        exit();
     }
 }

@@ -17,6 +17,31 @@ class SectionRepository extends BaseRepository implements ContractsRepository
         parent::__construct($section);
     }
 
+    public function getSectionsByType(string $type, string $name): Collection
+    {
+        return $this->section::where(
+            'type',
+            $type === $this->section::NONGRADABLE ?
+                $this->section::NONGRADABLE :
+                $this->section::GRADABLE
+        )
+            ->where('name', 'like', "%{$name}%")
+            ->get();
+    }
+
+    public function findOne(string $id): ?Section
+    {
+        return $this->section::with([
+            'questions',
+            'questions.section',
+            'questions.qualification',
+            'questions.category',
+            'questions.dimension',
+            'questions.domain',
+        ])
+            ->find($id);
+    }
+
     public function getAllSections(): Collection
     {
         return $this->section::orderBy('id', 'desc')->get();
@@ -59,7 +84,7 @@ class SectionRepository extends BaseRepository implements ContractsRepository
 
     public function findSectionByIdWithQuestions(string $sectionId): Section
     {
-        return $this->section::with('questions')->find($sectionId);
+        return $this->section::with('questions.qualification')->find($sectionId);
     }
 
     public function findMultipleSectionsWithQuestions(array $sectionsId): Collection
@@ -72,8 +97,7 @@ class SectionRepository extends BaseRepository implements ContractsRepository
     public function countSectionsByArrayOfSectionsId(array $sectionId): int
     {
         return $this->section::whereIn('id', $sectionId)
-        ->has('questions')
-        ->count();
+            ->has('questions')
+            ->count();
     }
-
 }

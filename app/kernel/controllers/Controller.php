@@ -14,8 +14,7 @@ abstract class Controller extends Request
 
     protected function response(mixed $response, int $statusCode = 200)
     {
-        if($response instanceof Exception) return $this->response(['message' => $response->getMessage()], $response->getCode());
+        if($response instanceof Exception) return $this->responseJson(['message' => $response->getMessage()], $response->getCode());
         $this->responseJson($response, $statusCode);
-        exit(0);
     }
 }

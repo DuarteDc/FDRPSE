@@ -33,10 +33,14 @@ function router(Router $router)
     $router->get('/questions/{sectionId}', function (string $sectionId) use ($sectionController) {
         $sectionController->getSectionWithQuestions($sectionId);
     });    
+
+    $router->get('/{id}', function (string $id) use ($sectionController) {
+        $sectionController->getOneSection($id);
+    });
     
     $router->post('/create', function () use ($sectionController) {
-        $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
-        $middleware->handle();
+        // $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
+        // $middleware->handle();
         $sectionController->createSection();
     });    
 

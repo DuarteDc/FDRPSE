@@ -11,10 +11,16 @@ class SectionUseCase
     {
     }
 
-    public function findAllSections(): mixed
+    public function searchSections(string $type, string $name): mixed
     {
-        $sections = $this->sectionRepository->getAllSections();
+        $sections = $this->sectionRepository->getSectionsByType($type, mb_strtoupper($name));
         return ['sections' => $sections];
+    }
+
+    public function getSectionDetail(string $id)
+    {
+        $section = $this->sectionRepository->findOne($id);
+        return ['section' => $section];
     }
 
     public function createSection(mixed $body): Exception | array
@@ -27,7 +33,9 @@ class SectionUseCase
         if ($section) return new Exception('Ya existe una sección con ese nombre', 400);
 
         if (!$body->binary) {
-            $section = $this->sectionRepository->create(['name' => $name, 'binary' => $body->binary, 'question' => null]);
+            $section = $this->sectionRepository->create([
+                'name' => $name, 'binary' => $body->binary, 'question' => null, 'can_finish_guide' => $body->can_finish_guide, 'type' => $body->type
+            ]);
             return ['section' => $section, 'message' => 'La sección se creo correctamente'];
         }
 

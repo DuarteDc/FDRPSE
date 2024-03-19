@@ -9,13 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 class Section extends Model
 {
 
-    const GRADABLE  = "gradable";
-    const NONGRADABLE  = "nongradable";
+    const GRADABLE  = 'gradable';
+    const NONGRADABLE  = 'nongradable';
 
     protected $table = 'sections';
-    protected $fillable = ['name', 'binary', 'question'];
+    protected $fillable = ['name', 'binary', 'question', 'can_finish_guide', 'type'];
     protected $withCount = ['questions'];
-
 
     public function questions()
     {
@@ -24,7 +23,7 @@ class Section extends Model
 
     public function guide()
     {
-
         return $this->belongsTo(Guide::class);
     }
+
 }

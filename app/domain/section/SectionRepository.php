@@ -10,7 +10,9 @@ use Illuminate\Contracts\Pagination\Paginator;
 
 interface SectionRepository extends BaseRepository
 {
+    public function getSectionsByType(string $type, string $name): Collection;
     public function getAllSections(): Collection;
+    public function findOne(string $id): ?Section;
     public function findSectionsWithQuestions(): Collection;
     public function findSectionWithQuestions(string $page): Paginator | null;
     public function countTotalSections(): int;

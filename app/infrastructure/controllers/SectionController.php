@@ -15,7 +15,14 @@ class SectionController extends Controller
 
     public function getAllSections()
     {
-        $this->response($this->sectionUseCase->findAllSections());
+        $type = (string) $this->get('type');
+        $name = (string) $this->get('name');
+        $this->response($this->sectionUseCase->searchSections($type, $name));
+    }
+
+    public function getOneSection(string $id)
+    {
+        $this->response($this->sectionUseCase->getSectionDetail($id));
     }
 
     public function createSection()

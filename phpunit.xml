@@ -4,7 +4,14 @@
     colors="true" stopOnFailure="false" 
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" 
     cacheDirectory=".phpunit.cache">
+
+    <php>
+        <var name="DB_HOST" value="10.0.0.20" />
+        <var name="DB_USER" value="root" />
+        <var name="DB_PASSWD" value="tutorial" />
+        <var name="DB_DBNAME" value="library" />
+    </php>
   <testsuite name="Test directory">
-    <directory>tests</directory>
+    <directory suffix="Test.php">tests</directory>
   </testsuite>
 </phpunit>

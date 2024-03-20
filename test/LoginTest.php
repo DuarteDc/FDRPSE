@@ -7,10 +7,10 @@ use App\application\authentication\AuthenticationUseCase;
 use App\domain\user\User;
 use App\infrastructure\controllers\AuthenticationController;
 use App\infrastructure\repositories\user\UserRepository;
-use PHPUnit\Framework\TestCase;
-use App\infrastructure\database\Database;
 
-final class LoginTest extends DatabaseServiceTest
+use Test\Persistence\DatabaseTestCase;
+
+final class LoginTest extends DatabaseTestCase
 {
 
     public function testLoginUSer() 
@@ -21,7 +21,6 @@ final class LoginTest extends DatabaseServiceTest
 
         $user = $authenticationUseCase->signin('Eduardo Duarte', '7291073097');
 
-        $this->assertSame($user->nombre, 'Eduardo');
-
+        $this->assertSame('Eduardo', $user->nombre);
     }
 }

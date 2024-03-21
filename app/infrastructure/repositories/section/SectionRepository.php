@@ -33,7 +33,6 @@ class SectionRepository extends BaseRepository implements ContractsRepository
     {
         return $this->section::with([
             'questions',
-            'questions.section',
             'questions.qualification',
             'questions.category',
             'questions.dimension',

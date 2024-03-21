@@ -2,6 +2,7 @@
 
 namespace App\application\question;
 
+use App\domain\question\Question;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use App\domain\question\QuestionRepository;
@@ -20,6 +21,11 @@ class QuestionUseCase
 
     public function createQuestion(mixed $body): Exception | array
     {
+        if ($body->type === Question::GRADABLE) {
+            $question =  $this->questionRepository->create($body);
+            return $question ? ['message' => 'La pregunta se agrego correctamente'] : new Exception('Parece que hubo un error al crear la pregunta', 500);
+        }
+
         $isValidBody = $this->questionService->prepareDataToInsert($body);
         if ($isValidBody instanceof Exception) return $isValidBody;
 
@@ -56,7 +62,7 @@ class QuestionUseCase
 
         if ($surveyUser && $surveyUser->answers) {
             $lastSection = $this->getLastSection($surveyUser->answers)['id'];
-            if($page > $lastSection) $page = $lastSection + 1;
+            if ($page > $lastSection) $page = $lastSection + 1;
         }
 
         $section = $this->questionService->getQuestionBySection($page);

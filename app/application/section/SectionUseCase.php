@@ -51,9 +51,9 @@ class SectionUseCase
         return ['sections' => $sections];
     }
 
-    public function getSectionsByCriteria(mixed $criteria)
+    public function getSectionsByType(string $type)
     {
-        $sections = $this->sectionRepository->findByCriteria((bool)$criteria);
+        $sections = $this->sectionRepository->findByType($type);
         return ['sections' => $sections];
     }
 

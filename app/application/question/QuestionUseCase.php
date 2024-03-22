@@ -14,9 +14,9 @@ class QuestionUseCase
     {
     }
 
-    public function findAllQuestions(): Collection
+    public function searchSections(string $type, string $name): Collection
     {
-        return $this->questionRepository->findAll();
+        return $this->questionRepository->findQuestionsByTypeAndSection($type, trim($name));
     }
 
     public function createQuestion(mixed $body): Exception | array

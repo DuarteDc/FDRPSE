@@ -27,7 +27,7 @@ function router(Router $router)
     });    
 
     $router->get('/questions/by', function () use ($sectionController) {
-        $sectionController->getSectionsBy();
+        $sectionController->getSectionsByType();
     });    
 
     $router->get('/questions/{sectionId}', function (string $sectionId) use ($sectionController) {

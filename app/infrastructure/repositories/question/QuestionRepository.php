@@ -15,6 +15,18 @@ class QuestionRepository extends BaseRepository implements ContractsRepository
         parent::__construct($question);
     }
 
+    public function findQuestionsByTypeAndSection(string $type, string $name): Collection
+    {
+        return $this->question::where(
+            'type',
+            $type === $this->question::NONGRADABLE ?
+                $this->question::NONGRADABLE :
+                $this->question::GRADABLE
+        )
+            ->where('name', 'like', "%{$name}%")
+            ->get();
+    }
+
     public function getQuestionBySection(): Collection
     {
         return $this->question::with('section')->get();

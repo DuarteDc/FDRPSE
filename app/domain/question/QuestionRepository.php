@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface QuestionRepository extends BaseRepository
 {
+    public function findQuestionsByTypeAndSection(string $type, string $name): Collection;
     public function getQuestionBySection(): Collection;
     public function getQuestionDetail(string $questionId) : Question | null;
     public function countQuestions(): int;

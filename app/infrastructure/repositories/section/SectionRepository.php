@@ -73,12 +73,12 @@ class SectionRepository extends BaseRepository implements ContractsRepository
         return $this->section::where('name', $name)->first();
     }
 
-    public function findByCriteria(bool $criteria): Collection
+    public function findByType(string $type): Collection
     {
-        return $this->section::whereHas('questions', function ($query) use ($criteria) {
-            $criteria ? $query->where('type', $this->section::GRADABLE)
-                :   $query->where('type', $this->section::NONGRADABLE);
-        })->get();
+        return $this->section::where('type', $type === $this->section::NONGRADABLE ?
+            $this->section::NONGRADABLE :
+            $this->section::GRADABLE)
+            ->get();
     }
 
     public function findSectionByIdWithQuestions(string $sectionId): Section

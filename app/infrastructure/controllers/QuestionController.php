@@ -14,7 +14,9 @@ class QuestionController extends Controller
 
     public function getAllQuestions()
     {
-        $questions = $this->questionUseCase->findAllQuestions();
+        $type = (string) $this->get('type');
+        $name = (string) $this->get('name');
+        $questions = $this->questionUseCase->searchSections($type,$name);
         $this->response(['questions' => $questions]);
     }
 

@@ -36,11 +36,10 @@ class SectionController extends Controller
         $this->response($this->sectionUseCase->getSectionsWhereHaveQuestions());
     }
 
-    public function getSectionsBy()
+    public function getSectionsByType()
     {
-        $gradable = (string) $this->get('type');
-        $gradable = json_decode(trim($gradable));
-        $this->response($this->sectionUseCase->getSectionsByCriteria($gradable));
+        $type = (string) $this->get('type');
+        $this->response($this->sectionUseCase->getSectionsByType($type));
     }
 
     public function getSectionWithQuestions(string $sectionId)

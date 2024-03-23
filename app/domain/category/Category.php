@@ -13,6 +13,7 @@ class Category extends Model
 
     protected $table = 'categories';
     protected $fillable = ['name'];
+    protected $withCount = ['qualifications'];
 
     public function questions()
     {

@@ -29,13 +29,7 @@ class CategoryRepository extends BaseRepository implements ContractsRepository
 
     public function setCategoryQualification(Category $category, object $body): Category
     {
-        $category->qualifications()->create([
-            'despicable' => $body->despicable,
-            'low'        => $body->low,
-            'middle'     => $body->middle,
-            'high'       => $body->high,
-            'very_high' => $body->very_high,
-        ]);
+        $category->qualifications()->createManyQuietly($body->qualifications);
         return $category;
     }
 

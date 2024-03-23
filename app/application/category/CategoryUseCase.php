@@ -18,7 +18,7 @@ class CategoryUseCase
         return ['categories' => $categories];
     }
 
-    public function createCategory(mixed $body): mixed
+    public function createCategory(object $body): mixed
     {
         $isValidName = $this->validateName($body->name);
         if ($isValidName instanceof Exception) return $isValidName;

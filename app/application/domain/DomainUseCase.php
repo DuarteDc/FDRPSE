@@ -32,6 +32,14 @@ class DomainUseCase
         return ['domains' => $domains];
     }
 
+    public function findDomainWithQualifications(string $categoryId)
+    {
+        $category = $this->domainRepository->findOne($categoryId);
+        if (!$category) return new Exception('El dominio no existe o no es valida', 404);
+        $category = $this->domainRepository->findOneWithQualifications($categoryId);
+        return ['domain' => $category];
+    }
+
     private function validateDomainName(string $name): Exception | string
     {
         $name = mb_strtoupper(trim($name));

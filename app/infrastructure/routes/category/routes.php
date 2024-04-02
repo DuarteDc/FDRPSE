@@ -17,7 +17,6 @@ function router(Router $router)
 {
 
     $checkRole = new HasAdminRole();
-  
 
     $categoryRepository     = new CategoryRepository(new Category());
     $categoryUseCase        = new CategoryUseCase($categoryRepository);
@@ -31,6 +30,11 @@ function router(Router $router)
     $router->get('/with/qualification', function () use ($categoryController, $checkRole) {
         $checkRole->handle();
         $categoryController->getCategoriesWithQualifications();
+    });
+
+    $router->get('/with/qualifications/{categoryId}', function (string $categoryId) use ($categoryController, $checkRole) {
+        $checkRole->handle();
+        $categoryController->getCategoryWithQualifications($categoryId);
     });
 
     $router->post('/create', function () use ($categoryController, $checkRole) {

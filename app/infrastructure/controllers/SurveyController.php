@@ -5,11 +5,11 @@ namespace App\infrastructure\controllers;
 use Exception;
 use App\kernel\controllers\Controller;
 use App\application\survey\SurveyUseCase;
-use App\domain\area\Area;
 use App\infrastructure\adapters\PdfAdapter;
 use App\infrastructure\adapters\PaperTypes;
 use App\infrastructure\adapters\OrientationTypes;
 use App\infrastructure\requests\survey\SaveQuestionRequest;
+use App\infrastructure\requests\survey\StartNewSurveyRequest;
 
 class SurveyController extends Controller
 {
@@ -20,13 +20,15 @@ class SurveyController extends Controller
 
     public function getAllSurveys()
     {
-        $this->response($this->surveyUseCase->getAllSurveys());
+        $page = (int) $this->get('page');
+        $this->response($this->surveyUseCase->getAllSurveys($page));
     }
 
     public function startSurvey()
     {
-        $areas = $this->request()->areas;
-        $this->response($this->surveyUseCase->startNewSurvey($areas));
+        $this->validate(StartNewSurveyRequest::rules(), StartNewSurveyRequest::messages());
+        $guides = $this->request()->guides;
+        $this->response($this->surveyUseCase->startNewSurvey($guides));
     }
 
     public function saveUserAnswers()

@@ -29,13 +29,7 @@ class DomainRepository extends BaseRepository implements ContractsRepository
 
     public function setDomainQualification(Domain $domain, object $body): Domain
     {
-        $domain->qualifications()->create([
-            'despicable' => $body->despicable, 
-            'low'        => $body->low,
-            'middle'     => $body->middle,
-            'high'       => $body->high,
-            'very_high' => $body->very_high,
-        ]);
+        $domain->qualifications()->createManyQuietly($body->qualifications);
         return $domain;
     }
 
@@ -43,5 +37,11 @@ class DomainRepository extends BaseRepository implements ContractsRepository
     {
         return $this->domain->with('qualification')->get();
     }
+
+    public function findOneWithQualifications(string $domainId): ?Domain
+    {
+        return $this->domain::with('qualifications')->find($domainId);
+    }
+
 }
  

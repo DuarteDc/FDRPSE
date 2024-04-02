@@ -3,41 +3,37 @@
 
 namespace App\application\survey;
 
-use App\domain\area\Area;
 use App\domain\area\AreaRepository;
-use App\domain\user\User;
+use App\domain\guide\GuideRepository;
 use App\domain\user\UserRepository;
 use Exception;
 
 class SurveyUseCase
 {
 
-    public function __construct(private readonly SurveyService $surveyService, private readonly UserRepository $userRepository, private readonly AreaRepository $areaRepository)
-    {
+    public function __construct(
+        private readonly SurveyService $surveyService,
+        private readonly UserRepository $userRepository,
+        private readonly AreaRepository $areaRepository,
+        private readonly GuideRepository $guideRepository,
+    ) {
     }
 
-    public function getAllSurveys()
+    public function getAllSurveys(int $page)
     {
-        return $this->surveyService->getSurvys();
+        return $this->surveyService->getSurvys($page);
     }
 
-    public function startNewSurvey(mixed $areas)
+    public function startNewSurvey(array $guides)
     {
         $survey = $this->surveyService->startSurvey();
         if ($survey instanceof Exception) return $survey;
-        //return ['survey' => $survey, 'message' => 'El cuestionario se creo correctamente'];
 
-        $countAreas = $this->areaRepository->countAreasByAreasId(array_column($areas, 'id'));
-        if ($countAreas !== count($areas)) return new Exception('Por favor verifica que las areas sean correctas', 400);
-        $surveyUsers = [];
-        $users = $this->userRepository->getAvailableUsers();
-        $users->each(function (User $user) use($surveyUsers, $survey) {
-            $surveyUsers = [...$surveyUsers, ['user_id', $user->id, 'survey_id' => $survey->id]];
-        });
-
-        return $surveyUsers;
-
-
+        $areValidIds = $this->guideRepository->countGuidesById($guides);
+        if (count($guides) !== $areValidIds) return new Exception('Los cuestionarios no son validos', 400);
+        return [
+            'survey' => $this->surveyService->attachGuidesToSurvey($survey, $guides)
+        ];
     }
 
     public function saveAnswers(mixed $body)

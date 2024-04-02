@@ -28,4 +28,9 @@ class CategoryController extends Controller
     {
         $this->response($this->categoryUseCase->findCategoriesWithQualifications());
     }
+
+    public function getCategoryWithQualifications(string $id)
+    {
+        $this->response($this->categoryUseCase->findCategoryWithQualifications($id));
+    }
 }

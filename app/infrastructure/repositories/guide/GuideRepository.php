@@ -51,4 +51,9 @@ class GuideRepository extends BaseRepository implements ContractsRepository
             ->where('name', 'like', "%{$name}%")
             ->get();
     }
+
+    public function countGuidesById(array $guidesId): int
+    {
+        return $this->guide->whereIn('id', $guidesId)->pluck('id')->count();
+    }
 }

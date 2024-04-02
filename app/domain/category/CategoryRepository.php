@@ -14,4 +14,6 @@ interface CategoryRepository extends BaseRepository {
     public function setCategoryQualification(Category $category, object $body): Category;
 
     public function findWithQualifications(): Collection;
+
+    public function findOneWithQualifications(string $categoryId): ?Category;
 }

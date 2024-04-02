@@ -2,6 +2,7 @@
 
 namespace App\domain\guide;
 
+use App\domain\guideSurvey\GuideSurvey;
 use App\domain\qualifications\Qualifications;
 use App\domain\section\Section;
 use App\domain\survey\Survey;
@@ -17,7 +18,7 @@ class Guide extends Model
 
     public function surveys()
     {
-        return $this->belongsTo(Survey::class);
+        return $this->belongsToMany(Survey::class)->using(GuideSurvey::class);
     }
 
     public function sections()

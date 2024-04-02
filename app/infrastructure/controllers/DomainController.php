@@ -28,4 +28,10 @@ class DomainController extends Controller
     {
         $this->response($this->domainUseCase->findDomaisWithQualifications());
     }
+
+    public function getDomainWithQualifications(string $id)
+    {
+        $this->response($this->domainUseCase->findDomainWithQualifications($id));
+    }
+
 }

@@ -17,9 +17,9 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
         parent::__construct($survey);
     }
 
-    public function findAllSurveys(): Paginator
+    public function findAllSurveys(int $page): Paginator
     {
-        return $this->survey::orderBy('id', 'desc')->simplePaginate();
+        return $this->survey::orderBy('id', 'desc')->simplePaginate(2,'*', 'page', $page);
     }
 
     public function startSurvey(): ?Model
@@ -49,6 +49,12 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
         $survey->end_date = date('Y-m-d\TH:i:s.000');
         $survey->status   = Survey::FINISHED;
         $survey->save();
+        return $survey;
+    }
+
+    public function setGuidesToNewSurvey(Survey $survey, array $guidesId): Survey
+    {
+        $survey->guides()->sync($guidesId);
         return $survey;
     }
 }

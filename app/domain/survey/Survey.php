@@ -3,6 +3,7 @@
 namespace App\domain\survey;
 
 use App\domain\guide\Guide;
+use App\domain\guideSurvey\GuideSurvey;
 use Illuminate\Database\Eloquent\Model;
 
 use App\domain\surveyUser\SurveyUser;
@@ -29,6 +30,6 @@ class Survey extends Model
 
     public function guides()
     {
-        return $this->hasMany(Guide::class);
+        return $this->belongsToMany(Guide::class)->using(GuideSurvey::class);
     }
 }

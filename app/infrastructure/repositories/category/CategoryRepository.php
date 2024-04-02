@@ -38,4 +38,9 @@ class CategoryRepository extends BaseRepository implements ContractsRepository
         return $this->category::with('qualification')->get();
     }
 
+    public function findOneWithQualifications(string $categoryId): ?Category
+    {
+        return $this->category::with('qualifications')->find($categoryId);
+    }
+
 }

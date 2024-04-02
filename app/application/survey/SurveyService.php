@@ -19,9 +19,9 @@ class SurveyService
     {
     }
 
-    public function getSurvys()
+    public function getSurvys(int $page)
     {
-        return $this->surveyRepository->findAllSurveys();
+        return $this->surveyRepository->findAllSurveys($page);
     }
 
     public function startSurvey()
@@ -167,6 +167,12 @@ class SurveyService
     public function getLastSurveyByUser(string $userId) {
         return $this->surveyUserRepository->findCurrentSurveyUser($userId);
     }
+
+    public function attachGuidesToSurvey(Survey $survey, array $guidesId)
+    {
+        return $this->surveyRepository->setGuidesToNewSurvey($survey, $guidesId);
+    }
+
 
     private function calculateUserQualification(SurveyUser $surveyUser): int
     {

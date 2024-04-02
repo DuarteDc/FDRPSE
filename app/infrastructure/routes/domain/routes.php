@@ -21,12 +21,19 @@ function router(Router $router)
     $router->get('/', function ()  use ($domainController) {
         $domainController->getAllDomains();
     });
+
     $router->post('/create', function () use ($domainController) {
         $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
         $middleware->handle();
         $domainController->createDomain();
     });    
 
+
+    $router->get('/with/qualifications/{categoryId}', function (string $domainId) use ($domainController) {
+        // $checkRole->handle();
+        $domainController->getDomainWithQualifications($domainId);
+    });
+    
     $router->get('/with/qualification', function () use ($domainController) {
         $domainController->getDomainsWithQualifications();
     });

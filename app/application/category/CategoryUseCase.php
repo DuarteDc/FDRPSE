@@ -33,6 +33,13 @@ class CategoryUseCase
         return ['categories' => $categories];
     }
 
+    public function findCategoryWithQualifications(string $categoryId)
+    {
+        $category = $this->categoryRepository->findOne($categoryId);
+        if (!$category) return new Exception('La categoría no existe o no es valida', 404);
+        $category = $this->categoryRepository->findOneWithQualifications($categoryId);
+        return ['category' => $category];
+    }
 
     private function validateName($name): Exception | string
     {

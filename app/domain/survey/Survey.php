@@ -4,6 +4,7 @@ namespace App\domain\survey;
 
 use App\domain\guide\Guide;
 use App\domain\guideSurvey\GuideSurvey;
+use App\domain\guideUser\GuideUser;
 use Illuminate\Database\Eloquent\Model;
 
 use App\domain\surveyUser\SurveyUser;
@@ -20,7 +21,7 @@ class Survey extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'survey_users', 'survey_id', 'user_id')->using(SurveyUser::class);
+        return $this->belongsToMany(User::class, 'survey_users', 'survey_id', 'user_id')->using(GuideUser::class);
     }
 
     public function qualification()

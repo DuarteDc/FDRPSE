@@ -59,13 +59,14 @@ class SectionRepository extends BaseRepository implements ContractsRepository
                 'questions.qualification:id,name,always_op,almost_alwyas_op,sometimes_op,almost_never_op,never_op'
             ]
         )
-            ->has('questions', '>', 0)
+            // ->has('questions', '>', 0)
             ->simplePaginate(1, ['id', 'name', 'binary', 'question'], 'page', $page);
     }
 
     public function countTotalSections(): int
     {
-        return $this->section::with('questions')->has('questions', '>', 0)->count();
+        return $this->section::with('questions')
+            ->count();
     }
 
     public function findByName(string $name): ?Section
@@ -89,14 +90,14 @@ class SectionRepository extends BaseRepository implements ContractsRepository
     public function findMultipleSectionsWithQuestions(array $sectionsId): Collection
     {
         return $this->section::with('questions.qualification')
-            ->has('questions')
+            // ->has('questions')
             ->find($sectionsId);
     }
 
     public function countSectionsByArrayOfSectionsId(array $sectionId): int
     {
         return $this->section::whereIn('id', $sectionId)
-            ->has('questions')
+            // ->has('questions')
             ->count();
     }
 }

@@ -24,6 +24,11 @@ class SurveyUseCase
         return $this->surveyService->getSurvys($page);
     }
 
+    public function getSurveyById(string $surveyId) 
+    {
+        return ['survey' => $this->surveyService->getSurveyDetail($surveyId)];
+    }
+
     public function startNewSurvey(array $guides)
     {
         $survey = $this->surveyService->startSurvey();

@@ -13,7 +13,7 @@ class CreateSectionRequest extends Request implements HttpRulesRequest
         return [
             'name'              => 'required|min:8|max:200',
             'binary'            => 'required|boolean',
-            'question'          => 'min:8|max:200',
+            'question'          => 'min:8',
             'can_finish_guide'  => 'boolean',
             'type'              => 'required|min:5|max:200'
         ];
@@ -28,7 +28,7 @@ class CreateSectionRequest extends Request implements HttpRulesRequest
             'binary:required'           => 'El tipo de sección es requerido',
             'binary:boolean'            => 'El tipo del campo debe ser true o false',   
             'question:min'              => 'La pregunta de contener al menos 8 caracteres',
-            'question:max'              => 'La pregunta supera el máximo de caracteres',
+            // 'question:max'              => 'La pregunta supera el máximo de caracteres',
             'can_finish_guide:boolean'  => 'Por favor especifica una opcioón valida para la sección',
             'type:required'             => 'El tipo de la sección es requerido',
             'type:min'                  => 'El tipo de la sección debe ser mayor a 5 caracteres',

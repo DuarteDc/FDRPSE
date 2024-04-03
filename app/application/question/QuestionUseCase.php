@@ -10,7 +10,9 @@ use App\domain\surveyUser\SurveyUserRepository;
 
 class QuestionUseCase
 {
-    public function __construct(private readonly QuestionRepository $questionRepository, private readonly QuestionService $questionService, private readonly SurveyUserRepository $surveyUserRepository)
+    public function __construct(private readonly QuestionRepository $questionRepository, private readonly QuestionService $questionService, 
+    // private readonly SurveyUserRepository $surveyUserRepository
+    )
     {
     }
 
@@ -21,7 +23,7 @@ class QuestionUseCase
 
     public function createQuestion(mixed $body): Exception | array
     {
-        if ($body->type === Question::GRADABLE) {
+        if ($body->type === Question::NONGRADABLE) {
             $question =  $this->questionRepository->create($body);
             return $question ? ['message' => 'La pregunta se agrego correctamente'] : new Exception('Parece que hubo un error al crear la pregunta', 500);
         }
@@ -58,12 +60,12 @@ class QuestionUseCase
 
     public function getQuestionsBySectionAndTotalSections(string $page, int $userId)
     {
-        $surveyUser = $this->surveyUserRepository->getUserAnwserInCurrentSurvey($userId);
+        // $surveyUser = $this->surveyUserRepository->getUserAnwserInCurrentSurvey($userId);
 
-        if ($surveyUser && $surveyUser->answers) {
-            $lastSection = $this->getLastSection($surveyUser->answers)['id'];
-            if ($page > $lastSection) $page = $lastSection + 1;
-        }
+        // if ($surveyUser && $surveyUser->answers) {
+        //     $lastSection = $this->getLastSection($surveyUser->answers)['id'];
+        //     if ($page > $lastSection) $page = $lastSection + 1;
+        // }
 
         $section = $this->questionService->getQuestionBySection($page);
         $totalSections = $this->questionService->getTotalSections();

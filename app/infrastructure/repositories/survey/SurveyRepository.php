@@ -19,7 +19,12 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
 
     public function findAllSurveys(int $page): Paginator
     {
-        return $this->survey::orderBy('id', 'desc')->simplePaginate(2,'*', 'page', $page);
+        return $this->survey::orderBy('id', 'desc')->simplePaginate(2, '*', 'page', $page);
+    }
+
+    public function findSurveyWithDetails(string $surveyId): Survey
+    {
+        return $this->survey::with('guides')->find($surveyId);
     }
 
     public function startSurvey(): ?Model
@@ -35,7 +40,9 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
 
     public function getCurrentSurvey(): ?Survey
     {
-        return $this->survey::where('status', false)->first();
+        return $this->survey::with('guides')
+            ->where('status', false)
+            ->first();
     }
 
     public function getStatusUsers(string $surveyId): Collection

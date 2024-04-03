@@ -24,6 +24,11 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->getAllSurveys($page));
     }
 
+    public function showSurvey(string $surveyId)
+    {
+        $this->response($this->surveyUseCase->getSurveyById($surveyId));
+    }
+
     public function startSurvey()
     {
         $this->validate(StartNewSurveyRequest::rules(), StartNewSurveyRequest::messages());

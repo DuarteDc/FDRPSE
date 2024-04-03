@@ -35,8 +35,8 @@ function router(Router $router)
     $questionRepository         = new QuestionRepository(new Question);
     $dimensionRepository        = new DimensionRepository(new Dimension);
     $questionService            = new QuestionService($categoryRepository, $qualificationRepository, $sectionRepository, $domainRepository, $dimensionRepository);
-    $surveyUserRespository      = new SurveyUserRepository(new SurveyUser);
-    $questionUseCase            = new QuestionUseCase($questionRepository, $questionService, $surveyUserRespository);
+    // $surveyUserRespository      = new SurveyUserRepository(new SurveyUser);
+    $questionUseCase            = new QuestionUseCase($questionRepository, $questionService);
     $questionController         = new QuestionController($questionUseCase);
 
     $router->get('/', function () use ($questionController) {

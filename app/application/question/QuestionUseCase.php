@@ -10,10 +10,11 @@ use App\domain\surveyUser\SurveyUserRepository;
 
 class QuestionUseCase
 {
-    public function __construct(private readonly QuestionRepository $questionRepository, private readonly QuestionService $questionService, 
-    // private readonly SurveyUserRepository $surveyUserRepository
-    )
-    {
+    public function __construct(
+        private readonly QuestionRepository $questionRepository,
+        private readonly QuestionService $questionService,
+        // private readonly SurveyUserRepository $surveyUserRepository
+    ) {
     }
 
     public function searchSections(string $type, string $name): Collection
@@ -58,17 +59,11 @@ class QuestionUseCase
         return ['sections' => $sections];
     }
 
-    public function getQuestionsBySectionAndTotalSections(string $page, int $userId)
+    public function getQuestionsBySectionAndTotalSections(string $guideId, string $page)
     {
-        // $surveyUser = $this->surveyUserRepository->getUserAnwserInCurrentSurvey($userId);
-
-        // if ($surveyUser && $surveyUser->answers) {
-        //     $lastSection = $this->getLastSection($surveyUser->answers)['id'];
-        //     if ($page > $lastSection) $page = $lastSection + 1;
-        // }
-
-        $section = $this->questionService->getQuestionBySection($page);
-        $totalSections = $this->questionService->getTotalSections();
+        
+        $section = $this->questionService->getQuestionBySection($guideId, $page);
+        $totalSections = $this->questionService->getTotalSections($guideId);
         return $section ? [
             'current_page'  => $section->currentPage(),
             'section'       => $section[0] ?? [],

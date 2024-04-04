@@ -13,7 +13,6 @@ use App\domain\domain\Domain;
 use App\domain\qualification\Qualification;
 use App\domain\section\Section;
 use App\domain\survey\Survey;
-use App\domain\surveyUser\SurveyUser;
 
 use App\infrastructure\controllers\QuestionController;
 use App\infrastructure\middlewares\CreateResourceMiddleware;
@@ -24,7 +23,6 @@ use App\infrastructure\repositories\qualification\QualificationRepository;
 use App\infrastructure\repositories\question\QuestionRepository;
 use App\infrastructure\repositories\section\SectionRepository;
 use App\infrastructure\repositories\survey\SurveyRepository;
-use App\infrastructure\repositories\surveyUser\SurveyUserRepository;
 
 function router(Router $router)
 {
@@ -48,8 +46,8 @@ function router(Router $router)
     });
 
 
-    $router->get('/section', function () use ($questionController) {
-        $questionController->getQuestionsBySection();
+    $router->get('/section/{guideId}', function (string $guideId) use ($questionController) {
+        $questionController->getQuestionsBySection($guideId);
     });
 
     $router->get('/{questionId}', function ($questionId) use ($questionController) {

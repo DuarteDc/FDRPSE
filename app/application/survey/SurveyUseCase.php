@@ -4,7 +4,9 @@
 namespace App\application\survey;
 
 use App\domain\area\AreaRepository;
+use App\domain\guide\Guide;
 use App\domain\guide\GuideRepository;
+use App\domain\question\Question;
 use App\domain\user\UserRepository;
 use Exception;
 
@@ -24,7 +26,7 @@ class SurveyUseCase
         return $this->surveyService->getSurvys($page);
     }
 
-    public function getSurveyById(string $surveyId) 
+    public function getSurveyById(string $surveyId)
     {
         return ['survey' => $this->surveyService->getSurveyDetail($surveyId)];
     }
@@ -41,8 +43,9 @@ class SurveyUseCase
         ];
     }
 
-    public function saveAnswers(mixed $body)
+    public function saveAnswers(array $body, string $type)
     {
+        if ($type === Question::NONGRADABLE) return $this->surveyService->saveNongradableAnswersByUser($body);
         return $this->surveyService->saveAnswersByUser($body);
     }
 
@@ -74,7 +77,11 @@ class SurveyUseCase
 
     public function getOneSurvey(string $surveyId)
     {
-        return ['survey' => $this->surveyService->getSurveyDetails($surveyId)];
+        return [
+            'survey' =>
+            // $this->surveyService->getSurveyDetails($surveyId)
+            ''
+        ];
     }
 
     public function findSurveyByName(string $surveyId, string $name, string $areaId)

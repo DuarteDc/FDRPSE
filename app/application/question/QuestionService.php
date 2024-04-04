@@ -61,13 +61,13 @@ class QuestionService implements QuestionServiceRepository
         return $this->sectionRepository->findSectionsWithQuestions();
     }
 
-    public function getQuestionBySection(string $page): Paginator | null
+    public function getQuestionBySection(string $guideId, string $page): Paginator | null
     {
-        return $this->sectionRepository->findSectionWithQuestions($page);
+        return $this->sectionRepository->findSectionWithQuestions($guideId, $page);
     }
 
-    public function getTotalSections (): int {
-        return $this->sectionRepository->countTotalSections();
+    public function getTotalSections (string $guideId): int {
+        return $this->sectionRepository->countTotalSections($guideId);
     }
     
     public function prepareDataToInsert(mixed $body): Exception | array

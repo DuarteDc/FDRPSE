@@ -51,27 +51,29 @@ class SectionRepository extends BaseRepository implements ContractsRepository
         return $this->section::has('questions', '>', 0)->get(['id', 'name', 'binary', 'question']);
     }
 
-    public function findSectionWithQuestions(string $page): Paginator | null
+    public function findSectionWithQuestions(string $guideId, string $page): Paginator | null
     {
         return $this->section::with(
             [
                 'questions:id,name,section_id,qualification_id',
                 'questions.qualification:id,name,always_op,almost_alwyas_op,sometimes_op,almost_never_op,never_op'
             ]
-        )
+        )->where('guide_id', $guideId)
             // ->has('questions', '>', 0)
             ->simplePaginate(1, ['id', 'name', 'binary', 'question'], 'page', $page);
     }
 
-    public function countTotalSections(): int
+    public function countTotalSections(string $guideId): int
     {
         return $this->section::with('questions')
+            ->where('guide_id', $guideId)
             ->count();
     }
 
     public function findByName(string $name): ?Section
     {
-        return $this->section::where('name', $name)->first();
+        return $this->section::where('name', $name)
+            ->first();
     }
 
     public function findByType(string $type): Collection
@@ -84,7 +86,8 @@ class SectionRepository extends BaseRepository implements ContractsRepository
 
     public function findSectionByIdWithQuestions(string $sectionId): Section
     {
-        return $this->section::with('questions.qualification')->find($sectionId);
+        return $this->section::with('questions.qualification')
+            ->find($sectionId);
     }
 
     public function findMultipleSectionsWithQuestions(array $sectionsId): Collection

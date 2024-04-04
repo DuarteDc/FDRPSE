@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Collection;
 class QuestionRepository extends BaseRepository implements ContractsRepository
 {
 
-    public function __construct(private readonly Question $question) {
+    public function __construct(private readonly Question $question)
+    {
         parent::__construct($question);
     }
 
@@ -34,7 +35,7 @@ class QuestionRepository extends BaseRepository implements ContractsRepository
 
     public function getQuestionDetail(string $questionId): Question | null
     {
-        if(!is_numeric($questionId)) return null;
+        if (!is_numeric($questionId)) return null;
         return $this->question::with(['section', 'qualification', 'category', 'dimension', 'domain'])->where('id', $questionId)->first();
     }
 
@@ -43,9 +44,8 @@ class QuestionRepository extends BaseRepository implements ContractsRepository
         return $this->question::count();
     }
 
-    public function getQualification(Question $question): Qualification
+    public function getQualification(Question $question): ?Qualification
     {
-        return $question->qualification()->first(['always_op','almost_alwyas_op','sometimes_op','almost_never_op','never_op']);
+        return $question->qualification()->first(['always_op', 'almost_alwyas_op', 'sometimes_op', 'almost_never_op', 'never_op']);
     }
-
 }

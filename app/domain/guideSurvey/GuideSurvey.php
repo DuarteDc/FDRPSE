@@ -14,12 +14,12 @@ class GuideSurvey extends Pivot
 
     public function guides()
     {
-        return $this->hasMany(Guide::class);
+        return $this->belongsTo(Guide::class, 'guide_id');
     }
 
     public function surveys()
     {
-        return $this->hasMany(Survey::class);
+        return $this->belongsTo(Survey::class, 'survey_id');
     }
 
 }

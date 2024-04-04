@@ -12,8 +12,8 @@ interface GuideUserRepository extends BaseRepository
     public function getCurrentGuideUser(string $guideId, string $userId);
     public function saveAnswer(GuideUser $surveyUser, mixed $body): GuideUser;
     public function getUserAnwserInCurrentSurvey(string $userId): ?GuideUser;
-    public function finalizeSurveyUser(string $surveyId, string $userId, int $userQualification): GuideUser;
-    public function canAvailableSurveyPerUser(string $surveyId, string $userId): ?GuideUser;
+    public function finalizeGuideUser(string $guideId, string $userId, int $userQualification): GuideUser;
+    public function canAvailableSurveyPerUser(string $userId): ?GuideUser;
     public function getDetailsSurveyUser(string $surveyId): array;
     public function searchByName(string $surveyId, string $name, string $areaId);
     public function getDetailsByUser(string $surveyId, string $userId): ?GuideUser;

@@ -19,6 +19,7 @@ function router(Router $router)
     $router->get('/', function ()  use ($guideController) {
         $guideController->getGuides();
     });
+
     $router->get('/search', function() use($guideController) {
         $guideController->getGuidesByCriteria();
     });

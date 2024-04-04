@@ -13,7 +13,7 @@ class Section extends Model
     const NONGRADABLE  = 'nongradable';
 
     protected $table = 'sections';
-    protected $fillable = ['name', 'binary', 'question', 'can_finish_guide', 'type'];
+    protected $fillable = ['name', 'binary', 'question', 'can_finish_guide', 'type', 'guide_id'];
     protected $withCount = ['questions'];
 
     public function questions()

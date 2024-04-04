@@ -30,6 +30,5 @@ class GuideController extends Controller
         $name = (string) $this->get('name');
 
         $this->response($this->guideUseCase->searchGuidesByTypeAndName($type, $name));
- 
     }
 }

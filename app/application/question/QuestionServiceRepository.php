@@ -16,6 +16,6 @@ interface QuestionServiceRepository
     public function domainIsValid(string $id): Model | Exception;
     public function prepareDataToInsert(mixed $body): Exception | array;
     public function getQuestionsBySections(): Collection;
-    public function getQuestionBySection(string $page): Paginator | null;
-    public function getTotalSections(): int;
+    public function getQuestionBySection(string $guideId, string $page): Paginator | null;
+    public function getTotalSections(string $guideId): int;
 }

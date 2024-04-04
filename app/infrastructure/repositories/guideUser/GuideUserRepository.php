@@ -26,7 +26,10 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
 
     public function getCurrentGuideUser(string $guideId, string $userId)
     {
-        $guideUser = $this->guideUser::Where('guide_id', $guideId)->where('user_id', $userId)->first();
+        $guideUser = $this->guideUser::Where('guide_id', $guideId)
+            ->where('user_id', $userId)
+            ->first();
+            
         return $guideUser ? $guideUser : $this->create(['guide_id' => $guideId, 'user_id' => $userId]);
     }
 
@@ -42,19 +45,21 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
         return $this->guideUser::where('status', false)->where('user_id', $userId)->first();
     }
 
-    public function finalizeSurveyUser(string $surveyId, string $userId, int $userQualification): GuideUser
+    public function finalizeGuideUser(string $guideId, string $userId, int $userQualification): GuideUser
     {
-        $surveyUser = $this->guideUser::where('survey_id', $surveyId)->where('user_id', $userId)->first();
+        $surveyUser = $this->guideUser::where('guide_id', $guideId)
+            ->where('user_id', $userId)
+            ->first();
         $surveyUser->status = GuideUser::FINISHED;
         $surveyUser->total  = $userQualification;
         $surveyUser->save();
         return $surveyUser;
     }
 
-    public function canAvailableSurveyPerUser(string $surveyId, string $userId): ?GuideUser
+    public function canAvailableSurveyPerUser(string $userId): ?GuideUser
     {
-        return $this->guideUser::where('guide_id', $surveyId)
-            ->where('user_id', $userId)
+        return $this->guideUser::where('user_id', $userId)
+            ->where('status', false)
             ->first();
     }
 

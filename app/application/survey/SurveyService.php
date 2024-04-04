@@ -2,6 +2,8 @@
 
 namespace App\application\survey;
 
+use App\domain\guideSurvey\GuideSurveyRepository;
+use App\domain\guideUser\GuideUser;
 use App\domain\guideUser\GuideUserRepository;
 use Exception;
 use App\kernel\authentication\Auth;
@@ -10,6 +12,7 @@ use App\domain\survey\Survey;
 use App\domain\survey\SurveyRepository;
 use App\domain\surveyUser\SurveyUserRepository;
 use App\domain\question\QuestionRepository;
+use App\domain\section\Section;
 use App\domain\surveyUser\SurveyUser;
 
 class SurveyService
@@ -19,7 +22,8 @@ class SurveyService
     public function __construct(
         private readonly SurveyRepository $surveyRepository,
         private readonly GuideUserRepository $guideUserRepository,
-        private readonly QuestionRepository $questionRepository
+        private readonly QuestionRepository $questionRepository,
+        private readonly GuideSurveyRepository $guideSurveyRepository,
     ) {
     }
 
@@ -46,21 +50,60 @@ class SurveyService
         // $this->surveyUserRepository->setUser($surveyUserId, $userId);
     }
 
-    public function saveAnswersByUser(mixed $body)
+    public function saveNongradableAnswersByUser(array $body)
     {
-        $survey = $this->surveyRepository->getCurrentSurvey();
-        if (!$survey) return new Exception('Parece que hubo un error al registar la respusta', 400);
+        $guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
+        if (!$guideSurvey) return new Exception('Parece que hubo un error al registar la respusta', 400);
+
+        $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id);
+        if (!$guideUser) return new Exception('Parece que hubo un error al registar la respusta', 500);
+
+        if (count($body) === 1) {
+            $section = $this->guideSurveyRepository->findQuestionInsideGuide($guideSurvey, $body[0]['question_id']);
+            $body =  $this->validateCanFinishedQuestion($section, $body[0]['qualification']);
+
+            $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id);
+
+            if ($guideUser->answers != "") $body = $this->hasPreviousQuestion($guideUser->answers, [$body]);
+            else $body = [$body];
+
+            $this->guideUserRepository->saveAnswer($guideUser, $body);
+            return ['message' => 'La preguntas se guardaron correctmente', 'guide' => $guideUser];
+        }
+
         $isValidRequest = $this->validateQuestions($body);
 
         if (in_array(false, $isValidRequest)) return new Exception('Las preguntas que intentas guardar no exiten', 400);
 
-        // $surveyUser = $this->surveyUserRepository->getCurrentSurveyUser($survey->id, $this->auth()->id);
+        $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id);
 
-        // if ($surveyUser->answers != "") $body = $this->hasPreviousQuestion($surveyUser->answers, $isValidRequest);
+        if ($guideUser->answers != "") $body = $this->hasPreviousQuestion($guideUser->answers, $isValidRequest);
 
-        // else $body = $isValidRequest;
+        else $body = $isValidRequest;
 
-        // $this->surveyUserRepository->saveAnswer($surveyUser, $body);
+        $this->guideUserRepository->saveAnswer($guideUser, $body);
+        return ['message' => 'La preguntas se guardaron correctmente', 'guide' => $guideUser];
+    }
+
+    public function saveAnswersByUser(array $body)
+    {
+        $guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
+        if (!$guideSurvey) return new Exception('Parece que hubo un error al registar la respusta', 400);
+
+        $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id);
+        if (!$guideUser) return new Exception('Parece que hubo un error al registar la respusta', 500);
+
+        $isValidRequest = $this->validateQuestions($body);
+
+        if (in_array(false, $isValidRequest)) return new Exception('Las preguntas que intentas guardar no exiten', 400);
+
+        $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideUser->guide_id, $this->auth()->id);
+
+        if ($guideUser->answers != "") $body = $this->hasPreviousQuestion($guideUser->answers, $isValidRequest);
+
+        else $body = $isValidRequest;
+
+        $this->guideUserRepository->saveAnswer($guideUser, $body);
         return ['message' => 'La preguntas se guardaron correctmente'];
     }
 
@@ -82,11 +125,11 @@ class SurveyService
 
     public function finalzeUserSurvey()
     {
-        $survey = $this->surveyRepository->getCurrentSurvey();
+        $survey = $this->guideSurveyRepository->findGuideInProgress();
         if (!$survey) return new Exception('La encuesta que intentas guardar no existe', 404);
-        // $userQualification = $this->calculateUserQualification($this->surveyUserRepository->getCurrentSurveyUser($survey->id, $this->auth()->id));
-        // $surveyUser = $this->surveyUserRepository->finalizeSurveyUser($survey->id, $this->auth()->id, $userQualification);
-        // return $surveyUser ? ['message' => 'La encuesta ha finalizado correctamente'] : new Exception('Parece que hubo un error al finalizar la encuesta', 500);
+        $userQualification = $this->calculateUserQualification($this->guideUserRepository->getCurrentGuideUser($survey->guide_id, $this->auth()->id));
+        $surveyUser = $this->guideUserRepository->finalizeGuideUser($survey->guide_id, $this->auth()->id, $userQualification);
+        return $surveyUser ? ['message' => 'La encuesta ha finalizado correctamente'] : new Exception('Parece que hubo un error al finalizar la encuesta', 500);
     }
 
     public function existSurveyInProgress()
@@ -94,22 +137,19 @@ class SurveyService
         $survey = $this->surveyRepository->getCurrentSurvey();
         if (!$survey) return new Exception('No hay encuestas disponibles', 400);
 
-        $guides = (array) json_decode(json_encode($survey->guides), true);
-        $guides = array_filter($guides, fn ($guide) => $guide['status'] === false);
+        $guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
 
-        if (count($guides) < 1) return  new Exception('La encuesta ya ha sido contestada', 400);
+        if (!$guideSurvey) return new Exception('La encuesta ya ha sido contestada', 400);
 
-        $surveyUser = $this->guideUserRepository->canAvailableSurveyPerUSer($guides[0]['id'], $this->auth()->id);
-        if (!$surveyUser) return ['survey' => $survey];
-        return $surveyUser->status ? new Exception('La encuesta ya ha sido contestada', 400) : ['survey' => $survey];
+        $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id);
+
+        unset($guideUser['answers']);
+
+
+        return $guideUser->status ? new Exception('La encuesta ya ha sido contestada', 400) : ['guide' => $guideUser];
     }
 
     public function findOneSurvey(string $surveyId)
-    {
-        return $this->surveyRepository->findOne($surveyId);
-    }
-
-    public function getSurveyDetails(string $surveyId)
     {
         $suervey = $this->surveyRepository->findOne($surveyId);
         if (!$suervey) return new Exception('El cuestionario no existe o no es valido', 404);
@@ -153,6 +193,20 @@ class SurveyService
         return [...$answers, ...$newBody];
     }
 
+    private function validateCanFinishedQuestion(Section $section, bool $qualification)
+    {
+        return [
+            'question_id' => $section->id,
+            'name' => $section->question,
+            'category' => '',
+            'section' => '',
+            'domain' => '',
+            'dimension' => '',
+            'qualification' => $qualification,
+            'qualification_name' => '',
+        ];
+    }
+
     private function validateQuestions(mixed $body)
     {
         return array_map(function ($currentQuestion) {
@@ -178,9 +232,9 @@ class SurveyService
                     'name' => $question->dimension->name ?? ''
                 ],
                 'qualification' => $currentQuestion['qualification'],
-                'qualification_name' => $this->questionRepository->getQualification($question)
+                'qualification_name' => $this->questionRepository->getQualification($question) ?? ''
             ];
-        }, (array) $body->questions);
+        }, (array) $body);
     }
 
     public function getLastSurveyByUser(string $userId)
@@ -193,9 +247,8 @@ class SurveyService
         return $this->surveyRepository->setGuidesToNewSurvey($survey, $guidesId);
     }
 
-
-    // private function calculateUserQualification(SurveyUser $surveyUser): int
-    // {
-    //     return array_reduce($surveyUser->answers, fn ($prev, $curr) => $prev + $curr['qualification']);
-    // }
+    private function calculateUserQualification(GuideUser $guideUser): int
+    {
+        return array_reduce($guideUser->answers, fn ($prev, $curr) => $prev + $curr['qualification']);
+    }
 }

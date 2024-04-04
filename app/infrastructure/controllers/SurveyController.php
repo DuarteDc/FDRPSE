@@ -38,8 +38,9 @@ class SurveyController extends Controller
 
     public function saveUserAnswers()
     {
+        $type = $this->get('type');
         $this->validate(SaveQuestionRequest::rules(), SaveQuestionRequest::messages());
-        $this->response($this->surveyUseCase->saveAnswers($this->request()));
+        $this->response($this->surveyUseCase->saveAnswers($this->request()->questions, $type));
     }
 
     public function startSurveyByUser()

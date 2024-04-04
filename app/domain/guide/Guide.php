@@ -3,6 +3,7 @@
 namespace App\domain\guide;
 
 use App\domain\guideSurvey\GuideSurvey;
+use App\domain\guideUser\GuideUser;
 use App\domain\qualifications\Qualifications;
 use App\domain\section\Section;
 use App\domain\survey\Survey;

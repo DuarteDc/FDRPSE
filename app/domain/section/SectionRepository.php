@@ -14,8 +14,8 @@ interface SectionRepository extends BaseRepository
     public function getAllSections(): Collection;
     public function findOne(string $id): ?Section;
     public function findSectionsWithQuestions(): Collection;
-    public function findSectionWithQuestions(string $page): Paginator | null;
-    public function countTotalSections(): int;
+    public function findSectionWithQuestions(string $guideId, string $page): Paginator | null;
+    public function countTotalSections(string $guideId): int;
     public function findByName(string $name): ?Section;
     public function findByType(string $criteria): Collection;
     public function findSectionByIdWithQuestions(string $sectionId): Section;

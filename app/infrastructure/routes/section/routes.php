@@ -26,6 +26,10 @@ function router(Router $router)
         $sectionController->getSectionsWithQuestions();
     });    
 
+    $router->get('/available', function () use($sectionController) {
+        $sectionController->getAvailableSections();
+    });
+
     $router->get('/questions/by', function () use ($sectionController) {
         $sectionController->getSectionsByType();
     });    

@@ -2,6 +2,7 @@
 
 namespace App\domain\qualification;
 
+use App\domain\qualificationQuestion\QualificationQuestion;
 use App\domain\question\Question;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,11 @@ class Qualification extends Model {
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    public function qualificationsBy()
+    {
+        return $this->morphMany(QualificationQuestion::class, 'qualificationable');
     }
 
 }

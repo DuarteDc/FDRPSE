@@ -6,14 +6,16 @@ use Bramus\Router\Router;
 
 use App\domain\guide\Guide;
 use App\application\guide\GuideUseCase;
+use App\domain\section\Section;
 use App\infrastructure\controllers\GuideController;
 use App\infrastructure\repositories\guide\GuideRepository;
-
+use App\infrastructure\repositories\section\SectionRepository;
 
 function router(Router $router)
 {
     $guideRepository   = new GuideRepository(new Guide);
-    $guideseCase       = new GuideUseCase($guideRepository);
+    $sectionRepository = new SectionRepository(new Section);
+    $guideseCase       = new GuideUseCase($guideRepository, $sectionRepository);
     $guideController   = new GuideController($guideseCase);
 
     $router->get('/', function ()  use ($guideController) {

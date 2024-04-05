@@ -23,6 +23,7 @@ class QuestionController extends Controller
     public function createQuestion()
     {
         $this->validate(CreateQuestionRequest::rules(), CreateQuestionRequest::messages());
+        // $this->response($this->request());
         $questions = $this->questionUseCase->createQuestion($this->request());
         $this->response($questions);
     }

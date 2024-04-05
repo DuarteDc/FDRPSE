@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use App\domain\section\Section;
 use App\domain\section\SectionRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Builder;
 
 class SectionRepository extends BaseRepository implements ContractsRepository
 {
@@ -102,5 +103,35 @@ class SectionRepository extends BaseRepository implements ContractsRepository
         return $this->section::whereIn('id', $sectionId)
             // ->has('questions')
             ->count();
+    }
+
+    public function findAvailableSections(string $type): Collection
+    {
+        if ($type === $this->section::NONGRADABLE)
+            return $this->section::where('guide_id', null)
+                ->where('type', $this->section::NONGRADABLE)
+                ->has('questions')
+                ->OrWhere('can_finish_guide', true)
+                ->get();
+
+        return $this->section::where('guide_id', null)
+            ->where('type', $this->section::GRADABLE)
+            ->has('questions')
+            ->get();
+    }
+
+    public function validateSectionsId(array $sectionsId): Collection
+    {
+        return $this->section::where('guide_id', null)->find($sectionsId);
+    }
+
+    public function attachGuide(string $guideId, mixed $sectionsId): ?Collection
+    {
+        $sections = $this->section::find($sectionsId);
+        $sections->each(function (Section $section) use ($guideId) {
+            $section->guide_id = $guideId;
+            $section->save();
+        });
+        return $sections;
     }
 }

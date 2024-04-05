@@ -39,7 +39,8 @@ class SurveyUseCase
         $areValidIds = $this->guideRepository->countGuidesById($guides);
         if (count($guides) !== $areValidIds) return new Exception('Los cuestionarios no son validos', 400);
         return [
-            'survey' => $this->surveyService->attachGuidesToSurvey($survey, $guides)
+            'survey' => $this->surveyService->attachGuidesToSurvey($survey, $guides),
+            'message' => 'Se ha generado una serie de cuestionarios'
         ];
     }
 

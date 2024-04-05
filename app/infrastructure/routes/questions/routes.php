@@ -11,6 +11,7 @@ use App\domain\category\Category;
 use App\domain\dimension\Dimension;
 use App\domain\domain\Domain;
 use App\domain\qualification\Qualification;
+use App\domain\qualificationQuestion\QualificationQuestion;
 use App\domain\section\Section;
 use App\domain\survey\Survey;
 
@@ -19,7 +20,9 @@ use App\infrastructure\middlewares\CreateResourceMiddleware;
 use App\infrastructure\repositories\category\CategoryRepository;
 use App\infrastructure\repositories\dimension\DimensionRepository;
 use App\infrastructure\repositories\domain\DomainRepository;
+
 use App\infrastructure\repositories\qualification\QualificationRepository;
+use App\infrastructure\repositories\qualificationQuestion\QualificationQuestionRepository;
 use App\infrastructure\repositories\question\QuestionRepository;
 use App\infrastructure\repositories\section\SectionRepository;
 use App\infrastructure\repositories\survey\SurveyRepository;
@@ -33,8 +36,8 @@ function router(Router $router)
     $questionRepository         = new QuestionRepository(new Question);
     $dimensionRepository        = new DimensionRepository(new Dimension);
     $questionService            = new QuestionService($categoryRepository, $qualificationRepository, $sectionRepository, $domainRepository, $dimensionRepository);
-    // $surveyUserRespository      = new SurveyUserRepository(new SurveyUser);
-    $questionUseCase            = new QuestionUseCase($questionRepository, $questionService);
+    $qualificationQuestionRepository      = new qualificationQuestionRepository(new QualificationQuestion);
+    $questionUseCase            = new QuestionUseCase($questionRepository, $questionService, $qualificationQuestionRepository);
     $questionController         = new QuestionController($questionUseCase);
 
     $router->get('/', function () use ($questionController) {

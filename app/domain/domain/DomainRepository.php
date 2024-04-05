@@ -7,7 +7,7 @@ use App\domain\domain\Domain;
 use Illuminate\Database\Eloquent\Collection;
 
 interface DomainRepository extends BaseRepository {
-    
+    public function findOneWithQualification(string $id,string $qualificationId): Domain | null;
     public function findByName(string $name): Domain | null;
     public function saveDomainAndSetQualification(object $body): Domain;
     public function setDomainQualification(Domain $domain, object $body): Domain;

@@ -19,7 +19,12 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
 
     public function findAllSurveys(int $page): Paginator
     {
-        return $this->survey::orderBy('id', 'desc')->simplePaginate(2, '*', 'page', $page);
+        return $this->survey::orderBy('id', 'desc')->paginate(5,'*','page',$page);
+    }
+
+    public function countTotalsPages(): int
+    {
+        return ceil($this->survey::count()/ 5);
     }
 
     public function findSurveyWithDetails(string $surveyId): Survey

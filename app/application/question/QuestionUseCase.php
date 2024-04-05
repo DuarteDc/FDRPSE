@@ -2,18 +2,18 @@
 
 namespace App\application\question;
 
+use App\domain\qualificationQuestion\QualificationQuestionRepository;
 use App\domain\question\Question;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use App\domain\question\QuestionRepository;
-use App\domain\surveyUser\SurveyUserRepository;
 
 class QuestionUseCase
 {
     public function __construct(
         private readonly QuestionRepository $questionRepository,
         private readonly QuestionService $questionService,
-        // private readonly SurveyUserRepository $surveyUserRepository
+        private readonly QualificationQuestionRepository $qualificationQuestionRepository,
     ) {
     }
 
@@ -35,14 +35,30 @@ class QuestionUseCase
         $domain = "";
         $category = "";
 
-        if (isset($body->domain_id) || isset($body->categoy_id)) {
-            $domain = $this->questionService->domainIsValid($body->domain_id);
-            $category = $this->questionService->categoryIsValid($body->category_id);
+        if (isset($body->domain) || isset($body->categoy)) {
+            $domain = $this->questionService->domainIsValid($body->domain['id'], $body->domain['qualification_id']);
+            $category = $this->questionService->categoryIsValid($body->category['id'],  $body->category['qualification_id']);
+
             if ($domain instanceof Exception) return $domain;
             if ($category instanceof Exception) return $category;
         }
 
-        $question =  $this->questionRepository->create($body);
+        $question =  $this->questionRepository->createQuestion((object)[
+            ...(array)$body,
+            'category_id' => $body->category['id'],
+            'domain' => $body->domain['id']
+        ]);
+
+        $this->qualificationQuestionRepository->setQualification([
+            'qualificationable_id' => $category->qualification->id,
+            'qualificationable_type' => get_class($category->qualification),
+            'question_id' => $question->id,
+        ]);
+        $this->qualificationQuestionRepository->setQualification([
+            'qualificationable_id' => $domain->qualification->id,
+            'qualificationable_type' => get_class($domain->qualification),
+            'question_id' => $question->id,
+        ]);
 
         return $question ? ['message' => 'La pregunta se agrego correctamente'] : new Exception('Parece que hubo un error al crear la pregunta', 500);
     }
@@ -61,7 +77,7 @@ class QuestionUseCase
 
     public function getQuestionsBySectionAndTotalSections(string $guideId, string $page)
     {
-        
+
         $section = $this->questionService->getQuestionBySection($guideId, $page);
         $totalSections = $this->questionService->getTotalSections($guideId);
         return $section ? [

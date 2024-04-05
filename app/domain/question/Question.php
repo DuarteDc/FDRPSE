@@ -8,6 +8,7 @@ use App\domain\category\Category;
 use App\domain\dimension\Dimension;
 use App\domain\domain\Domain;
 use App\domain\qualification\Qualification;
+use App\domain\qualificationQuestion\QualificationQuestion;
 use App\domain\section\Section;
 
 class Question  extends Model

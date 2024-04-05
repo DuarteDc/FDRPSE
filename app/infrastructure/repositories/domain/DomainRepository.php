@@ -6,6 +6,7 @@ use App\domain\domain\Domain;
 use App\domain\domain\DomainRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class DomainRepository extends BaseRepository implements ContractsRepository
 {
@@ -13,6 +14,14 @@ class DomainRepository extends BaseRepository implements ContractsRepository
     public function __construct(private readonly Domain $domain)
     {
         parent::__construct($domain);
+    }
+
+    public function findOneWithQualification(string $id, string $qualificationId): Domain | null
+    {
+        return $this->domain::where('id', $id)
+            ->with('qualification', function ($query) use($qualificationId) {
+                $query->where('id', $qualificationId);
+            })->first();
     }
 
     public function findByName(string $name): ?Domain
@@ -42,6 +51,4 @@ class DomainRepository extends BaseRepository implements ContractsRepository
     {
         return $this->domain::with('qualifications')->find($domainId);
     }
-
 }
- 

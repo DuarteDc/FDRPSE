@@ -25,6 +25,12 @@ class SectionController extends Controller
         $this->response($this->sectionUseCase->getSectionDetail($id));
     }
 
+    public function getAvailableSections() 
+    {
+        $type = (string) $this->get('type');
+        $this->response($this->sectionUseCase->getSectionWithoutGuide($type));
+    }
+
     public function createSection()
     {
         $this->validate(CreateSectionRequest::rules(), CreateSectionRequest::messages());

@@ -16,6 +16,12 @@ class QuestionRepository extends BaseRepository implements ContractsRepository
         parent::__construct($question);
     }
 
+    public function createQuestion(object $body): Question
+    {
+        $question = new $this->question([...(array)$body]);
+        $question->save();
+        return $question;
+    }
     public function findQuestionsByTypeAndSection(string $type, string $name): Collection
     {
         return $this->question::where(

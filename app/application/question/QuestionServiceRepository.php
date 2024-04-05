@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 
 interface QuestionServiceRepository
 {
-    public function categoryIsValid(string $id): Model | Exception;
+    public function categoryIsValid(string $id, string $qualificationId): Model | Exception;
     public function qualificationIsValid(string $id): Model | Exception;
     public function sectionIsValid(string $id): Model | Exception;
-    public function domainIsValid(string $id): Model | Exception;
+    public function domainIsValid(string $id, string $qualificationId): Model | Exception;
     public function prepareDataToInsert(mixed $body): Exception | array;
     public function getQuestionsBySections(): Collection;
     public function getQuestionBySection(string $guideId, string $page): Paginator | null;

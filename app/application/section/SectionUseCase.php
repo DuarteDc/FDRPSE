@@ -23,6 +23,11 @@ class SectionUseCase
         return ['section' => $section];
     }
 
+    public function getSectionWithoutGuide(string $type)
+    {
+        return ['sections'  => $this->sectionRepository->findAvailableSections($type)];
+    }
+
     public function createSection(mixed $body): Exception | array
     {
         $section = [];

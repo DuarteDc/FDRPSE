@@ -3,12 +3,13 @@
 namespace App\application\guide;
 
 use App\domain\guide\GuideRepository;
+use App\domain\section\SectionRepository;
 use Exception;
 
 class GuideUseCase
 {
 
-    public function __construct(private readonly GuideRepository $guideRepository)
+    public function __construct(private readonly GuideRepository $guideRepository, private readonly SectionRepository $sectionRepository)
     {
     }
 
@@ -24,6 +25,15 @@ class GuideUseCase
         if ($name instanceof Exception) return $name;
 
         $guide = $this->guideRepository->createAndSetQualification((object)[...(array)$body, 'name' => $name]);
+
+        $sections = $this->sectionRepository->validateSectionsId($body->sections);
+
+        if (count($sections) !== count($body->sections)) {
+            $this->guideRepository->deleteGuide($guide->id);
+            return new Exception('Parece que hubo un error al asignar las secciones por favor verifica que las secciones no correspondan a otra guia', 400);
+        }
+
+        $this->sectionRepository->attachGuide($guide->id, $body->sections);
         return ['message' => 'EL cuestionario se creo correctamente', 'guide' => $guide];
     }
 
@@ -48,5 +58,4 @@ class GuideUseCase
 
         return ['guides' => $this->guideRepository->findGuideByTypeAndName($type, $name)];
     }
-
 }

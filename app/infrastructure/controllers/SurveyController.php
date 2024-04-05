@@ -20,7 +20,7 @@ class SurveyController extends Controller
 
     public function getAllSurveys()
     {
-        $page = (int) $this->get('page');
+        $page =$this->get('page');
         $this->response($this->surveyUseCase->getAllSurveys($page));
     }
 

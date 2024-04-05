@@ -13,4 +13,5 @@ interface GuideRepository extends BaseRepository
     public function setGuideQualification(Guide $guide, object $body): Guide;
     public function findGuideByTypeAndName(string $type, string $name): Collection;
     public function countGuidesById(array $guidesId): int;
+    public function deleteGuide(string $guideId);
 }

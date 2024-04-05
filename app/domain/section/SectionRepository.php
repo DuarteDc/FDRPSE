@@ -21,5 +21,7 @@ interface SectionRepository extends BaseRepository
     public function findSectionByIdWithQuestions(string $sectionId): Section;
     public function findMultipleSectionsWithQuestions(array $sectionsId): Collection;
     public function countSectionsByArrayOfSectionsId(array $sectionId): int;
-
+    public function findAvailableSections(string $type): ?Collection;
+    public function attachGuide(string $guideId, mixed $sectionsId): ?Collection;
+    public function validateSectionsId(array $sectionsId): Collection;
 }

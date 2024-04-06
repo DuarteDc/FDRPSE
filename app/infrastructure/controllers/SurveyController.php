@@ -20,7 +20,7 @@ class SurveyController extends Controller
 
     public function getAllSurveys()
     {
-        $page =$this->get('page');
+        $page = $this->get('page');
         $this->response($this->surveyUseCase->getAllSurveys($page));
     }
 
@@ -58,17 +58,18 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->getInProgressSurvey());
     }
 
-    public function getSurveyById(string $surveyId)
+    public function getGudeDetailBySurvey(string $surveyId, string $guideId)
     {
-        $this->response($this->surveyUseCase->getOneSurvey($surveyId));
+        $this->response($this->surveyUseCase->getOneSurveyWithGuideDetail($surveyId, $guideId));
     }
 
-    public function findSurveyDetailByUserName(string $surveyId)
+    public function findSurveyDetailByUserName(string $surveyId, string $guideId)
     {
         $name = (string) $this->get('name') ?? '';
-        $areaId = $this->get('area') ?? '';
+        $areaId = (string) $this->get('area') ?? '';
+        $subareaId = (string) $this->get('subarea') ?? '';
         $name = trim(mb_strtoupper($name));
-        $this->response($this->surveyUseCase->findSurveyByName($surveyId, $name, $areaId));
+        $this->response($this->surveyUseCase->findSurveyByName($surveyId, $guideId, $name, $areaId, $subareaId));
     }
 
     public function getDetailsByUser(string $surveyId,  string $userId)

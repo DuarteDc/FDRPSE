@@ -7,7 +7,6 @@ use App\domain\guideSurvey\GuideSurvey;
 use App\domain\guideUser\GuideUser;
 use Illuminate\Database\Eloquent\Model;
 
-use App\domain\surveyUser\SurveyUser;
 use App\domain\qualifications\Qualifications;
 use App\domain\user\User;
 
@@ -36,5 +35,10 @@ class Survey extends Model
         return $this->belongsToMany(Guide::class)
             ->using(GuideSurvey::class)
             ->withPivot('status');
+    }
+
+    public function guidesUser()
+    {
+        return $this->belongsToMany(GuideUser::class, 'guide_survey_user');
     }
 }

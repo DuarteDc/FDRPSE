@@ -12,13 +12,13 @@ class AreaUseCase
 
     public function findAllAreas()
     {
-        $areas = $this->areaRepository->findAreasWithUsers();
+        $areas = $this->areaRepository->findAreas();
         return ['areas' => $areas];
     }
 
     public function getAreaDetailsById(string $areaId)
-    {   
-        return $this->areaRepository->findAreaByIdAndGetChildAreas($areaId);
-
+    {
+        $subareas = $this->areaRepository->findAreaByIdAndGetChildAreas($areaId);
+        return ['areas' => $subareas];
     }
 }

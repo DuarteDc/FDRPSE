@@ -5,6 +5,7 @@ namespace App\infrastructure\repositories\guideUser;
 use App\domain\guideUser\GuideUser;
 use App\infrastructure\repositories\BaseRepository;
 use App\domain\guideUser\GuideUserRepository as ContractsRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 class GuideUserRepository extends BaseRepository implements ContractsRepository
 {
@@ -24,13 +25,14 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
         $this->guideUser::find($surveyUserId)->attach($surveyId);
     }
 
-    public function getCurrentGuideUser(string $guideId, string $userId)
+    public function getCurrentGuideUser(string $guideId, string $userId, string $surveyId)
     {
         $guideUser = $this->guideUser::Where('guide_id', $guideId)
             ->where('user_id', $userId)
+            ->where('survey_id', $surveyId)
             ->first();
-            
-        return $guideUser ? $guideUser : $this->create(['guide_id' => $guideId, 'user_id' => $userId]);
+
+        return $guideUser ? $guideUser : $this->create(['guide_id' => $guideId, 'user_id' => $userId, 'survey_id' => $surveyId]);
     }
 
     public function saveAnswer(GuideUser $guideUser, mixed $body): GuideUser
@@ -63,21 +65,49 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
             ->first();
     }
 
-    public function getDetailsSurveyUser(string $surveyId): array
+    public function getDetailsSurveyUser(string $surveyId, string $guideId)
     {
+        // id,nombre,userName,apellidoP,apellidoM,id_area',
         return $this->guideUser::where('survey_id', $surveyId)
-            ->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
-            ->get(['user_id', 'total', 'status'])
-            ->toArray();
+            ->where('guide_id', $guideId)
+            ->with([
+                'guides:id,name',
+                'users' => function ($query) {
+                    $query->where('nombre', 'EDUARDO');
+                },
+                'users.area:id,nombreArea',
+                'users.area.subdirections'
+            ])
+            ->get(['user_id', 'total', 'status']);
     }
 
-    public function searchByName(string $surveyId, string $name, string $areaId)
+    public function searchByNameAndAreas(string $surveyId, string $guideId, string $name, string $areaId = '', string $subareaId = '')
     {
-        $survey =  $this->getDetailsSurveyUser($surveyId);
-        return array(...array_filter($survey, function ($survey) use ($name, $areaId) {
-            if (!$areaId) return (str_contains($survey['user']['nombre'], $name) || str_contains($survey['user']['apellidoP'], $name)) ? $survey : null;
-            return ((str_contains($survey['user']['nombre'], $name) || str_contains($survey['user']['apellidoP'], $name)) && $survey['user']['area']['id'] == $areaId) ? $survey : null;
-        }));
+        $guidesUser =  $this->guideUser::where('survey_id', $surveyId)
+            ->where('guide_id', $guideId)
+            ->with([
+                'users' => function ($query) use ($name) {
+                    return $query->where('nombre', 'like', "%$name%")
+                    ->orWhere('apellidoP', 'like', "%$name%")
+                    ->orWhere('apellidoM', 'like', "%$name%");
+                },
+                'users:id,nombre,userName,apellidoP,apellidoM,id_area',
+                'users.area' => function ($query) use ($areaId, $subareaId) {
+                    if (!$areaId && !$subareaId) return $query;
+                    if ($areaId && !$subareaId)
+                        return $query->where('area_padre', $areaId);
+                    elseif (!$areaId && $subareaId)
+                        return $query->where('id', $subareaId);
+                    else
+                        return $query->where('area_padre', $areaId)->where('id', $subareaId);
+                }
+            ])
+            ->get(['user_id', 'total', 'status', 'guide_id']);
+
+
+        return collect([...$guidesUser->filter(function ($guide) {
+            return $guide->users !== null && $guide->users->area !== null;
+        })]);
     }
 
     public function getDetailsByUser(string $surveyId, string $userId): ?GuideUser
@@ -97,5 +127,15 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
     public function countSurveyUserAnswers(string $surveyId): int
     {
         return $this->guideUser::where('survey_id', $surveyId)->count();
+    }
+
+    public function findUserGuideBySurvey(string $surveyId, string $guideId): ?Collection
+    {
+        return $this->guideUser::with([
+            'users:id,nombre,userName,apellidoP,apellidoM,id_area', 'users.area:id,nombreArea'
+        ])
+            ->where('guide_id', $guideId)
+            ->where('survey_id', $surveyId)
+            ->get(['id', 'guide_id', 'user_id', 'survey_id', 'status', 'total', 'created_at', 'updated_at']);
     }
 }

@@ -18,6 +18,11 @@ class GuideController extends Controller
         $this->response($this->guideUseCase->getAllGuides());
     }
 
+    public function showGuide(string $guideId)
+    {
+        $this->response($this->guideUseCase->findGuide($guideId));
+    }
+
     public function createGuide()
     {
         $this->validate(CreateGuideRequest::rules(), CreateGuideRequest::messages());

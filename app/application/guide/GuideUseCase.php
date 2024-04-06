@@ -19,6 +19,13 @@ class GuideUseCase
         return ['guides' => $guides];
     }
 
+    public function findGuide(string $guideId)
+    {
+        $guide =  $this->guideRepository->findOne($guideId);
+        if (!$guide) return new Exception('La guia que buscar no existe o no es valida', 404);
+        return ['guide' => $guide];
+    }
+
     public function createGuide(mixed $body)
     {
         $name = $this->validateName($body->name);

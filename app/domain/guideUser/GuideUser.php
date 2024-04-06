@@ -3,25 +3,33 @@
 namespace App\domain\guideUser;
 
 use App\domain\guide\Guide;
+use App\domain\survey\Survey;
 use Illuminate\Database\Eloquent\Model;
 use App\domain\user\User;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class GuideUser extends Model
+class GuideUser extends Pivot
 {
     const INPROGRESS = false;
     const FINISHED   = true;
 
-    protected $table = 'guide_user';
-    protected $fillable = ['guide_id', 'user_id', 'answers', 'status', 'total'];
+    protected $table = 'guide_survey_user';
+    protected $fillable = ['guide_id', 'user_id', 'survey_id', 'answers', 'status', 'total'];
     protected $casts = ['answers' => 'json'];
 
-    public function guide()
+    public function guides()
     {
         return $this->belongsTo(Guide::class, 'guide_id');
     }
 
-    public function user()
+    public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function survey()
+    {
+        return $this->belongsTo(Survey::class, 'survey_id');
+    }
+
 }

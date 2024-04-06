@@ -70,24 +70,24 @@ class SurveyUseCase
         return $this->surveyService->existSurveyInProgress();
     }
 
-    public function findSurveyById(string $surveyId)
-    {
-        $survey =  $this->surveyService->findOneSurvey($surveyId);
-        return $survey ? ['survey' => $survey] : new Exception('La encuesta no existe o no esta disponible', 404);
-    }
+    // public function findSurveyById(string $surveyId)
+    // {
+    //     $survey =  $this->surveyService->findOneSurvey($surveyId);
+    //     return $survey ? ['survey' => $survey] : new Exception('La encuesta no existe o no esta disponible', 404);
+    // }
 
-    public function getOneSurvey(string $surveyId)
+    public function getGuideDetail(string $guideId)
     {
         return [
-            'survey' =>
-            // $this->surveyService->getSurveyDetails($surveyId)
-            ''
+            'guide' => $this->guideRepository->findOne($guideId),
         ];
     }
 
-    public function findSurveyByName(string $surveyId, string $name, string $areaId)
+    public function findSurveyByName(string $surveyId, string $guideId, string $name, string $areaId, string $subareaId)
     {
-        return ['survey' => $this->surveyService->findSurveyByName($surveyId, $name, $areaId)];
+        return [
+            'survey' => $this->surveyService->findSurveyByNameAndAreas($surveyId, $guideId, $name, $areaId, $subareaId)
+        ];
     }
 
     public function findUserDetails(string $surveyId, string $userId)

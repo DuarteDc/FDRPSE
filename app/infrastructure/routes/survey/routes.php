@@ -77,12 +77,12 @@ function router(Router $router)
         $surveyController->getTotalUserInSurvey();
     });
 
-    $router->get('/{surveyId}/find-by', function (string $surveyId) use ($surveyController) {
-        $surveyController->findSurveyDetailByUserName($surveyId);
+    $router->get('/{surveyId}/guide/{guideId}find-by', function (string $surveyId, string $guideId) use ($surveyController) {
+        $surveyController->findSurveyDetailByUserName($surveyId, $guideId);
     });
 
-    $router->get('/{id}', function (string $id) use ($surveyController) {
-        $surveyController->getSurveyById($id);
+    $router->get('/{id}/details/{guideId}', function (string $id, string $guideId) use ($surveyController) {
+        $surveyController->getGudeDetailBySurvey($id, $guideId);
     });
 
     $router->post('/end/{id}', function (string $id) use ($surveyController) {

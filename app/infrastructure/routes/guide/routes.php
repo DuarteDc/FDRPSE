@@ -32,6 +32,12 @@ function router(Router $router)
         $guideController->createGuide();
     });    
 
+    $router->get('/{id}', function (string $id)  use ($guideController) {
+        $guideController->showGuide($id);
+    });
+
+
+
     // $router->get('/with/qualification', function () use ($domainController) {
     //     $domainController->getDomainsWithQualifications();
     // });

@@ -7,6 +7,7 @@ use App\domain\guideUser\GuideUser;
 use App\domain\qualifications\Qualifications;
 use App\domain\section\Section;
 use App\domain\survey\Survey;
+use App\domain\user\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Guide extends Model
@@ -31,4 +32,10 @@ class Guide extends Model
     {
         return $this->morphOne(Qualifications::class,  'qualificationable');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->using(GuideUser::class);
+    }
+
 }

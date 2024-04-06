@@ -14,4 +14,6 @@ interface GuideRepository extends BaseRepository
     public function findGuideByTypeAndName(string $type, string $name): Collection;
     public function countGuidesById(array $guidesId): int;
     public function deleteGuide(string $guideId);
+
+    public function findUserGuideBySurvey(string $surveyId, string $guideId): ?Collection;
 }

@@ -4,7 +4,6 @@ namespace App\infrastructure\repositories\guide;
 
 use App\domain\guide\Guide;
 use App\domain\guide\GuideRepository as ContractsRepository;
-use App\domain\section\Section;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -57,8 +56,13 @@ class GuideRepository extends BaseRepository implements ContractsRepository
         return $this->guide->whereIn('id', $guidesId)->pluck('id')->count();
     }
 
-    public function deleteGuide(string $guideId) 
+    public function deleteGuide(string $guideId)
     {
         return $this->guide::where('id', $guideId)->delete();
+    }
+
+    public function findUserGuideBySurvey(string $surveyId, string $guideId): ?Collection
+    {
+        return $this->guide::with('users')->get();
     }
 }

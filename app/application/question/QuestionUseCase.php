@@ -43,22 +43,27 @@ class QuestionUseCase
             if ($category instanceof Exception) return $category;
         }
 
-        $question =  $this->questionRepository->createQuestion((object)[
+        $question = $this->questionRepository->createQuestion((object)[
             ...(array)$body,
-            'category_id' => $body->category['id'],
-            'domain' => $body->domain['id']
+            'category_id' => $body->category['id'] ?? null,
+            'domain_id' => $body->domain['id'] ?? null,
         ]);
 
-        $this->qualificationQuestionRepository->setQualification([
-            'qualificationable_id' => $category->qualification->id,
-            'qualificationable_type' => get_class($category->qualification),
-            'question_id' => $question->id,
-        ]);
-        $this->qualificationQuestionRepository->setQualification([
-            'qualificationable_id' => $domain->qualification->id,
-            'qualificationable_type' => get_class($domain->qualification),
-            'question_id' => $question->id,
-        ]);
+        if ($category && $category->qualification->id) {
+            $this->qualificationQuestionRepository->setQualification([
+                'qualificationable_id' => $category->qualification->id,
+                'qualificationable_type' => get_class($category->qualification),
+                'question_id' => $question->id,
+            ]);
+        }
+
+        if ($domain && $domain->qualification->id) {
+            $this->qualificationQuestionRepository->setQualification([
+                'qualificationable_id' => $domain->qualification->id,
+                'qualificationable_type' => get_class($domain->qualification),
+                'question_id' => $question->id,
+            ]);
+        }
 
         return $question ? ['message' => 'La pregunta se agrego correctamente'] : new Exception('Parece que hubo un error al crear la pregunta', 500);
     }

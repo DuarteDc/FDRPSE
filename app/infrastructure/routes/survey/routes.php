@@ -12,6 +12,7 @@ use App\domain\guide\Guide;
 use App\domain\guideSurvey\GuideSurvey;
 use App\domain\question\Question;
 use App\domain\guideUser\GuideUser;
+use App\domain\qualificationQuestion\QualificationQuestion;
 use App\domain\user\User;
 use App\infrastructure\controllers\SurveyController;
 use App\infrastructure\adapters\PdfAdapter;
@@ -21,6 +22,7 @@ use App\infrastructure\repositories\guideSurvey\GuideSurveyRepository;
 use App\infrastructure\repositories\question\QuestionRepository;
 use App\infrastructure\repositories\survey\SurveyRepository;
 use App\infrastructure\repositories\guideUser\GuideUserRepository;
+use App\infrastructure\repositories\qualificationQuestion\QualificationQuestionRepository;
 use App\infrastructure\repositories\user\UserRepository;
 
 function router(Router $router)
@@ -31,7 +33,8 @@ function router(Router $router)
     $userRepository         = new UserRepository(new User);
     $guideRepository        = new GuideRepository(new Guide);
     $guideSurveyRepository  = new GuideSurveyRepository(new GuideSurvey);
-    $surveyService          = new SurveyService($surveyRepository, $guideUserRepository, $questionRepository, $guideSurveyRepository);
+    $qualificationQuestionRepository  = new QualificationQuestionRepository(new QualificationQuestion);
+    $surveyService          = new SurveyService($surveyRepository, $guideUserRepository, $questionRepository, $guideSurveyRepository, $qualificationQuestionRepository);
     $areaRepository         = new AreaRepository(new Area);
     $surveyUseCase          = new SurveyUseCase($surveyService, $userRepository, $areaRepository, $guideRepository);
     $pdfAdapter             = new PdfAdapter;
@@ -65,8 +68,8 @@ function router(Router $router)
         $surveyController->getCurrentSurvey();
     });
 
-    $router->get('/details/{surveId}/{userId}', function (string $id, string $userId) use ($surveyController) {
-        $surveyController->getDetailsByUser($id, $userId);
+    $router->get('/details/{surveId}/{$guideId}/{userId}', function (string $id, string $guideId, string $userId) use ($surveyController) {
+        $surveyController->getDetailsByUser($id, $userId, $guideId);
     });
 
     $router->get('/report', function () use ($surveyController) {

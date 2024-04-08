@@ -72,9 +72,10 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->findSurveyByName($surveyId, $guideId, $name, $areaId, $subareaId));
     }
 
-    public function getDetailsByUser(string $surveyId,  string $userId)
+    public function getDetailsByUser(string $surveyId,  string $userId, string $guideId)
     {
-        $this->response($this->surveyUseCase->findUserDetails($surveyId, $userId));
+
+        $this->response($this->surveyUseCase->findUserDetails($surveyId, $userId, $guideId));
     }
 
     public function getTotalUserInSurvey()

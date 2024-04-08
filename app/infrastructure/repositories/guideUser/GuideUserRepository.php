@@ -71,12 +71,12 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
         return $this->guideUser::where('survey_id', $surveyId)
             ->where('guide_id', $guideId)
             ->with([
-                'guides:id,name',
-                'users' => function ($query) {
+                'guide:id,name',
+                'user' => function ($query) {
                     $query->where('nombre', 'EDUARDO');
                 },
-                'users.area:id,nombreArea',
-                'users.area.subdirections'
+                'user.area:id,nombreArea',
+                'user.area.subdirections'
             ])
             ->get(['user_id', 'total', 'status']);
     }
@@ -86,13 +86,13 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
         $guidesUser =  $this->guideUser::where('survey_id', $surveyId)
             ->where('guide_id', $guideId)
             ->with([
-                'users' => function ($query) use ($name) {
+                'user' => function ($query) use ($name) {
                     return $query->where('nombre', 'like', "%$name%")
                     ->orWhere('apellidoP', 'like', "%$name%")
                     ->orWhere('apellidoM', 'like', "%$name%");
                 },
-                'users:id,nombre,userName,apellidoP,apellidoM,id_area',
-                'users.area' => function ($query) use ($areaId, $subareaId) {
+                'user:id,nombre,userName,apellidoP,apellidoM,id_area',
+                'user.area' => function ($query) use ($areaId, $subareaId) {
                     if (!$areaId && !$subareaId) return $query;
                     if ($areaId && !$subareaId)
                         return $query->where('area_padre', $areaId);
@@ -106,13 +106,14 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
 
 
         return collect([...$guidesUser->filter(function ($guide) {
-            return $guide->users !== null && $guide->users->area !== null;
+            return $guide->user !== null && $guide->user->area !== null;
         })]);
     }
 
-    public function getDetailsByUser(string $surveyId, string $userId): ?GuideUser
+    public function getDetailsByUser(string $surveyId, string $userId, string $guideId): ?GuideUser
     {
         return $this->guideUser::where('survey_id', $surveyId)->where('user_id', $userId)
+            ->where('guide_id', $guideId)
             ->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
             ->first(['user_id', 'total', 'status', 'answers']);
     }
@@ -132,7 +133,7 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
     public function findUserGuideBySurvey(string $surveyId, string $guideId): ?Collection
     {
         return $this->guideUser::with([
-            'users:id,nombre,userName,apellidoP,apellidoM,id_area', 'users.area:id,nombreArea'
+            'user:id,nombre,userName,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'
         ])
             ->where('guide_id', $guideId)
             ->where('survey_id', $surveyId)

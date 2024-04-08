@@ -10,9 +10,13 @@ class Qualifications extends Model
     protected $table = 'qualifications';
     protected $fillable = ['despicable', 'low', 'middle', 'high', 'very_high', 'qualificationable_id', 'qualificationable_type'];
 
-    public function qualificationable() 
+    public function qualificationable()
     {
         return $this->morphTo();
     }
 
+    public function qualifications()
+    {
+        return $this->morphMany(Qualifications::class, 'qualificationable');
+    }
 }

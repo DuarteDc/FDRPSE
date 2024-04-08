@@ -17,12 +17,12 @@ class GuideUser extends Pivot
     protected $fillable = ['guide_id', 'user_id', 'survey_id', 'answers', 'status', 'total'];
     protected $casts = ['answers' => 'json'];
 
-    public function guides()
+    public function guide()
     {
         return $this->belongsTo(Guide::class, 'guide_id');
     }
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

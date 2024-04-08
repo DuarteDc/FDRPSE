@@ -90,9 +90,9 @@ class SurveyUseCase
         ];
     }
 
-    public function findUserDetails(string $surveyId, string $userId)
+    public function findUserDetails(string $surveyId, string $userId, string $guideId)
     {
-        $surveyUser = $this->surveyService->getDetailsByUser($surveyId, $userId);
+        $surveyUser = $this->surveyService->getDetailsByUser($surveyId, $userId, $guideId);
         if ($surveyUser instanceof Exception) return $surveyUser;
         return ['survey_user' => $surveyUser];
     }

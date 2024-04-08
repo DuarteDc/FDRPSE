@@ -2,9 +2,14 @@
 
 namespace App\application\survey;
 
+use App\domain\category\Category;
+use App\domain\domain\Domain;
 use App\domain\guideSurvey\GuideSurveyRepository;
 use App\domain\guideUser\GuideUser;
 use App\domain\guideUser\GuideUserRepository;
+use App\domain\qualification\Qualification;
+use App\domain\qualificationQuestion\QualificationQuestion;
+use App\domain\qualificationQuestion\QualificationQuestionRepository;
 use Exception;
 use App\kernel\authentication\Auth;
 
@@ -22,6 +27,7 @@ class SurveyService
         private readonly GuideUserRepository $guideUserRepository,
         private readonly QuestionRepository $questionRepository,
         private readonly GuideSurveyRepository $guideSurveyRepository,
+        private readonly QualificationQuestionRepository $qualificationQuestionRepository,
     ) {
     }
 
@@ -73,7 +79,7 @@ class SurveyService
 
         $isValidRequest = $this->validateQuestions($body);
 
-        if (in_array(false, $isValidRequest)) return new Exception('Las preguntas que intentas guardar no exiten', 400);
+        if (in_array(false, $isValidRequest)) return new Exception('Parece que hubo un error al guardar las preguntas', 400);
 
         $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id,  $guideSurvey->survey_id);
 
@@ -130,7 +136,7 @@ class SurveyService
     {
         $survey = $this->guideSurveyRepository->findGuideInProgress();
         if (!$survey) return new Exception('La encuesta que intentas guardar no existe', 404);
-    
+
         $userQualification = $this->calculateUserQualification(
             $this->guideUserRepository->getCurrentGuideUser($survey->guide_id, $this->auth()->id, $survey->survey_id)
         );
@@ -172,12 +178,12 @@ class SurveyService
         return $this->guideUserRepository->searchByNameAndAreas($surveyId, $guideId, $name, $areaId, $subareaId);
     }
 
-    public function getDetailsByUser(string $surveyId, string $userId)
+    public function getDetailsByUser(string $surveyId, string $userId, string $guideId)
     {
-        $survey = $this->surveyRepository->findOne($surveyId, $userId);
+        $survey = $this->surveyRepository->findOne($surveyId);
         if (!$survey) return new Exception('El cuestionario no existe o no es valido', 404);
-        // $suerveyUser = $this->surveyUserRepository->getDetailsByUser($surveyId, $userId);
-        // return !$suerveyUser ? new Exception('La encuesta no esta disponible', 404) : $suerveyUser;
+        $suerveyUser = $this->guideUserRepository->getDetailsByUser($surveyId, $userId, $guideId);
+        return !$suerveyUser ? new Exception('La encuesta no esta disponible', 404) : $suerveyUser;
     }
 
     public function endSurvey(string $suerveyId)
@@ -224,6 +230,12 @@ class SurveyService
                 'category' => [
                     'id' => $question->category->id ?? '',
                     'name' => $question->category->name ?? '',
+                    'qualification' => $this->parseQualificationData(
+                        $this->qualificationQuestionRepository->findQualificationByQuestion(
+                            $currentQuestion['question_id'],
+                            Category::class
+                        )
+                    ),
                 ],
                 'section' => [
                     'id' => $question->section->id ?? '',
@@ -232,13 +244,19 @@ class SurveyService
                 'domain' => [
                     'id' => $question->domain->id ?? '',
                     'name' => $question->domain->name ?? '',
+                    'qualification' => $this->parseQualificationData(
+                        $this->qualificationQuestionRepository->findQualificationByQuestion(
+                            $currentQuestion['question_id'],
+                            Domain::class
+                        )
+                    ),
                 ],
                 'dimension' => [
                     'id' => $question->dimension->id ?? '',
                     'name' => $question->dimension->name ?? ''
                 ],
                 'qualification' => $currentQuestion['qualification'],
-                'qualification_name' => $this->questionRepository->getQualification($question) ?? ''
+                'qualification_data' => $this->questionRepository->getQualification($question) ?? ''
             ];
         }, (array) $body);
     }
@@ -256,5 +274,18 @@ class SurveyService
     private function calculateUserQualification(GuideUser $guideUser): int
     {
         return array_reduce($guideUser->answers, fn ($prev, $curr) => $prev + $curr['qualification']);
+    }
+
+    private function parseQualificationData(mixed $body)
+    {
+        if (!$body) return "";
+        return [
+            "id" => $body->qualificationable->id,
+            "despicable" => $body->qualificationable->despicable,
+            "low" => $body->qualificationable->low,
+            "middle" => $body->qualificationable->middle,
+            "high" => $body->qualificationable->high,
+            "very_high" => $body->qualificationable->very_high,
+        ];
     }
 }

@@ -66,7 +66,7 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
 
     public function setGuidesToNewSurvey(Survey $survey, array $guidesId): Survey
     {
-        $survey->guides()->sync($guidesId);
+        $survey->guides()->attach($guidesId);
         return $survey;
     }
 }

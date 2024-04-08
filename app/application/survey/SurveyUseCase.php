@@ -37,7 +37,13 @@ class SurveyUseCase
         if ($survey instanceof Exception) return $survey;
 
         $areValidIds = $this->guideRepository->countGuidesById($guides);
-        if (count($guides) !== $areValidIds) return new Exception('Los cuestionarios no son validos', 400);
+        if (count($guides) !== count($areValidIds)) return new Exception('Los cuestionarios no son validos', 400);
+
+        $guides = [];
+        foreach ($areValidIds as $guide) {
+            $guides[$guide['id']] = ['qualification' => json_encode($guide['qualification'])];
+        }
+
         return [
             'survey' => $this->surveyService->attachGuidesToSurvey($survey, $guides),
             'message' => 'Se ha generado una serie de cuestionarios'
@@ -94,7 +100,7 @@ class SurveyUseCase
     {
         $surveyUser = $this->surveyService->getDetailsByUser($surveyId, $userId, $guideId);
         if ($surveyUser instanceof Exception) return $surveyUser;
-        return ['survey_user' => $surveyUser];
+        return ['guide_user' => $surveyUser];
     }
 
     public function getUserWithoutSurvey()

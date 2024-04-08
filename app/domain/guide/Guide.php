@@ -38,4 +38,11 @@ class Guide extends Model
         return $this->belongsToMany(User::class)->using(GuideUser::class);
     }
 
+    public function survey()
+    {
+        return $this->belongsToMany(Survey::class)
+            ->using(GuideSurvey::class)
+            ->withPivot('qualification');
+    }
+
 }

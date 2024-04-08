@@ -27,8 +27,8 @@ class Area extends Model
         return $this->hasMany(Area::class, 'area_padre');
     }
 
-    public function getMainArea(string $areaId)
+    public function father()
     {
-        return $this->where('area_padre', $areaId)->get();
+        return $this->belongsTo(Area::class, 'area_padre');
     }
 }

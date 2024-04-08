@@ -83,26 +83,41 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
 
     public function searchByNameAndAreas(string $surveyId, string $guideId, string $name, string $areaId = '', string $subareaId = '')
     {
-        $guidesUser =  $this->guideUser::where('survey_id', $surveyId)
+        $guidesUser = $this->guideUser::where('survey_id', $surveyId)
             ->where('guide_id', $guideId)
             ->with([
                 'user' => function ($query) use ($name) {
                     return $query->where('nombre', 'like', "%$name%")
-                    ->orWhere('apellidoP', 'like', "%$name%")
-                    ->orWhere('apellidoM', 'like', "%$name%");
+                        ->orWhere('apellidoP', 'like', "%$name%")
+                        ->orWhere('apellidoM', 'like', "%$name%");
                 },
                 'user:id,nombre,userName,apellidoP,apellidoM,id_area',
                 'user.area' => function ($query) use ($areaId, $subareaId) {
                     if (!$areaId && !$subareaId) return $query;
-                    if ($areaId && !$subareaId)
-                        return $query->where('area_padre', $areaId);
-                    elseif (!$areaId && $subareaId)
-                        return $query->where('id', $subareaId);
-                    else
-                        return $query->where('area_padre', $areaId)->where('id', $subareaId);
+                    if ($areaId && !$subareaId) {
+                        $query->where(function ($q) use ($areaId) {
+                            $q->where('area_padre', $areaId)
+                                ->orWhereHas('father', function ($subquery) use ($areaId) {
+                                    $subquery->where('area_padre', $areaId)->where('area_nivel', '>', 1);
+                                })
+                                ->orWhere('id',$areaId)
+                                ;
+                        });
+                    } elseif (!$areaId && $subareaId) {
+                        $query->where('id', $subareaId);
+                    } else {
+                        $query->where(function ($q) use ($areaId, $subareaId) {
+                            $q->where('area_padre', $areaId)
+                                ->where('id', $subareaId);
+                        })->orWhereHas('father', function ($subquery) use ($areaId, $subareaId) {
+                            $subquery->where('area_padre', $areaId)
+                                ->where('id', $subareaId);
+                        });
+                    }
                 }
             ])
             ->get(['user_id', 'total', 'status', 'guide_id']);
+
 
 
         return collect([...$guidesUser->filter(function ($guide) {

@@ -17,6 +17,7 @@ use App\domain\survey\Survey;
 use App\domain\survey\SurveyRepository;
 use App\domain\question\QuestionRepository;
 use App\domain\section\Section;
+use Illuminate\Database\Eloquent\Collection;
 
 class SurveyService
 {
@@ -43,8 +44,7 @@ class SurveyService
 
     public function startSurvey()
     {
-        if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay un cuestionatio en progreso por lo que no se puede comenzar la nueva encuesta', 400);
-        // if ($this->questionRepository->countQuestions() <= 0) return new Exception('No se puede comenzar el cuestionario porque no existen preguntas', 400);
+        // if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay un cuestionatio en progreso por lo que no se puede comenzar la nueva encuesta', 400);
         return $this->surveyRepository->create(['start_date' => date('Y-m-d\TH:i:s.000'), 'status' => Survey::PENDING]);
     }
 
@@ -123,13 +123,15 @@ class SurveyService
         $survey = $this->surveyRepository->getCurrentSurvey();
         if (!$survey) return new Exception('No hay encuestas disponibles', 404);
 
-        $guides = (array) json_decode(json_encode($survey->guides), true);
+        $guides =json_decode(json_encode($survey->guides), true);
 
         $guide = array_filter($guides, fn ($guide) => $guide['pivot']['status'] === false);
 
         if (count($guide) === 0) return new Exception('No hay encuestas disponibles', 400);
 
-        return ['survey' => $this->guideUserRepository->getCurrentGuideUser($guide[0]['id'], $this->auth()->id, $survey->id), 'success' => true];
+        $guide = collect(...$guide);
+
+        return ['survey' => $this->guideUserRepository->getCurrentGuideUser($guide['id'], $this->auth()->id, $survey->id), 'success' => true];
     }
 
     public function finalzeUserSurvey()
@@ -221,6 +223,8 @@ class SurveyService
 
     private function validateQuestions(mixed $body)
     {
+
+
         return array_map(function ($currentQuestion) {
             $question = $this->questionRepository->findOne($currentQuestion['question_id']);
             if (!$question) return false;
@@ -273,7 +277,7 @@ class SurveyService
 
     private function calculateUserQualification(GuideUser $guideUser): int
     {
-        return array_reduce($guideUser->answers, fn ($prev, $curr) => $prev + $curr['qualification']);
+        return array_reduce((array)$guideUser->answers, fn ($prev, $curr) => $prev + $curr['qualification']);
     }
 
     private function parseQualificationData(mixed $body)

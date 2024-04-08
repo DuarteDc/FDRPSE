@@ -21,7 +21,7 @@ class GuideUseCase
 
     public function findGuide(string $guideId)
     {
-        $guide =  $this->guideRepository->findOne($guideId);
+        $guide =  $this->guideRepository->findGuideWithQualification($guideId);
         if (!$guide) return new Exception('La guia que buscar no existe o no es valida', 404);
         return ['guide' => $guide];
     }

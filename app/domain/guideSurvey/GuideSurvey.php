@@ -10,7 +10,8 @@ class GuideSurvey extends Pivot
 {
 
     protected $table = 'guide_survey';
-    protected $fillable = ['guide_id', 'survey_id', 'status'];
+    protected $fillable = ['guide_id', 'survey_id', 'status', 'qualification'];
+    protected $casts = ['qualification' => 'json'];
 
     public function guides()
     {

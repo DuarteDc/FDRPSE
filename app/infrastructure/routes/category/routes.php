@@ -37,6 +37,12 @@ function router(Router $router)
         $categoryController->getCategoryWithQualifications($categoryId);
     });
 
+    $router->post('/add/qualification/{categoryId}', function (string $categoryId) use ($categoryController, $checkRole) {
+        $checkRole->handle();
+        $categoryController->addNewQualification($categoryId);
+    });
+
+
     $router->post('/create', function () use ($categoryController, $checkRole) {
         $checkRole->handle();
         $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));

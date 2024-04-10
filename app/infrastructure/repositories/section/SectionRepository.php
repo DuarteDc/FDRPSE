@@ -82,6 +82,7 @@ class SectionRepository extends BaseRepository implements ContractsRepository
         return $this->section::where('type', $type === $this->section::NONGRADABLE ?
             $this->section::NONGRADABLE :
             $this->section::GRADABLE)
+            ->where('can_finish_guide', false)
             ->get();
     }
 

@@ -58,6 +58,14 @@ class GuideUseCase
         return $guide ? new Exception('Ya existe un cuestionario con ese nombre', 400) : $name;
     }
 
+    public function showGuideBySurvey(string $surveyId, string $guideId)
+    {
+        $guide =  $this->guideRepository->findGuideBySurvey($surveyId, $guideId);
+        return $guide;
+        if (!$guide) return new Exception('La guia que buscar no existe o no es valida', 404);
+        return ['guide' => $guide];
+    }
+
     public function searchGuidesByTypeAndName(string $type, string $name)
     {
         $type = trim(mb_strtolower($type));

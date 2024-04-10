@@ -33,4 +33,11 @@ class CategoryController extends Controller
     {
         $this->response($this->categoryUseCase->findCategoryWithQualifications($id));
     }
+
+
+    public function addNewQualification(string $categoryId)
+    {
+        $this->response($this->categoryUseCase->addQualification($categoryId, $this->request()->qualification));
+    }
+
 }

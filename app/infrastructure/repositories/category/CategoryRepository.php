@@ -42,6 +42,7 @@ class CategoryRepository extends BaseRepository implements ContractsRepository
     {
         return $this->category::with('qualifications')->find($categoryId);
     }
+
     public function findOneWithQualification(string $id, string $qualificationId): Category | null
     {
         return $this->category::where('id', $id)
@@ -50,4 +51,8 @@ class CategoryRepository extends BaseRepository implements ContractsRepository
             })->first();
     }
 
+    public function addNewQualification(Category $category, mixed $qualification): Category {
+        $category->qualification()->create($qualification);
+        return $this->findOneWithQualifications($category->id);
+    }
 }

@@ -34,4 +34,9 @@ class DomainController extends Controller
         $this->response($this->domainUseCase->findDomainWithQualifications($id));
     }
 
+    public function addNewQualification(string $domainId)
+    {
+        $this->response($this->domainUseCase->addQualification($domainId, $this->request()->qualification));
+    }
+
 }

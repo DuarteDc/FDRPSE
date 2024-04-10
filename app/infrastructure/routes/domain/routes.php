@@ -33,8 +33,13 @@ function router(Router $router)
         // $checkRole->handle();
         $domainController->getDomainWithQualifications($domainId);
     });
-    
+
     $router->get('/with/qualification', function () use ($domainController) {
         $domainController->getDomainsWithQualifications();
     });
+
+    $router->post('/add/qualification/{domainId}', function (string $domainId) use ($domainController) {
+        $domainController->addNewQualification($domainId);
+    });
+
 }

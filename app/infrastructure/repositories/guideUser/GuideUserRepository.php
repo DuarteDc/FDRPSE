@@ -47,9 +47,10 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
         return $this->guideUser::where('status', false)->where('user_id', $userId)->first();
     }
 
-    public function finalizeGuideUser(string $guideId, string $userId, int $userQualification): GuideUser
+    public function finalizeGuideUser(string $surveyId, string $guideId, string $userId, int $userQualification): GuideUser
     {
         $surveyUser = $this->guideUser::where('guide_id', $guideId)
+            ->where('survey_id', $surveyId)
             ->where('user_id', $userId)
             ->first();
         $surveyUser->status = GuideUser::FINISHED;
@@ -153,5 +154,12 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
             ->where('guide_id', $guideId)
             ->where('survey_id', $surveyId)
             ->get(['id', 'guide_id', 'user_id', 'survey_id', 'status', 'total', 'created_at', 'updated_at']);
+    }
+
+    public function clearOldAnswers(GuideUser $guideUser): GuideUser {
+        $guideUser->answers = [];
+        $guideUser->status = GuideUser::INPROGRESS;
+        $guideUser->save();
+        return $guideUser;
     }
 }

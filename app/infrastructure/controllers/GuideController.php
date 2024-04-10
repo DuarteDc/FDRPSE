@@ -17,10 +17,14 @@ class GuideController extends Controller
     {
         $this->response($this->guideUseCase->getAllGuides());
     }
-
     public function showGuide(string $guideId)
     {
         $this->response($this->guideUseCase->findGuide($guideId));
+    }
+
+    public function showGuideBySurvey(string $surveyId, string $guideId)
+    {
+        $this->response($this->guideUseCase->showGuideBySurvey($surveyId, $guideId));
     }
 
     public function createGuide()

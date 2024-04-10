@@ -61,8 +61,17 @@ class GuideRepository extends BaseRepository implements ContractsRepository
         return $this->guide::where('id', $guideId)->delete();
     }
 
-    public function findGuideWithQualification(string $guideId):? Guide
+    public function findGuideWithQualification(string $guideId): ?Guide
     {
         return $this->guide::with(['survey:id', 'survey:pivot.qualification'])->find($guideId);
+    }
+
+    public function findGuideBySurvey(string $surveyId, string $guideId): ?Guide
+    {
+        return $this->guide::whereHas('survey', function ($query)  use ($surveyId){
+                return $query->where();
+            }
+        )
+            ->where('id', $guideId)->first();
     }
 }

@@ -18,4 +18,6 @@ interface CategoryRepository extends BaseRepository {
     public function findOneWithQualifications(string $categoryId): ?Category;
 
     public function findOneWithQualification(string $id, string $qualificationId): Category | null;
+
+    public function addNewQualification(Category $category, mixed $qualification): Category;
 }

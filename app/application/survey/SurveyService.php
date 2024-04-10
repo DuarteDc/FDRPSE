@@ -44,7 +44,7 @@ class SurveyService
 
     public function startSurvey()
     {
-        // if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay un cuestionatio en progreso por lo que no se puede comenzar la nueva encuesta', 400);
+        //if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay un cuestionatio en progreso por lo que no se puede comenzar la nueva encuesta', 400);
         return $this->surveyRepository->create(['start_date' => date('Y-m-d\TH:i:s.000'), 'status' => Survey::PENDING]);
     }
 
@@ -123,7 +123,7 @@ class SurveyService
         $survey = $this->surveyRepository->getCurrentSurvey();
         if (!$survey) return new Exception('No hay encuestas disponibles', 404);
 
-        $guides =json_decode(json_encode($survey->guides), true);
+        $guides = json_decode(json_encode($survey->guides), true);
 
         $guide = array_filter($guides, fn ($guide) => $guide['pivot']['status'] === false);
 
@@ -131,7 +131,11 @@ class SurveyService
 
         $guide = collect(...$guide);
 
-        return ['survey' => $this->guideUserRepository->getCurrentGuideUser($guide['id'], $this->auth()->id, $survey->id), 'success' => true];
+        $guideUser = $this->guideUserRepository->getCurrentGuideUser($guide['id'], $this->auth()->id, $survey->id);
+    
+        if(gettype($guideUser->answers) === 'array' && count($guideUser->answers) > 0) $guideUser = $this->guideUserRepository->clearOldAnswers($guideUser);
+
+        return ['survey' => $guideUser, 'success' => true];
     }
 
     public function finalzeUserSurvey()
@@ -143,7 +147,7 @@ class SurveyService
             $this->guideUserRepository->getCurrentGuideUser($survey->guide_id, $this->auth()->id, $survey->survey_id)
         );
 
-        $surveyUser = $this->guideUserRepository->finalizeGuideUser($survey->guide_id, $this->auth()->id, $userQualification);
+        $surveyUser = $this->guideUserRepository->finalizeGuideUser($survey->survey_id, $survey->guide_id, $this->auth()->id, $userQualification);
         return $surveyUser ? ['message' => 'La encuesta ha finalizado correctamente'] : new Exception('Parece que hubo un error al finalizar la encuesta', 500);
     }
 
@@ -210,10 +214,10 @@ class SurveyService
     private function validateCanFinishedQuestion(Section $section, bool $qualification)
     {
         return [
-            'question_id' => $section->id,
+            'question_id' => '',
             'name' => $section->question,
             'category' => '',
-            'section' => '',
+            'section' => $section->id,
             'domain' => '',
             'dimension' => '',
             'qualification' => $qualification,

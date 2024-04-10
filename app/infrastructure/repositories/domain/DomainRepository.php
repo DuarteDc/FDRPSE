@@ -51,4 +51,9 @@ class DomainRepository extends BaseRepository implements ContractsRepository
     {
         return $this->domain::with('qualifications')->find($domainId);
     }
+
+    public function addNewQualification(Domain $domain, mixed $qualification): Domain {
+        $domain->qualification()->create($qualification);
+        return $this->findOneWithQualifications($domain->id);
+    }
 }

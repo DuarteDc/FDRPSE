@@ -41,6 +41,14 @@ class CategoryUseCase
         return ['category' => $category];
     }
 
+    public function addQualification(string $categoryId, mixed $body)
+    {
+        $category = $this->categoryRepository->findOne($categoryId);
+        if (!$category) return new Exception('La categoría no existe o no es valida', 404);
+        $category = $this->categoryRepository->addNewQualification($category, $body);
+        return ['category' => $category, 'message' => 'La calificación se agrego correctamente'];
+    }
+
     private function validateName($name): Exception | string
     {
         $name = mb_strtoupper(trim($name));

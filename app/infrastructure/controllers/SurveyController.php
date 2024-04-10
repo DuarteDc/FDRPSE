@@ -9,7 +9,6 @@ use App\infrastructure\adapters\PdfAdapter;
 use App\infrastructure\adapters\PaperTypes;
 use App\infrastructure\adapters\OrientationTypes;
 use App\infrastructure\requests\survey\SaveQuestionRequest;
-use App\infrastructure\requests\survey\StartNewSurveyRequest;
 
 class SurveyController extends Controller
 {
@@ -31,7 +30,7 @@ class SurveyController extends Controller
 
     public function startSurvey()
     {
-        //$this->validate(StartNewSurveyRequest::rules(), StartNewSurveyRequest::messages());
+        // $this->validate(StartNewSurveyRequest::rules(), StartNewSurveyRequest::messages());
         $guides = $this->request()->guides;
         $this->response($this->surveyUseCase->startNewSurvey($guides));
     }
@@ -57,11 +56,6 @@ class SurveyController extends Controller
     {
         $this->response($this->surveyUseCase->getInProgressSurvey());
     }
-
-    // public function getGudeDetailBySurvey(string $surveyId, string $guideId)
-    // {
-    //     $this->response($this->surveyUseCase->getOneSurveyWithGuideDetail($surveyId, $guideId));
-    // }
 
     public function findSurveyDetailByUserName(string $surveyId, string $guideId)
     {

@@ -41,7 +41,7 @@ class SurveyUseCase
 
         $guides = [];
         foreach ($areValidIds as $guide) {
-            $guides[$guide['id']] = ['qualification' => json_encode($guide['qualification'])];
+            $guides[$guide['id']] = ['qualification' => $guide['qualification']];
         }
 
         return [
@@ -76,12 +76,6 @@ class SurveyUseCase
         return $this->surveyService->existSurveyInProgress();
     }
 
-    // public function findSurveyById(string $surveyId)
-    // {
-    //     $survey =  $this->surveyService->findOneSurvey($surveyId);
-    //     return $survey ? ['survey' => $survey] : new Exception('La encuesta no existe o no esta disponible', 404);
-    // }
-
     public function getGuideDetail(string $guideId)
     {
         return [
@@ -111,13 +105,13 @@ class SurveyUseCase
 
     public function finalizeSurvey(string $surveyId)
     {
-        $survey = $this->surveyService->findOneSurvey($surveyId);
-        if (!$survey) return new Exception('El cuestionario no existe o no esta disponible', 404);
-        if ($survey->status) return new Exception('El cuestionario ya ha sido finalizado', 404);
-        $totalSurveyUsers = $this->surveyService->getTotalUsersInSurvey($surveyId);
-        $totalUsers = $this->userRepository->countTotalAvailableUsers();
-        $users = $this->calculateUsersHaveToAnswers($totalUsers);
-        return $totalSurveyUsers >= $users ? $this->surveyService->endSurvey($surveyId) : new Exception("El cuestionario no puede ser finalizado, es necesario {$users} usuarios o más", 400);
+        // $survey = $this->surveyService->findOneSurvey($surveyId);
+        // if (!$survey) return new Exception('El cuestionario no existe o no esta disponible', 404);
+        // if ($survey->status) return new Exception('El cuestionario ya ha sido finalizado', 404);
+        // $totalSurveyUsers = $this->surveyService->getTotalUsersInSurvey($surveyId);
+        // $totalUsers = $this->userRepository->countTotalAvailableUsers();
+        // $users = $this->calculateUsersHaveToAnswers($totalUsers);
+        // return $totalSurveyUsers >= $users ? $this->surveyService->endSurvey($surveyId) : new Exception("El cuestionario no puede ser finalizado, es necesario {$users} usuarios o más", 400);
     }
 
     private function calculateUsersHaveToAnswers(int $usersCount): int

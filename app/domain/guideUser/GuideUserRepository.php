@@ -13,7 +13,7 @@ interface GuideUserRepository extends BaseRepository
     public function getCurrentGuideUser(string $guideId, string $userId, string $surveyId);
     public function saveAnswer(GuideUser $surveyUser, mixed $body): GuideUser;
     public function getUserAnwserInCurrentSurvey(string $userId): ?GuideUser;
-    public function finalizeGuideUser(string $guideId, string $userId, int $userQualification): GuideUser;
+    public function finalizeGuideUser(string $surveyId, string $guideId, string $userId, int $userQualification): GuideUser;
     public function canAvailableSurveyPerUser(string $userId): ?GuideUser;
     public function getDetailsSurveyUser(string $surveyId, string $guideId);
     public function searchByNameAndAreas(string $surveyId, string $guideId, string $name, string $areaId, string $subareaId);
@@ -21,4 +21,5 @@ interface GuideUserRepository extends BaseRepository
     public function countSurveyUserAnswers(string $surveyId): int;
     public function findCurrentSurveyUser(string $userId): GuideUser;
     public function findUserGuideBySurvey(string $surveyId, string $guideId): ?Collection;
+    public function clearOldAnswers(GuideUser $guideUser): GuideUser;
 }

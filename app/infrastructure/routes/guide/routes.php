@@ -22,19 +22,24 @@ function router(Router $router)
         $guideController->getGuides();
     });
 
-    $router->get('/search', function() use($guideController) {
+    $router->get('/search', function () use ($guideController) {
         $guideController->getGuidesByCriteria();
     });
 
+    $router->get('/{surveyId}/survey/{guideId}', function (string $surveyId, string $guideId)  use ($guideController) {
+        $guideController->showGuideBySurvey($surveyId, $guideId);
+    });
+    
     $router->post('/create', function () use ($guideController) {
         // $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
         // $middleware->handle();
         $guideController->createGuide();
-    });    
-
+    });
+    
     $router->get('/{id}', function (string $id)  use ($guideController) {
         $guideController->showGuide($id);
     });
+
 
 
 

@@ -13,4 +13,5 @@ interface DomainRepository extends BaseRepository {
     public function setDomainQualification(Domain $domain, object $body): Domain;
     public function findWithQualifications(): Collection;
     public function findOneWithQualifications(string $domainId): ?Domain;
+    public function addNewQualification(Domain $domain, mixed $qualification): Domain;
 }

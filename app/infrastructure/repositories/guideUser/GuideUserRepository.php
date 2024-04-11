@@ -101,8 +101,7 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
                                 ->orWhereHas('father', function ($subquery) use ($areaId) {
                                     $subquery->where('area_padre', $areaId)->where('area_nivel', '>', 1);
                                 })
-                                ->orWhere('id',$areaId)
-                                ;
+                                ->orWhere('id', $areaId);
                         });
                     } elseif (!$areaId && $subareaId) {
                         $query->where('id', $subareaId);
@@ -156,10 +155,18 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
             ->get(['id', 'guide_id', 'user_id', 'survey_id', 'status', 'total', 'created_at', 'updated_at']);
     }
 
-    public function clearOldAnswers(GuideUser $guideUser): GuideUser {
+    public function clearOldAnswers(GuideUser $guideUser): GuideUser
+    {
         $guideUser->answers = [];
         $guideUser->status = GuideUser::INPROGRESS;
         $guideUser->save();
         return $guideUser;
+    }
+
+
+    public function countGudesUsersAvailable(string $surveyId, string $guideId): int
+    {
+        return $this->guideUser::where('survey_id', $surveyId)->where('guide_id', $guideId)
+            ->where('status', GuideUser::FINISHED)->count();
     }
 }

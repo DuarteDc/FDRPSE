@@ -4,7 +4,6 @@ namespace App\domain\guideUser;
 
 use App\domain\guide\Guide;
 use App\domain\survey\Survey;
-use Illuminate\Database\Eloquent\Model;
 use App\domain\user\User;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 

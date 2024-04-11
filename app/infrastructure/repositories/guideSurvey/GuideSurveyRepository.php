@@ -2,6 +2,7 @@
 
 namespace App\infrastructure\repositories\guideSurvey;
 
+use App\domain\guideSurvey\GuideStatus;
 use App\domain\guideSurvey\GuideSurvey;
 use App\domain\guideSurvey\GuideSurveyRepository as ContractRepository;
 use App\domain\section\Section;
@@ -17,7 +18,7 @@ class GuideSurveyRepository extends BaseRepository implements ContractRepository
 
     public function findGuideInProgress(): ?GuideSurvey
     {
-        return $this->guideSurvey::where('status', false)
+        return $this->guideSurvey::where('status', GuideStatus::INPROGRESS)
             ->orderBy('id', 'asc')
             ->first();
     }
@@ -29,5 +30,32 @@ class GuideSurveyRepository extends BaseRepository implements ContractRepository
             ->first();
 
         return $guide->sections()->where('id', $questionId)->first();
+    }
+
+    public function finalizedGuideSurvey(string $surveyId, string $guideId): ?GuideSurvey
+    {
+        $guideSurvey = $guideSurvey = $this->guideSurvey->where('survey_id', $surveyId)
+            ->where('guide_id', $guideId)->first();
+
+        $guideSurvey->status = GuideStatus::FINISHED;
+        $guideSurvey->save();
+
+        return $guideSurvey;
+    }
+
+    public function startNextGuide(): ?GuideSurvey
+    {
+        $guide = $this->findGuideInProgress();
+        if (!$guide) return null;
+        $guide->status = GuideStatus::INPROGRESS;
+        $guide->save();
+        return $guide;
+    }
+
+    public function findByGuideSurvey(string $surveyId, string $guideId): ?GuideSurvey 
+    {
+        return $this->guideSurvey::where('survey_id', $surveyId)
+            ->where('guide_id', $guideId)
+            ->first();
     }
 }

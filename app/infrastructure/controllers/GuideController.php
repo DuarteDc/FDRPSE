@@ -30,7 +30,6 @@ class GuideController extends Controller
     public function createGuide()
     {
         $this->validate(CreateGuideRequest::rules(), CreateGuideRequest::messages());
-        // $this->response($this->request());
         $this->response($this->guideUseCase->createGuide($this->request()));
     }
 
@@ -41,4 +40,5 @@ class GuideController extends Controller
 
         $this->response($this->guideUseCase->searchGuidesByTypeAndName($type, $name));
     }
+
 }

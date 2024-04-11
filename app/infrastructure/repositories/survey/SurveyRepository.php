@@ -55,9 +55,8 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
         return $this->survey::where('id', $surveyId)->get();
     }
 
-    public function endSurvey(string $surveyId): Survey
+    public function endSurvey(Survey $survey): Survey
     {
-        $survey = $this->survey::find($surveyId);
         $survey->end_date = date('Y-m-d\TH:i:s.000');
         $survey->status   = Survey::FINISHED;
         $survey->save();

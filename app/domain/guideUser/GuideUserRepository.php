@@ -22,4 +22,5 @@ interface GuideUserRepository extends BaseRepository
     public function findCurrentSurveyUser(string $userId): GuideUser;
     public function findUserGuideBySurvey(string $surveyId, string $guideId): ?Collection;
     public function clearOldAnswers(GuideUser $guideUser): GuideUser;
+    public function countGudesUsersAvailable(string $surveyId, string $guideId): int;
 }

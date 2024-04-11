@@ -4,6 +4,7 @@ namespace App\application\survey;
 
 use App\domain\category\Category;
 use App\domain\domain\Domain;
+use App\domain\guideSurvey\GuideStatus;
 use App\domain\guideSurvey\GuideSurveyRepository;
 use App\domain\guideUser\GuideUser;
 use App\domain\guideUser\GuideUserRepository;
@@ -44,14 +45,8 @@ class SurveyService
 
     public function startSurvey()
     {
-        //if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay un cuestionatio en progreso por lo que no se puede comenzar la nueva encuesta', 400);
+        if (!$this->surveyRepository->canStartNewSurvey()) return new Exception('Hay un cuestionatio en progreso por lo que no se puede comenzar la nueva encuesta', 400);
         return $this->surveyRepository->create(['start_date' => date('Y-m-d\TH:i:s.000'), 'status' => Survey::PENDING]);
-    }
-
-    public function attachDataUserAndSurvey(string $surveyUserId, string $surveyId, string $userId)
-    {
-        // $this->surveyUserRepository->setSurvey($surveyUserId, $surveyId);
-        // $this->surveyUserRepository->setUser($surveyUserId, $userId);
     }
 
     public function saveNongradableAnswersByUser(array $body)
@@ -118,6 +113,19 @@ class SurveyService
         return $this->questionRepository->getQuestionBySection();
     }
 
+    public function finalizeSurvey(string $surveyId)
+    {
+        $survey = $this->surveyRepository->findSurveyWithDetails($surveyId);
+        if (!$survey) return new Exception('La series de cuestionarios que intentas finalizar no existe', 404);
+        if($survey->status) return new Exception('La series de cuestionarios ya han sido finalizados', 404);
+
+        $canFinishGuide = array_filter((array)[...$survey->guides], fn($guide) => $guide->pivot->status === GuideStatus::FINISHED->value);
+        if(count($canFinishGuide) !== count($survey->guides)) return new Exception('La series de cuestionarios no se puede finalizar porque hay guías en proceso', 404);
+
+        $survey = $this->surveyRepository->endSurvey($survey);
+        return ['survey' => $survey];
+    }
+
     public function setSurveyToUser()
     {
         $survey = $this->surveyRepository->getCurrentSurvey();
@@ -125,15 +133,15 @@ class SurveyService
 
         $guides = json_decode(json_encode($survey->guides), true);
 
-        $guide = array_filter($guides, fn ($guide) => $guide['pivot']['status'] === false);
+        $guide = array_filter($guides, fn ($guide) => $guide['pivot']['status'] === GuideStatus::INPROGRESS->value);
 
         if (count($guide) === 0) return new Exception('No hay encuestas disponibles', 400);
 
         $guide = collect(...$guide);
 
         $guideUser = $this->guideUserRepository->getCurrentGuideUser($guide['id'], $this->auth()->id, $survey->id);
-    
-        if(gettype($guideUser->answers) === 'array' && count($guideUser->answers) > 0) $guideUser = $this->guideUserRepository->clearOldAnswers($guideUser);
+
+        if (gettype($guideUser->answers) === 'array' && count($guideUser->answers) > 0) $guideUser = $this->guideUserRepository->clearOldAnswers($guideUser);
 
         return ['survey' => $guideUser, 'success' => true];
     }
@@ -156,8 +164,6 @@ class SurveyService
         $survey = $this->surveyRepository->getCurrentSurvey();
         if (!$survey) return new Exception('No hay encuestas disponibles', 400);
 
-
-
         $guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
 
         if (!$guideSurvey) return new Exception('La encuesta ya ha sido contestada', 400);
@@ -165,6 +171,28 @@ class SurveyService
         $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id, $guideSurvey->survey_id);
 
         return $guideUser->status ? new Exception('La encuesta ya ha sido contestada', 400) : ['guide' => $guideUser];
+    }
+
+    public function finalizedGuideInsideSurvey(string $surveyId, string $guideId, int $totalUsers)
+    {
+        $totalSurveys = $this->guideUserRepository->countGudesUsersAvailable($surveyId, $guideId);
+
+        if ($totalSurveys !== $totalUsers) return new Exception('No es posible finalizar la guía porque existen usuarios sin contestar la guia', 400);
+
+        $guideSurvey = $this->guideSurveyRepository->findByGuideSurvey($surveyId, $guideId);
+
+        if (!$guideSurvey) return new Exception('La guia no exite o no es valida', 404);
+        if ($guideSurvey->status === GuideStatus::FINISHED->value) return new Exception('La guia ya ha sido finalizada', 400);
+        if ($guideSurvey->status === GuideStatus::NOINITIALIZED->value) return new Exception('La guia no se puede finalizar', 400);
+
+        $currentGuideSurvey =  $this->guideSurveyRepository->finalizedGuideSurvey($surveyId, $guideId);
+
+        $nextGuideUser = $this->guideSurveyRepository->startNextGuide();
+
+        return [
+            'current_guide' => $currentGuideSurvey,
+            'next_guide' => $nextGuideUser,
+        ];
     }
 
     public function findOneSurveyWithGuides(string $surveyId, string $guideId)
@@ -192,11 +220,6 @@ class SurveyService
         return !$suerveyUser ? new Exception('La encuesta no esta disponible', 404) : $suerveyUser;
     }
 
-    public function endSurvey(string $suerveyId)
-    {
-        $survey = $this->surveyRepository->endSurvey($suerveyId);
-        return ['survey' => $survey];
-    }
 
     private function hasPreviousQuestion(mixed $answers, mixed $newBody): array
     {

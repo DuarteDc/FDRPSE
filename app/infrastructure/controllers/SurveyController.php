@@ -82,11 +82,23 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->finalizeSurvey($surveyId));
     }
 
+    public function finalizeGuideSurvey(string $surveyId, string $guideId)
+    {
+        $this->response($this->surveyUseCase->tryToFinalizeGuide($surveyId, $guideId));
+    }
+
     public function generateReportByUser()
     {
         $surveyUser = $this->surveyUseCase->getDataToGenerateSurveyUserResume($this->auth()->id);
         if ($surveyUser instanceof Exception) return $this->response($surveyUser);
         $view = $this->renderBufferView('pdf-user-answers', $surveyUser);
         $this->pdfAdapter->generatePDF($view, PaperTypes::Letter, OrientationTypes::Portrait, 'Acuse de entraga');
+    }
+
+    public function pauseGuideBySurvey(string $surveyId, string $guideId)
+    {
+        $status = (int) $this->get('status');
+
+        $this->response($this->surveyUseCase->changeGuideStatusToPaused($surveyId, $guideId, $status));
     }
 }

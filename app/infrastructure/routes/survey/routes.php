@@ -84,11 +84,20 @@ function router(Router $router)
         $surveyController->findSurveyDetailByUserName($surveyId, $guideId);
     });
 
-    $router->get('/{id}/details/{guideId}', function (string $id, string $guideId) use ($surveyController) {
-        $surveyController->getGudeDetailBySurvey($id, $guideId);
-    });
+    // $router->get('/{id}/details/{guideId}', function (string $id, string $guideId) use ($surveyController) {
+    //     $surveyController->getGudeDetailBySurvey($id, $guideId);
+    // });
 
     $router->post('/end/{id}', function (string $id) use ($surveyController) {
         $surveyController->finalizeSurvey($id);
+    });
+
+    $router->patch('/{surveyId}/guide/{guideId}/change-status', function (string $surveyId, string $guideId) use ($surveyController) {
+        $surveyController->pauseGuideBySurvey($surveyId, $guideId);
+    });
+
+
+    $router->patch('/{surveyId}/guide/{guideId}/finalized', function (string $surveyId, string $guideId) use ($surveyController) {
+        $surveyController->finalizeGuideSurvey($surveyId, $guideId);
     });
 }

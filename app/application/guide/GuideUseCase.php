@@ -61,7 +61,6 @@ class GuideUseCase
     public function showGuideBySurvey(string $surveyId, string $guideId)
     {
         $guide =  $this->guideRepository->findGuideBySurvey($surveyId, $guideId);
-        return $guide;
         if (!$guide) return new Exception('La guia que buscar no existe o no es valida', 404);
         return ['guide' => $guide];
     }

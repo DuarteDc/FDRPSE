@@ -9,6 +9,7 @@ use App\domain\section\Section;
 use App\domain\section\SectionRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class SectionRepository extends BaseRepository implements ContractsRepository
 {
@@ -95,8 +96,9 @@ class SectionRepository extends BaseRepository implements ContractsRepository
     public function findMultipleSectionsWithQuestions(array $sectionsId): Collection
     {
         return $this->section::with('questions.qualification')
-            // ->has('questions')
-            ->find($sectionsId);
+            ->whereIn('id', $sectionsId)->get()->sortBy(function ($model) use ($sectionsId) {
+                return array_search($model->id, $sectionsId);
+            })->values();
     }
 
     public function countSectionsByArrayOfSectionsId(array $sectionId): int

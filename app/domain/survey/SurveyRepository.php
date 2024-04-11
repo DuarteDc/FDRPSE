@@ -15,6 +15,6 @@ interface SurveyRepository extends BaseRepository
     public function canStartNewSurvey(): bool;
     public function getCurrentSurvey(): Survey | null;
     public function getStatusUsers(string $surveyId): Collection;
-    public function endSurvey(string $surveyId): Survey;
+    public function endSurvey(Survey $surveyId): Survey;
     public function setGuidesToNewSurvey(Survey $survey, array $guidesId): Survey;
 }

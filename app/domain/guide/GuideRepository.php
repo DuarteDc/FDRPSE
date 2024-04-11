@@ -3,6 +3,7 @@
 namespace App\domain\guide;
 
 use App\domain\BaseRepository;
+use App\domain\guideSurvey\GuideStatus;
 use Illuminate\Database\Eloquent\Collection;
 
 interface GuideRepository extends BaseRepository
@@ -16,4 +17,5 @@ interface GuideRepository extends BaseRepository
     public function deleteGuide(string $guideId);
     public function findGuideWithQualification(string $guideId):? Guide;
     public function findGuideBySurvey(string $surveyId, string $guideId):? Guide;
+    public function changeGuideSurveyStatus(Guide $guide, string $surveyId, GuideStatus $status): Guide;
 }

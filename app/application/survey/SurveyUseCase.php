@@ -6,6 +6,7 @@ namespace App\application\survey;
 use App\domain\area\AreaRepository;
 use App\domain\guide\Guide;
 use App\domain\guide\GuideRepository;
+use App\domain\guideSurvey\GuideStatus;
 use App\domain\question\Question;
 use App\domain\user\UserRepository;
 use Exception;
@@ -40,8 +41,8 @@ class SurveyUseCase
         if (count($guides) !== count($areValidIds)) return new Exception('Los cuestionarios no son validos', 400);
 
         $guides = [];
-        foreach ($areValidIds as $guide) {
-            $guides[$guide['id']] = ['qualification' => $guide['qualification']];
+        foreach ($areValidIds as $key => $guide) {
+            $guides[$guide['id']] = ['qualification' => $guide['qualification'], 'status' => ($key === 0) ? 1 : 0];
         }
 
         return [
@@ -105,14 +106,16 @@ class SurveyUseCase
 
     public function finalizeSurvey(string $surveyId)
     {
-        // $survey = $this->surveyService->findOneSurvey($surveyId);
-        // if (!$survey) return new Exception('El cuestionario no existe o no esta disponible', 404);
-        // if ($survey->status) return new Exception('El cuestionario ya ha sido finalizado', 404);
-        // $totalSurveyUsers = $this->surveyService->getTotalUsersInSurvey($surveyId);
-        // $totalUsers = $this->userRepository->countTotalAvailableUsers();
-        // $users = $this->calculateUsersHaveToAnswers($totalUsers);
-        // return $totalSurveyUsers >= $users ? $this->surveyService->endSurvey($surveyId) : new Exception("El cuestionario no puede ser finalizado, es necesario {$users} usuarios o más", 400);
+        return $this->surveyService->finalizeSurvey($surveyId);
     }
+
+    public function tryToFinalizeGuide(string $surveyId, string $guideId)
+    {
+
+        $totalUsers = $this->userRepository->countTotalAvailableUsers();
+        return $this->surveyService->finalizedGuideInsideSurvey($surveyId, $guideId, $totalUsers);
+    }
+
 
     private function calculateUsersHaveToAnswers(int $usersCount): int
     {
@@ -125,5 +128,24 @@ class SurveyUseCase
     {
         $surveyUser =  $this->surveyService->getLastSurveyByUser($userId);
         return !$surveyUser ? new Exception('El cuestionario no esta disponible', 404) : $surveyUser;
+    }
+
+    public function changeGuideStatusToPaused(string $surveyId, string $guideId, int $status)
+    {
+        $guideSurvey = $this->guideRepository->findGuideBySurvey($surveyId, $guideId);
+        if (!$guideSurvey) return new Exception('El cuestionario no existe o no es valido', 404);
+
+        $guide = "";
+
+        if ($status === GuideStatus::PAUSED->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::INPROGRESS->value) {
+            $guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::PAUSED);
+            return ['guide' => $guide];
+        }
+        if ($status === GuideStatus::INPROGRESS->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::PAUSED->value) {
+            $guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::INPROGRESS);
+            return ['guide' => $guide];
+        }
+
+        return new Exception("Parece que hubo un error al " . ($status === GuideStatus::PAUSED->value ? 'pausar' : 'continuar') . " la guía", 400);
     }
 }

@@ -4,6 +4,7 @@ namespace App\infrastructure\repositories\guide;
 
 use App\domain\guide\Guide;
 use App\domain\guide\GuideRepository as ContractsRepository;
+use App\domain\guideSurvey\GuideStatus;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -68,10 +69,19 @@ class GuideRepository extends BaseRepository implements ContractsRepository
 
     public function findGuideBySurvey(string $surveyId, string $guideId): ?Guide
     {
-        return $this->guide::whereHas('survey', function ($query)  use ($surveyId){
-                return $query->where();
-            }
-        )
-            ->where('id', $guideId)->first();
+        return $this->guide
+            ->whereHas('surveys', function ($query) use ($surveyId) {
+                $query->where('surveys.id', $surveyId);
+            })->with(['surveys' => function($query) use($surveyId) {
+                    $query->where('surveys.id', $surveyId)->first();
+            }, 'surveys:id', 'surveys:pivot'])
+            ->find($guideId);
     }
+
+    public function changeGuideSurveyStatus(Guide $guide, string $surveyId, GuideStatus $status): Guide
+    {
+        $guide->surveys()->updateExistingPivot($surveyId, ['status' => $status->value]);
+        return $this->findGuideBySurvey($surveyId, $guide->id);
+    }
+
 }

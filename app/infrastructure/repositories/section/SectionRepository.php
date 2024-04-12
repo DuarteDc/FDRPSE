@@ -8,8 +8,6 @@ use Illuminate\Contracts\Pagination\Paginator;
 use App\domain\section\Section;
 use App\domain\section\SectionRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class SectionRepository extends BaseRepository implements ContractsRepository
 {

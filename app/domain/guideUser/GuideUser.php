@@ -7,6 +7,11 @@ use App\domain\survey\Survey;
 use App\domain\user\User;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+enum TypeQuestion: string
+{
+    case SECTION = 'section';
+    case QUESTION = 'question';
+}
 class GuideUser extends Pivot
 {
     const INPROGRESS = false;
@@ -30,5 +35,4 @@ class GuideUser extends Pivot
     {
         return $this->belongsTo(Survey::class, 'survey_id');
     }
-
 }

@@ -8,9 +8,11 @@ use App\domain\guideSurvey\GuideStatus;
 use App\domain\guideSurvey\GuideSurveyRepository;
 use App\domain\guideUser\GuideUser;
 use App\domain\guideUser\GuideUserRepository;
+use App\domain\guideUser\TypeQuestion;
 use App\domain\qualification\Qualification;
 use App\domain\qualificationQuestion\QualificationQuestion;
 use App\domain\qualificationQuestion\QualificationQuestionRepository;
+use App\domain\question\Question;
 use Exception;
 use App\kernel\authentication\Auth;
 
@@ -18,7 +20,7 @@ use App\domain\survey\Survey;
 use App\domain\survey\SurveyRepository;
 use App\domain\question\QuestionRepository;
 use App\domain\section\Section;
-use Illuminate\Database\Eloquent\Collection;
+use stdClass;
 
 class SurveyService
 {
@@ -51,6 +53,7 @@ class SurveyService
 
     public function saveNongradableAnswersByUser(array $body)
     {
+
         $guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
 
         if (!$guideSurvey) return new Exception('Parece que hubo un error al registar la respusta', 400);
@@ -59,20 +62,17 @@ class SurveyService
 
         if (!$guideUser) return new Exception('Parece que hubo un error al registar la respusta', 500);
 
-        if (count($body) === 1) {
-            $section = $this->guideSurveyRepository->findQuestionInsideGuide($guideSurvey, $body[0]['question_id']);
-            $body =  $this->validateCanFinishedQuestion($section, $body[0]['qualification']);
+        $isValidRequest = array_map(function ($question) use ($guideSurvey) {
+            $question = (object) $question;
+            if ($question->type === TypeQuestion::SECTION->value) {
+                $section = $this->guideSurveyRepository->findQuestionInsideGuide($guideSurvey, $question->question_id);
+                return  $section ? $this->validateSectionBinaryToSaveQuestion($section,  $question->qualification) : false;
+            } else {
+                $questionDB = $this->questionRepository->findOne($question->question_id);
+                return $questionDB ? $this->validateQuestions($questionDB, $question->qualification) : false;
+            }
+        }, $body);
 
-            $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id,  $guideSurvey->survey_id);
-
-            if ($guideUser->answers != "") $body = $this->hasPreviousQuestion($guideUser->answers, [$body]);
-            else $body = [$body];
-
-            $this->guideUserRepository->saveAnswer($guideUser, $body);
-            return ['message' => 'La preguntas se guardaron correctmente', 'guide' => $guideUser];
-        }
-
-        $isValidRequest = $this->validateQuestions($body);
 
         if (in_array(false, $isValidRequest)) return new Exception('Parece que hubo un error al guardar las preguntas', 400);
 
@@ -94,7 +94,18 @@ class SurveyService
         $guideUser = $this->guideUserRepository->getCurrentGuideUser($guideSurvey->guide_id, $this->auth()->id, $guideSurvey->survey_id);
         if (!$guideUser) return new Exception('Parece que hubo un error al registar la respusta', 500);
 
-        $isValidRequest = $this->validateQuestions($body);
+
+        $isValidRequest = array_map(function ($question) use ($guideSurvey) {
+            $question = (object) $question;
+            if ($question->type === TypeQuestion::SECTION->value) {
+                $section = $this->guideSurveyRepository->findQuestionInsideGuide($guideSurvey, $question->question_id);
+                return  $section ? $this->validateSectionBinaryToSaveQuestion($section,  $question->qualification) : false;
+            } else {
+                $questionDB = $this->questionRepository->findOne($question->question_id);
+                return $questionDB ? $this->validateQuestions($questionDB, $question->qualification) : false;
+            }
+        }, $body);
+
 
         if (in_array(false, $isValidRequest)) return new Exception('Las preguntas que intentas guardar no exiten', 400);
 
@@ -117,10 +128,10 @@ class SurveyService
     {
         $survey = $this->surveyRepository->findSurveyWithDetails($surveyId);
         if (!$survey) return new Exception('La series de cuestionarios que intentas finalizar no existe', 404);
-        if($survey->status) return new Exception('La series de cuestionarios ya han sido finalizados', 404);
+        if ($survey->status) return new Exception('La series de cuestionarios ya han sido finalizados', 404);
 
-        $canFinishGuide = array_filter((array)[...$survey->guides], fn($guide) => $guide->pivot->status === GuideStatus::FINISHED->value);
-        if(count($canFinishGuide) !== count($survey->guides)) return new Exception('La series de cuestionarios no se puede finalizar porque hay guías en proceso', 404);
+        $canFinishGuide = array_filter((array)[...$survey->guides], fn ($guide) => $guide->pivot->status === GuideStatus::FINISHED->value);
+        if (count($canFinishGuide) !== count($survey->guides)) return new Exception('La series de cuestionarios no se puede finalizar porque hay guías en proceso', 404);
 
         $survey = $this->surveyRepository->endSurvey($survey);
         return ['survey' => $survey];
@@ -234,10 +245,10 @@ class SurveyService
         return [...$answers, ...$newBody];
     }
 
-    private function validateCanFinishedQuestion(Section $section, bool $qualification)
+    private function validateSectionBinaryToSaveQuestion(Section $section, bool $qualification)
     {
         return [
-            'question_id' => '',
+            'question_id' => uniqid("uuid"),
             'name' => $section->question,
             'category' => '',
             'section' => $section->id,
@@ -248,48 +259,42 @@ class SurveyService
         ];
     }
 
-    private function validateQuestions(mixed $body)
+    private function validateQuestions(Question $question, bool | int $qualification)
     {
-
-
-        return array_map(function ($currentQuestion) {
-            $question = $this->questionRepository->findOne($currentQuestion['question_id']);
-            if (!$question) return false;
-            return [
-                'question_id' => $question->id,
-                'name' => $question->name,
-                'category' => [
-                    'id' => $question->category->id ?? '',
-                    'name' => $question->category->name ?? '',
-                    'qualification' => $this->parseQualificationData(
-                        $this->qualificationQuestionRepository->findQualificationByQuestion(
-                            $currentQuestion['question_id'],
-                            Category::class
-                        )
-                    ),
-                ],
-                'section' => [
-                    'id' => $question->section->id ?? '',
-                    'name' => $question->section->name ?? '',
-                ],
-                'domain' => [
-                    'id' => $question->domain->id ?? '',
-                    'name' => $question->domain->name ?? '',
-                    'qualification' => $this->parseQualificationData(
-                        $this->qualificationQuestionRepository->findQualificationByQuestion(
-                            $currentQuestion['question_id'],
-                            Domain::class
-                        )
-                    ),
-                ],
-                'dimension' => [
-                    'id' => $question->dimension->id ?? '',
-                    'name' => $question->dimension->name ?? ''
-                ],
-                'qualification' => $currentQuestion['qualification'],
-                'qualification_data' => $this->questionRepository->getQualification($question) ?? ''
-            ];
-        }, (array) $body);
+        return [
+            'question_id' => $question->id,
+            'name' => $question->name,
+            'category' => [
+                'id' => $question->category->id ?? '',
+                'name' => $question->category->name ?? '',
+                'qualification' => $this->parseQualificationData(
+                    $this->qualificationQuestionRepository->findQualificationByQuestion(
+                        $question->id,
+                        Category::class
+                    )
+                ),
+            ],
+            'section' => [
+                'id' => $question->section->id ?? '',
+                'name' => $question->section->name ?? '',
+            ],
+            'domain' => [
+                'id' => $question->domain->id ?? '',
+                'name' => $question->domain->name ?? '',
+                'qualification' => $this->parseQualificationData(
+                    $this->qualificationQuestionRepository->findQualificationByQuestion(
+                        $question->id,
+                        Domain::class
+                    )
+                ),
+            ],
+            'dimension' => [
+                'id' => $question->dimension->id ?? '',
+                'name' => $question->dimension->name ?? ''
+            ],
+            'qualification' => $qualification,
+            'qualification_data' => $this->questionRepository->getQualification($question) ?? ''
+        ];
     }
 
     public function getLastSurveyByUser(string $userId)
@@ -304,7 +309,7 @@ class SurveyService
 
     private function calculateUserQualification(GuideUser $guideUser): int
     {
-        return array_reduce((array)$guideUser->answers, fn ($prev, $curr) => $prev + $curr['qualification']);
+        return array_reduce((array)$guideUser->answers, fn ($prev, $curr) => is_numeric($curr['qualification']) ? $prev + $curr['qualification'] : $prev) ?? 0;
     }
 
     private function parseQualificationData(mixed $body)

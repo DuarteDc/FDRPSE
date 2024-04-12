@@ -54,7 +54,11 @@ class GuideRepository extends BaseRepository implements ContractsRepository
 
     public function countGuidesById(array $guidesId): array
     {
-        return $this->guide::with('qualification')->find($guidesId)->toArray();
+        return $this->guide::with('qualification')
+            ->whereIn('id', $guidesId)->get()
+            ->sortBy(function ($model) use ($guidesId) {
+                return array_search($model->id, $guidesId);
+            })->values()->toArray();;
     }
 
     public function deleteGuide(string $guideId)
@@ -72,8 +76,8 @@ class GuideRepository extends BaseRepository implements ContractsRepository
         return $this->guide
             ->whereHas('surveys', function ($query) use ($surveyId) {
                 $query->where('surveys.id', $surveyId);
-            })->with(['surveys' => function($query) use($surveyId) {
-                    $query->where('surveys.id', $surveyId)->first();
+            })->with(['surveys' => function ($query) use ($surveyId) {
+                $query->where('surveys.id', $surveyId)->first();
             }, 'surveys:id', 'surveys:pivot'])
             ->find($guideId);
     }
@@ -83,5 +87,4 @@ class GuideRepository extends BaseRepository implements ContractsRepository
         $guide->surveys()->updateExistingPivot($surveyId, ['status' => $status->value]);
         return $this->findGuideBySurvey($surveyId, $guide->id);
     }
-
 }

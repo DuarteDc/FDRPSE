@@ -29,7 +29,9 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
 
     public function findSurveyWithDetails(string $surveyId): Survey
     {
-        return $this->survey::with('guides')->find($surveyId);
+        return $this->survey::with('guides')
+        
+            ->find($surveyId);
     }
 
     public function startSurvey(): ?Model

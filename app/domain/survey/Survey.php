@@ -34,7 +34,8 @@ class Survey extends Model
     {
         return $this->belongsToMany(Guide::class)
             ->using(GuideSurvey::class)
-            ->withPivot('status');
+            ->orderByPivot('id', 'asc')
+            ->withPivot('status', 'id');
     }
 
     public function guidesUser()

@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\requests\dimension;
 
-use App\kernel\request\Request;
 use App\kernel\request\HttpRulesRequest;
+use App\kernel\request\Request;
 
-class CreateDimensionRequest extends Request implements HttpRulesRequest
+final class CreateDimensionRequest extends Request implements HttpRulesRequest
 {
-
     public static function rules(): array
     {
         return [

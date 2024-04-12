@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\guideUser;
 
 use App\domain\guide\Guide;
@@ -12,10 +14,10 @@ enum TypeQuestion: string
     case SECTION = 'section';
     case QUESTION = 'question';
 }
-class GuideUser extends Pivot
+final class GuideUser extends Pivot
 {
-    const INPROGRESS = false;
-    const FINISHED   = true;
+    public const INPROGRESS = false;
+    public const FINISHED = true;
 
     protected $table = 'guide_survey_user';
     protected $fillable = ['guide_id', 'user_id', 'survey_id', 'answers', 'status', 'total'];

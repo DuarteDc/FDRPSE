@@ -1,24 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\routes\guide;
 
-use Bramus\Router\Router;
+use App\application\guide\GuideUseCase;
 
 use App\domain\guide\Guide;
-use App\application\guide\GuideUseCase;
 use App\domain\section\Section;
 use App\infrastructure\controllers\GuideController;
 use App\infrastructure\repositories\guide\GuideRepository;
 use App\infrastructure\repositories\section\SectionRepository;
+use Bramus\Router\Router;
 
 function router(Router $router)
 {
-    $guideRepository   = new GuideRepository(new Guide);
-    $sectionRepository = new SectionRepository(new Section);
-    $guideseCase       = new GuideUseCase($guideRepository, $sectionRepository);
-    $guideController   = new GuideController($guideseCase);
+    $guideRepository = new GuideRepository(new Guide());
+    $sectionRepository = new SectionRepository(new Section());
+    $guideseCase = new GuideUseCase($guideRepository, $sectionRepository);
+    $guideController = new GuideController($guideseCase);
 
-    $router->get('/', function ()  use ($guideController) {
+    $router->get('/', function () use ($guideController) {
         $guideController->getGuides();
     });
 
@@ -26,7 +28,7 @@ function router(Router $router)
         $guideController->getGuidesByCriteria();
     });
 
-    $router->get('/{surveyId}/survey/{guideId}', function (string $surveyId, string $guideId)  use ($guideController) {
+    $router->get('/{surveyId}/survey/{guideId}', function (string $surveyId, string $guideId) use ($guideController) {
         $guideController->showGuideBySurvey($surveyId, $guideId);
     });
 
@@ -36,11 +38,11 @@ function router(Router $router)
         $guideController->createGuide();
     });
 
-    $router->get('/{id}/detail', function (string $id)  use ($guideController) {
+    $router->get('/{id}/detail', function (string $id) use ($guideController) {
         $guideController->getGuideDetail($id);
     });
 
-    $router->get('/{id}', function (string $id)  use ($guideController) {
+    $router->get('/{id}', function (string $id) use ($guideController) {
         $guideController->showGuide($id);
     });
 

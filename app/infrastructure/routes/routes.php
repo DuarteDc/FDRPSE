@@ -1,19 +1,20 @@
 <?php
 
-namespace App\infrastructure\routes\MainRouter {
+declare(strict_types=1);
 
+namespace App\infrastructure\routes\MainRouter {
     use Bramus\Router\Router;
 
+    use function App\infrastructure\routes\area\router as routesAreas;
+    use function App\infrastructure\routes\authentication\router as routesAuthentication;
     use function App\infrastructure\routes\category\router as routesCategory;
+    use function App\infrastructure\routes\dimension\router as routesDimensions;
     use function App\infrastructure\routes\domain\router as routesDomain;
-    use function App\infrastructure\routes\section\router as routesSection;
+    use function App\infrastructure\routes\guide\router as routesGuide;
     use function App\infrastructure\routes\qualification\router as routesQualification;
     use function App\infrastructure\routes\questions\router as routesQuestions;
-    use function App\infrastructure\routes\dimension\router as routesDimensions;
+    use function App\infrastructure\routes\section\router as routesSection;
     use function App\infrastructure\routes\survey\router as routesSurvey;
-    use function App\infrastructure\routes\authentication\router as routesAuthentication;
-    use function App\infrastructure\routes\area\router as routesAreas;
-    use function App\infrastructure\routes\guide\router as routesGuide;
 
     function categoryRouter(Router $router)
     {
@@ -64,5 +65,4 @@ namespace App\infrastructure\routes\MainRouter {
     {
         routesGuide($router);
     }
-
 };

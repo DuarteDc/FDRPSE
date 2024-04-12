@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\repositories\guide;
 
 use App\domain\guide\Guide;
@@ -8,9 +10,8 @@ use App\domain\guideSurvey\GuideStatus;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class GuideRepository extends BaseRepository implements ContractsRepository
+final class GuideRepository extends BaseRepository implements ContractsRepository
 {
-
     public function __construct(private readonly Guide $guide)
     {
         parent::__construct($guide);
@@ -52,10 +53,10 @@ class GuideRepository extends BaseRepository implements ContractsRepository
     {
         $guide->qualification()->create([
             'despicable' => $body->despicable,
-            'low'        => $body->low,
-            'middle'     => $body->middle,
-            'high'       => $body->high,
-            'very_high'  => $body->very_high,
+            'low' => $body->low,
+            'middle' => $body->middle,
+            'high' => $body->high,
+            'very_high' => $body->very_high,
         ]);
         return $guide;
     }
@@ -73,7 +74,8 @@ class GuideRepository extends BaseRepository implements ContractsRepository
             ->whereIn('id', $guidesId)->get()
             ->sortBy(function ($model) use ($guidesId) {
                 return array_search($model->id, $guidesId);
-            })->values()->toArray();;
+            })->values()->toArray();
+        ;
     }
 
     public function deleteGuide(string $guideId)
@@ -114,8 +116,16 @@ class GuideRepository extends BaseRepository implements ContractsRepository
                 $query->select('id', 'name', 'section_id', 'qualification_id');
             },
             'sections.questions.qualification' => function ($query) {
-                $query->select('id', 'name', 'always_op', 'almost_alwyas_op', 'sometimes_op', 'almost_never_op', 'never_op');
-            }
+                $query->select(
+                    'id',
+                    'name',
+                    'always_op',
+                    'almost_alwyas_op',
+                    'sometimes_op',
+                    'almost_never_op',
+                    'never_op'
+                );
+            },
         ])
             ->select('id', 'name', 'gradable', 'status')
             ->find($guideId);

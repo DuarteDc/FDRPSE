@@ -4,7 +4,7 @@ const QUALIFICATION_NAME = [
     'almost_alwyas_op' => 'Casi siempre',
     'sometimes_op' => 'Algunas veces',
     'almost_never_op' => 'Casi nunca',
-    'never_op' => 'Nunca'
+    'never_op' => 'Nunca',
 ];
 ?>
 <!DOCTYPE html>
@@ -13,7 +13,7 @@ const QUALIFICATION_NAME = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resumen de cuestionario <?php echo $data->user->nombre . " " . $data->user->apellidoP . " " . $data->user->apellidoM ?? '' ?></title>
+    <title>Resumen de cuestionario <?php echo $data->user->nombre . ' ' . $data->user->apellidoP . ' ' . $data->user->apellidoM ?? '' ?></title>
     <style>
         body {
             font-size: 11px;
@@ -76,28 +76,31 @@ const QUALIFICATION_NAME = [
             <tbody>
                 <?php
                 foreach ($data->answers as $key => $question) {
-                    echo "
+                    echo '
                     <tr>
-                        <td>" . $key + 1 . "</td>
+                        <td>' . $key + 1 . "</td>
                         <td>{$question->name}</td>
                         <td>" .
                         (gettype($question->qualification) === 'boolean' ?
                         ($question->qualification ? 'Si' : 'No')
-                        : (QUALIFICATION_NAME[array_search($question->qualification, (array) $question->qualification_data)]) ). "</td>
+                        : (QUALIFICATION_NAME[array_search(
+                            $question->qualification,
+                            (array) $question->qualification_data
+                        )])) . '</td>
                     </tr>
-                    ";
+                    ';
                 }
-                ?>
+?>
             </tbody>
         </table>
         <footer>
             <div class="signature-line">
-                Yo, <b><?php echo $data->user->nombre . " " . $data->user->apellidoP . " " . $data->user->apellidoM ?? '' ?></b> certifico que he contestado el cuestionario de manera
+                Yo, <b><?php echo $data->user->nombre . ' ' . $data->user->apellidoP . ' ' . $data->user->apellidoM ?? '' ?></b> certifico que he contestado el cuestionario de manera
                 honesta y fidedigna, proporcionando respuestas veraces en cada pregunta.
             </div>
             <div class="signature-section">
                 <p> __________________________________</p>
-                <b><?php echo $data->user->nombre . " " . $data->user->apellidoP . " " . $data->user->apellidoM ?? '' ?></b>
+                <b><?php echo $data->user->nombre . ' ' . $data->user->apellidoP . ' ' . $data->user->apellidoM ?? '' ?></b>
             </div>
         </footer>
     </main>

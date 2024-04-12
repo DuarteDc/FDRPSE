@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\domain;
 
 use App\domain\qualificationQuestion\QualificationQuestion;
-use Illuminate\Database\Eloquent\Model;
-
-use App\domain\question\Question;
 use App\domain\qualifications\Qualifications;
 
-class Domain extends Model
-{
+use App\domain\question\Question;
+use Illuminate\Database\Eloquent\Model;
 
+final class Domain extends Model
+{
     protected $table = 'domains';
     protected $fillable = ['name'];
     protected $withCount = ['qualifications'];

@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\infrastructure\requests\question;
 
-use App\kernel\request\Request;
 use App\kernel\request\HttpRulesRequest;
+use App\kernel\request\Request;
 
-class CreateQuestionRequest extends Request implements HttpRulesRequest
+final class CreateQuestionRequest extends Request implements HttpRulesRequest
 {
-
     public static function rules(): array
     {
         return [
@@ -16,7 +16,7 @@ class CreateQuestionRequest extends Request implements HttpRulesRequest
             'section_id' => 'required|numeric',
             'dimension_id' => 'numeric',
             'qualification_id' => 'numeric',
-            'type' => 'required'
+            'type' => 'required',
         ];
     }
 
@@ -24,5 +24,4 @@ class CreateQuestionRequest extends Request implements HttpRulesRequest
     {
         return [];
     }
-    
 }

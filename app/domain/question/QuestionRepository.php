@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\question;
 
 use App\domain\BaseRepository;
@@ -11,7 +13,7 @@ interface QuestionRepository extends BaseRepository
     public function createQuestion(object $body): Question;
     public function findQuestionsByTypeAndSection(string $type, string $name): Collection;
     public function getQuestionBySection(): Collection;
-    public function getQuestionDetail(string $questionId) : Question | null;
+    public function getQuestionDetail(string $questionId): Question|null;
     public function countQuestions(): int;
     public function getQualification(Question $question): ?Qualification;
 }

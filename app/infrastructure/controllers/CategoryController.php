@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\controllers;
 
-use App\kernel\controllers\Controller;
 use App\application\category\CategoryUseCase;
 use App\infrastructure\requests\category\CreateCategoryRequest;
+use App\kernel\controllers\Controller;
 
-class CategoryController extends Controller
+final class CategoryController extends Controller
 {
-
-    public function __construct(private readonly CategoryUseCase $categoryUseCase)
-    {
-    }
+    public function __construct(private readonly CategoryUseCase $categoryUseCase) {}
 
     public function getAllCategories()
     {
@@ -24,7 +23,7 @@ class CategoryController extends Controller
         $this->response($this->categoryUseCase->createCategory($this->request()));
     }
 
-    public function getCategoriesWithQualifications() 
+    public function getCategoriesWithQualifications()
     {
         $this->response($this->categoryUseCase->findCategoriesWithQualifications());
     }
@@ -39,5 +38,4 @@ class CategoryController extends Controller
     {
         $this->response($this->categoryUseCase->addQualification($categoryId, $this->request()->qualification));
     }
-
 }

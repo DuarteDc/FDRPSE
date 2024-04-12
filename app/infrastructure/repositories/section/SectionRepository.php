@@ -1,17 +1,18 @@
 <?php
 
-namespace App\infrastructure\repositories\section;
+declare(strict_types=1);
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Pagination\Paginator;
+namespace App\infrastructure\repositories\section;
 
 use App\domain\section\Section;
 use App\domain\section\SectionRepository as ContractsRepository;
+
 use App\infrastructure\repositories\BaseRepository;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
 
-class SectionRepository extends BaseRepository implements ContractsRepository
+final class SectionRepository extends BaseRepository implements ContractsRepository
 {
-
     public function __construct(private readonly Section $section)
     {
         parent::__construct($section);
@@ -51,12 +52,12 @@ class SectionRepository extends BaseRepository implements ContractsRepository
         return $this->section::has('questions', '>', 0)->get(['id', 'name', 'binary', 'question']);
     }
 
-    public function findSectionWithQuestions(string $guideId, string $page): Paginator | null
+    public function findSectionWithQuestions(string $guideId, string $page): Paginator|null
     {
         return $this->section::with(
             [
                 'questions:id,name,section_id,qualification_id',
-                'questions.qualification:id,name,always_op,almost_alwyas_op,sometimes_op,almost_never_op,never_op'
+                'questions.qualification:id,name,always_op,almost_alwyas_op,sometimes_op,almost_never_op,never_op',
             ]
         )->where('guide_id', $guideId)
             // ->has('questions', '>', 0)
@@ -108,13 +109,14 @@ class SectionRepository extends BaseRepository implements ContractsRepository
 
     public function findAvailableSections(string $type): Collection
     {
-        if ($type === $this->section::NONGRADABLE)
+        if ($type === $this->section::NONGRADABLE) {
             return $this->section::where('type', $this->section::NONGRADABLE)
                 ->where('guide_id', null)
                 ->has('questions')
                 ->orWhere('can_finish_guide', true)
                 ->where('guide_id', null)
                 ->get();
+        }
 
         return $this->section::where('guide_id', null)
             ->where('type', $this->section::GRADABLE)

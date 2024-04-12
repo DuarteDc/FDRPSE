@@ -1,19 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\qualificationQuestion;
 
-use App\domain\qualifications\Qualifications;
-use App\domain\question\Question;
 use Illuminate\Database\Eloquent\Model;
 
-class QualificationQuestion extends Model
+final class QualificationQuestion extends Model
 {
-
     protected $table = 'qualifications_question';
     protected $fillable = ['question_id', 'qualificationable_id', 'qualificationable_type'];
 
-    const CATEGORY = 'category';
-    const DOMIAN = 'domain';
+    public const CATEGORY = 'category';
+    public const DOMIAN = 'domain';
 
     public function qualificationable()
     {
@@ -22,6 +21,6 @@ class QualificationQuestion extends Model
 
     public function qualificationQuestions()
     {
-        return $this->morphMany(QualificationQuestion::class, 'qualificationable');
+        return $this->morphMany(self::class, 'qualificationable');
     }
 }

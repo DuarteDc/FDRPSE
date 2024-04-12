@@ -1,17 +1,18 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace App\infrastructure\controllers;
 
 use App\kernel\controllers\Controller;
 use App\kernel\views\Views;
 
-class MainController extends Controller {
-
+final class MainController extends Controller
+{
     use Views;
 
     public function __invoke()
     {
-        $this->view('index');
+        return $this->view('index');
     }
-
 }

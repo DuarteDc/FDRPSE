@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\survey;
 
 use App\domain\guide\Guide;
 use App\domain\guideSurvey\GuideSurvey;
 use App\domain\guideUser\GuideUser;
+use App\domain\qualifications\Qualifications;
+
+use App\domain\user\User;
 use Illuminate\Database\Eloquent\Model;
 
-use App\domain\qualifications\Qualifications;
-use App\domain\user\User;
-
-class Survey extends Model
+final class Survey extends Model
 {
-    const PENDING = false;
-    const FINISHED = true;
+    public const PENDING = false;
+    public const FINISHED = true;
 
     protected $table = 'surveys';
     protected $fillable = ['start_date', 'end_date', 'status'];

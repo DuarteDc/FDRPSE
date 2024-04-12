@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\repositories\guideSurvey;
 
 use App\domain\guideSurvey\GuideStatus;
@@ -8,9 +10,8 @@ use App\domain\guideSurvey\GuideSurveyRepository as ContractRepository;
 use App\domain\section\Section;
 use App\infrastructure\repositories\BaseRepository;
 
-class GuideSurveyRepository extends BaseRepository implements ContractRepository
+final class GuideSurveyRepository extends BaseRepository implements ContractRepository
 {
-
     public function __construct(private readonly GuideSurvey $guideSurvey)
     {
         parent::__construct($guideSurvey);
@@ -46,13 +47,15 @@ class GuideSurveyRepository extends BaseRepository implements ContractRepository
     public function startNextGuide(): ?GuideSurvey
     {
         $guide = $this->findGuideInProgress();
-        if (!$guide) return null;
+        if (!$guide) {
+            return null;
+        }
         $guide->status = GuideStatus::INPROGRESS;
         $guide->save();
         return $guide;
     }
 
-    public function findByGuideSurvey(string $surveyId, string $guideId): ?GuideSurvey 
+    public function findByGuideSurvey(string $surveyId, string $guideId): ?GuideSurvey
     {
         return $this->guideSurvey::where('survey_id', $surveyId)
             ->where('guide_id', $guideId)

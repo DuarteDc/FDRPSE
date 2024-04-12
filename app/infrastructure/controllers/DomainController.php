@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\controllers;
 
-use App\kernel\controllers\Controller;
 use App\application\domain\DomainUseCase;
 use App\infrastructure\requests\domain\CreateDomainRequest;
+use App\kernel\controllers\Controller;
 
-class DomainController extends Controller
+final class DomainController extends Controller
 {
-
-    public function __construct(private readonly DomainUseCase $domainUseCase)
-    {
-    }
+    public function __construct(private readonly DomainUseCase $domainUseCase) {}
 
     public function getAllDomains()
     {
@@ -24,7 +23,7 @@ class DomainController extends Controller
         $this->response($this->domainUseCase->createDomain($this->request()), 201);
     }
 
-    public function getDomainsWithQualifications() 
+    public function getDomainsWithQualifications()
     {
         $this->response($this->domainUseCase->findDomaisWithQualifications());
     }
@@ -38,5 +37,4 @@ class DomainController extends Controller
     {
         $this->response($this->domainUseCase->addQualification($domainId, $this->request()->qualification));
     }
-
 }

@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\repositories\survey;
 
 use App\domain\survey\Survey;
-use App\infrastructure\repositories\BaseRepository;
 use App\domain\survey\SurveyRepository as ContractsRepository;
+use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class SurveyRepository extends BaseRepository implements ContractsRepository
+final class SurveyRepository extends BaseRepository implements ContractsRepository
 {
-
     public function __construct(private readonly Survey $survey)
     {
         parent::__construct($survey);
@@ -19,12 +20,12 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
 
     public function findAllSurveys(int $page): Paginator
     {
-        return $this->survey::orderBy('id', 'desc')->paginate(5,'*','page',$page);
+        return $this->survey::orderBy('id', 'desc')->paginate(5, '*', 'page', $page);
     }
 
-    public function countTotalsPages(): int
+    public function countTotalsPages(): float
     {
-        return ceil($this->survey::count()/ 5);
+        return ceil($this->survey::count() / 5);
     }
 
     public function findSurveyWithDetails(string $surveyId): Survey
@@ -36,7 +37,7 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
 
     public function startSurvey(): ?Model
     {
-        return new Model;
+        return new Model();
     }
 
     public function canStartNewSurvey(): bool
@@ -60,7 +61,7 @@ class SurveyRepository extends BaseRepository implements ContractsRepository
     public function endSurvey(Survey $survey): Survey
     {
         $survey->end_date = date('Y-m-d\TH:i:s.000');
-        $survey->status   = Survey::FINISHED;
+        $survey->status = Survey::FINISHED;
         $survey->save();
         return $survey;
     }

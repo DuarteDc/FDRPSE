@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\kernel\authentication;
 
 use App\domain\user\User;
@@ -10,7 +12,6 @@ use stdClass;
 
 trait Auth
 {
-
     public static function auth()
     {
         $session = $_SERVER['HTTP_SESSION'] ?? '';
@@ -34,7 +35,9 @@ trait Auth
     public static function check(string $token): ?stdClass
     {
         try {
-            if (!isset($token)) return null;
+            if (!isset($token)) {
+                return null;
+            }
             $key = getenv('JWT_SECRET_KEY');
             $session = JWT::decode($token, new Key($key, 'HS256'));
             return $session ? $session->user : null;

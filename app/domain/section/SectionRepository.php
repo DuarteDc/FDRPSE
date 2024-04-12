@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\section;
 
-use Illuminate\Database\Eloquent\Collection;
-
 use App\domain\BaseRepository;
-use App\domain\section\Section;
+
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
 
 interface SectionRepository extends BaseRepository
 {
@@ -14,7 +15,7 @@ interface SectionRepository extends BaseRepository
     public function getAllSections(): Collection;
     public function findOne(string $id): ?Section;
     public function findSectionsWithQuestions(): Collection;
-    public function findSectionWithQuestions(string $guideId, string $page): Paginator | null;
+    public function findSectionWithQuestions(string $guideId, string $page): Paginator|null;
     public function countTotalSections(string $guideId): int;
     public function findByName(string $name): ?Section;
     public function findByType(string $criteria): Collection;

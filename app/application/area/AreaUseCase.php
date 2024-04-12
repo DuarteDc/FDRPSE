@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\application\area;
 
 use App\domain\area\AreaRepository;
 
-class AreaUseCase
+final class AreaUseCase
 {
-    public function __construct(private readonly AreaRepository $areaRepository)
-    {
-    }
+    public function __construct(private readonly AreaRepository $areaRepository) {}
 
     public function findAllAreas()
     {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0e2f67a7811f27b293f16ee966d4c0d1",
+    "content-hash": "d7753e9189e285c9d1b18011f5fc420d",
     "packages": [
         {
             "name": "bramus/router",
@@ -2146,6 +2146,56 @@
     ],
     "packages-dev": [
         {
+            "name": "codelytv/coding-style",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CodelyTV/php-coding_style-codely.git",
+                "reference": "ffd9d00d85360350ffc07a81bc9e25abf75a59f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CodelyTV/php-coding_style-codely/zipball/ffd9d00d85360350ffc07a81bc9e25abf75a59f6",
+                "reference": "ffd9d00d85360350ffc07a81bc9e25abf75a59f6",
+                "shasum": ""
+            },
+            "require": {
+                "symplify/easy-coding-standard": "^12.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CodelyTv\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Codely",
+                    "homepage": "https://codely.com"
+                }
+            ],
+            "description": "PHP Coding Style rules we use in Codely",
+            "keywords": [
+                "Code style",
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/CodelyTV/php-coding_style-codely/issues",
+                "source": "https://github.com/CodelyTV/php-coding_style-codely/tree/1.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://bit.ly/CodelyTvPro",
+                    "type": "custom"
+                }
+            ],
+            "time": "2023-10-24T09:12:06+00:00"
+        },
+        {
             "name": "myclabs/deep-copy",
             "version": "1.11.1",
             "source": {
@@ -3843,6 +3893,64 @@
                 }
             ],
             "time": "2024-01-23T15:02:46+00:00"
+        },
+        {
+            "name": "symplify/easy-coding-standard",
+            "version": "12.1.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/easy-coding-standard/easy-coding-standard.git",
+                "reference": "e3c4a241ee36704f7cf920d5931f39693e64afd5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/easy-coding-standard/easy-coding-standard/zipball/e3c4a241ee36704f7cf920d5931f39693e64afd5",
+                "reference": "e3c4a241ee36704f7cf920d5931f39693e64afd5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "conflict": {
+                "friendsofphp/php-cs-fixer": "<3.46",
+                "phpcsstandards/php_codesniffer": "<3.8",
+                "symplify/coding-standard": "<12.1"
+            },
+            "bin": [
+                "bin/ecs"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Use Coding Standard with 0-knowledge of PHP-CS-Fixer and PHP_CodeSniffer",
+            "keywords": [
+                "Code style",
+                "automation",
+                "fixer",
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/easy-coding-standard/easy-coding-standard/issues",
+                "source": "https://github.com/easy-coding-standard/easy-coding-standard/tree/12.1.14"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/rectorphp",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/tomasvotruba",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-02-23T13:10:40+00:00"
         },
         {
             "name": "theseer/tokenizer",

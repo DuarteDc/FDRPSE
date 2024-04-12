@@ -1,20 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\controllers;
 
-use App\kernel\controllers\Controller;
 use App\application\qualification\qualificationUseCase;
+use App\kernel\controllers\Controller;
 
-class QualificationController extends Controller
+final class QualificationController extends Controller
 {
+    public function __construct(private readonly qualificationUseCase $qualificationUseCase) {}
 
-    public function __construct(private readonly qualificationUseCase $qualificationUseCase)
+    public function getAllQualifications()
     {
-    }
-
-    public function getAllQualifications() {
         $this->response($this->qualificationUseCase->findAllQualifications());
     }
-
-
 }

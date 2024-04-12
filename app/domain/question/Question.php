@@ -1,23 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\question;
 
-use Illuminate\Database\Eloquent\Model;
-
 use App\domain\category\Category;
+
 use App\domain\dimension\Dimension;
 use App\domain\domain\Domain;
 use App\domain\qualification\Qualification;
-use App\domain\qualificationQuestion\QualificationQuestion;
 use App\domain\section\Section;
+use Illuminate\Database\Eloquent\Model;
 
-class Question  extends Model
+final class Question extends Model
 {
-    const GRADABLE = 'gradable';
-    const NONGRADABLE = 'nongradable';
+    public const GRADABLE = 'gradable';
+    public const NONGRADABLE = 'nongradable';
 
     protected $table = 'questions';
-    protected $fillable = ['name', 'qualification_id', 'category_id', 'dimension_id', 'domain_id', 'section_id', 'type'];
+    protected $fillable = [
+        'name',
+        'qualification_id',
+        'category_id',
+        'dimension_id',
+        'domain_id',
+        'section_id',
+        'type',
+    ];
 
     public function section()
     {
@@ -43,5 +52,4 @@ class Question  extends Model
     {
         return $this->belongsTo(Domain::class);
     }
-
 }

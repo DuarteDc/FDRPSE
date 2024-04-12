@@ -1,26 +1,24 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\application\survey;
 
 use App\domain\area\AreaRepository;
-use App\domain\guide\Guide;
 use App\domain\guide\GuideRepository;
 use App\domain\guideSurvey\GuideStatus;
 use App\domain\question\Question;
 use App\domain\user\UserRepository;
 use Exception;
 
-class SurveyUseCase
+final class SurveyUseCase
 {
-
     public function __construct(
         private readonly SurveyService $surveyService,
         private readonly UserRepository $userRepository,
         private readonly AreaRepository $areaRepository,
         private readonly GuideRepository $guideRepository,
-    ) {
-    }
+    ) {}
 
     public function getAllSurveys(int $page)
     {
@@ -35,10 +33,14 @@ class SurveyUseCase
     public function startNewSurvey(array $guides)
     {
         $survey = $this->surveyService->startSurvey();
-        if ($survey instanceof Exception) return $survey;
+        if ($survey instanceof Exception) {
+            return $survey;
+        }
 
         $areValidIds = $this->guideRepository->countGuidesById($guides);
-        if (count($guides) !== count($areValidIds)) return new Exception('Los cuestionarios no son validos', 400);
+        if (count($guides) !== count($areValidIds)) {
+            return new Exception('Los cuestionarios no son validos', 400);
+        }
 
         $guides = [];
         foreach ($areValidIds as $key => $guide) {
@@ -47,13 +49,15 @@ class SurveyUseCase
 
         return [
             'survey' => $this->surveyService->attachGuidesToSurvey($survey, $guides),
-            'message' => 'Se ha generado una serie de cuestionarios'
+            'message' => 'Se ha generado una serie de cuestionarios',
         ];
     }
 
     public function saveAnswers(array $body, string $type)
     {
-        if ($type === Question::NONGRADABLE) return $this->surveyService->saveNongradableAnswersByUser($body);
+        if ($type === Question::NONGRADABLE) {
+            return $this->surveyService->saveNongradableAnswersByUser($body);
+        }
         return $this->surveyService->saveAnswersByUser($body);
     }
 
@@ -87,14 +91,16 @@ class SurveyUseCase
     public function findSurveyByName(string $surveyId, string $guideId, string $name, string $areaId, string $subareaId)
     {
         return [
-            'survey' => $this->surveyService->findSurveyByNameAndAreas($surveyId, $guideId, $name, $areaId, $subareaId)
+            'survey' => $this->surveyService->findSurveyByNameAndAreas($surveyId, $guideId, $name, $areaId, $subareaId),
         ];
     }
 
     public function findUserDetails(string $surveyId, string $userId, string $guideId)
     {
         $surveyUser = $this->surveyService->getDetailsByUser($surveyId, $userId, $guideId);
-        if ($surveyUser instanceof Exception) return $surveyUser;
+        if ($surveyUser instanceof Exception) {
+            return $surveyUser;
+        }
         return ['guide_user' => $surveyUser];
     }
 
@@ -111,31 +117,32 @@ class SurveyUseCase
 
     public function tryToFinalizeGuide(string $surveyId, string $guideId)
     {
-
         $totalUsers = $this->userRepository->countTotalAvailableUsers();
         return $this->surveyService->finalizedGuideInsideSurvey($surveyId, $guideId, $totalUsers);
     }
 
 
-    private function calculateUsersHaveToAnswers(int $usersCount): int
-    {
-        $totalUsers = 0.9604 * $usersCount;
-        $totalConst = 0.0025 * ($usersCount - 1) + 0.9604;
-        return round($totalUsers / $totalConst);
-    }
+    // private function calculateUsersHaveToAnswers(int $usersCount): int
+    // {
+    // 	$totalUsers = 0.9604 * $usersCount;
+    // 	$totalConst = 0.0025 * ($usersCount - 1) + 0.9604;
+    // 	return round($totalUsers / $totalConst);
+    // }
 
     public function getDataToGenerateSurveyUserResume(string $userId)
     {
-        $surveyUser =  $this->surveyService->getLastSurveyByUser($userId);
+        $surveyUser = $this->surveyService->getLastSurveyByUser($userId);
         return !$surveyUser ? new Exception('El cuestionario no esta disponible', 404) : $surveyUser;
     }
 
     public function changeGuideStatusToPaused(string $surveyId, string $guideId, int $status)
     {
         $guideSurvey = $this->guideRepository->findGuideBySurvey($surveyId, $guideId);
-        if (!$guideSurvey) return new Exception('El cuestionario no existe o no es valido', 404);
+        if (!$guideSurvey) {
+            return new Exception('El cuestionario no existe o no es valido', 404);
+        }
 
-        $guide = "";
+        $guide = '';
 
         if ($status === GuideStatus::PAUSED->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::INPROGRESS->value) {
             $guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::PAUSED);
@@ -146,6 +153,9 @@ class SurveyUseCase
             return ['guide' => $guide];
         }
 
-        return new Exception("Parece que hubo un error al " . ($status === GuideStatus::PAUSED->value ? 'pausar' : 'continuar') . " la guía", 400);
+        return new Exception(
+            'Parece que hubo un error al ' . ($status === GuideStatus::PAUSED->value ? 'pausar' : 'continuar') . ' la guía',
+            400
+        );
     }
 }

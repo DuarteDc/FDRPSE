@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\guideSurvey;
 
 use App\domain\BaseRepository;
@@ -16,5 +18,4 @@ interface GuideSurveyRepository extends BaseRepository
     public function startNextGuide(): ?GuideSurvey;
 
     public function findByGuideSurvey(string $surveyId, string $guideId): ?GuideSurvey;
-
 }

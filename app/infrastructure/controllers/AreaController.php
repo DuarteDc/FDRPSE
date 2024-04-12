@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\controllers;
 
-use App\kernel\controllers\Controller;
 use App\application\area\AreaUseCase;
+use App\kernel\controllers\Controller;
 
-class AreaController extends Controller
+final class AreaController extends Controller
 {
-
-    public function __construct(private readonly AreaUseCase $areaUseCase)
-    {
-    }
+    public function __construct(private readonly AreaUseCase $areaUseCase) {}
 
     public function getAreas()
     {

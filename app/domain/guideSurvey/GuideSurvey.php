@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\guideSurvey;
 
 use App\domain\guide\Guide;
@@ -13,9 +15,8 @@ enum GuideStatus: int
     case FINISHED = 2;
     case PAUSED = 3;
 }
-class GuideSurvey extends Pivot
+final class GuideSurvey extends Pivot
 {
-
     protected $table = 'guide_survey';
     protected $fillable = ['guide_id', 'survey_id', 'status', 'qualification'];
     protected $casts = ['qualification' => 'json'];

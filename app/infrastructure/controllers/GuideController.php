@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\controllers;
 
 use App\application\guide\GuideUseCase;
 use App\infrastructure\requests\guide\CreateGuideRequest;
 use App\kernel\controllers\Controller;
 
-class GuideController extends Controller
+final class GuideController extends Controller
 {
-
-    public function __construct(private readonly GuideUseCase $guideUseCase)
-    {
-    }
+    public function __construct(private readonly GuideUseCase $guideUseCase) {}
 
     public function getGuides()
     {
@@ -55,6 +54,4 @@ class GuideController extends Controller
     {
         $this->response($this->guideUseCase->findGuideDetail($guideId));
     }
-
-
 }

@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\controllers;
 
-use App\kernel\controllers\Controller;
 use App\application\section\SectionUseCase;
 use App\infrastructure\requests\section\CreateSectionRequest;
+use App\kernel\controllers\Controller;
 
-class SectionController extends Controller
+final class SectionController extends Controller
 {
-
-    public function __construct(private readonly SectionUseCase $sectionUseCase)
-    {
-    }
+    public function __construct(private readonly SectionUseCase $sectionUseCase) {}
 
     public function getAllSections()
     {
@@ -25,7 +24,7 @@ class SectionController extends Controller
         $this->response($this->sectionUseCase->getSectionDetail($id));
     }
 
-    public function getAvailableSections() 
+    public function getAvailableSections()
     {
         $type = (string) $this->get('type');
         $this->response($this->sectionUseCase->getSectionWithoutGuide($type));

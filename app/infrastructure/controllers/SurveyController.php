@@ -1,25 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\controllers;
 
-use Exception;
-use App\kernel\controllers\Controller;
 use App\application\survey\SurveyUseCase;
-use App\infrastructure\adapters\PdfAdapter;
-use App\infrastructure\adapters\PaperTypes;
 use App\infrastructure\adapters\OrientationTypes;
+use App\infrastructure\adapters\PaperTypes;
+use App\infrastructure\adapters\PdfAdapter;
 use App\infrastructure\requests\survey\SaveQuestionRequest;
+use App\kernel\controllers\Controller;
+use Exception;
 
-class SurveyController extends Controller
+final class SurveyController extends Controller
 {
-
-    public function __construct(private readonly SurveyUseCase $surveyUseCase, private readonly PdfAdapter $pdfAdapter)
-    {
-    }
+    public function __construct(private readonly SurveyUseCase $surveyUseCase, private readonly PdfAdapter $pdfAdapter) {}
 
     public function getAllSurveys()
     {
-        $page = $this->get('page');
+        $page = (int) $this->get('page');
         $this->response($this->surveyUseCase->getAllSurveys($page));
     }
 
@@ -66,9 +65,8 @@ class SurveyController extends Controller
         $this->response($this->surveyUseCase->findSurveyByName($surveyId, $guideId, $name, $areaId, $subareaId));
     }
 
-    public function getDetailsByUser(string $surveyId,  string $userId, string $guideId)
+    public function getDetailsByUser(string $surveyId, string $userId, string $guideId)
     {
-
         $this->response($this->surveyUseCase->findUserDetails($surveyId, $userId, $guideId));
     }
 
@@ -90,7 +88,9 @@ class SurveyController extends Controller
     public function generateReportByUser()
     {
         $surveyUser = $this->surveyUseCase->getDataToGenerateSurveyUserResume($this->auth()->id);
-        if ($surveyUser instanceof Exception) return $this->response($surveyUser);
+        if ($surveyUser instanceof Exception) {
+            return $this->response($surveyUser);
+        }
         $view = $this->renderBufferView('pdf-user-answers', $surveyUser);
         $this->pdfAdapter->generatePDF($view, PaperTypes::Letter, OrientationTypes::Portrait, 'Acuse de entraga');
     }

@@ -1,19 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\user;
 
 use App\domain\area\Area;
-use App\domain\guide\Guide;
 use App\domain\guideUser\GuideUser;
 use App\domain\survey\Survey;
-use App\domain\surveyUser\SurveyUser;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+final class User extends Model
 {
-
-    const ADMIN = 5;
-    const USER  = 1;
+    public const ADMIN = 5;
+    public const USER = 1;
 
     protected $table = 'usuarios';
     protected $connection = 'user_db';
@@ -30,7 +29,7 @@ class User extends Model
 
     public function guides()
     {
-        return $this->belongsToMany(User::class, 'guide_user', 'guide_id', 'user_id')
+        return $this->belongsToMany(self::class, 'guide_user', 'guide_id', 'user_id')
             ->using(GuideUser::class);
     }
 }

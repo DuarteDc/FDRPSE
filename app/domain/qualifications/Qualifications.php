@@ -1,14 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\qualifications;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Qualifications extends Model
+final class Qualifications extends Model
 {
-
     protected $table = 'qualifications';
-    protected $fillable = ['despicable', 'low', 'middle', 'high', 'very_high', 'qualificationable_id', 'qualificationable_type'];
+    protected $fillable = [
+        'despicable',
+        'low',
+        'middle',
+        'high',
+        'very_high',
+        'qualificationable_id',
+        'qualificationable_type',
+    ];
 
     public function qualificationable()
     {
@@ -17,6 +26,6 @@ class Qualifications extends Model
 
     public function qualifications()
     {
-        return $this->morphMany(Qualifications::class, 'qualificationable');
+        return $this->morphMany(self::class, 'qualificationable');
     }
 }

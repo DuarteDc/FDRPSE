@@ -1,16 +1,18 @@
 <?php
 
-namespace App\infrastructure\repositories\area;
+declare(strict_types=1);
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Builder;
+namespace App\infrastructure\repositories\area;
 
 use App\domain\area\Area;
 use App\domain\area\AreaRepository as ContractsRepository;
 
 use App\infrastructure\repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Builder;
 
-class AreaRepository extends BaseRepository implements ContractsRepository
+use Illuminate\Database\Eloquent\Collection;
+
+final class AreaRepository extends BaseRepository implements ContractsRepository
 {
     public function __construct(private readonly Area $area)
     {

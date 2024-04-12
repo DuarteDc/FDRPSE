@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\dimension;
 
-use Illuminate\Database\Eloquent\Model;
 use App\domain\question\Question;
+use Illuminate\Database\Eloquent\Model;
 
-class Dimension extends Model
+final class Dimension extends Model
 {
-
     protected $table = 'dimensions';
     protected $fillable = ['name'];
 

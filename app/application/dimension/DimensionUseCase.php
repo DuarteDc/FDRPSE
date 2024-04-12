@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\application\dimension;
 
 use App\domain\dimension\DimensionRepository;
 use Exception;
 
-class DimensionUseCase
+final class DimensionUseCase
 {
-
-    public function __construct(private readonly DimensionRepository $dimensionRespository)
-    {
-    }
+    public function __construct(private readonly DimensionRepository $dimensionRespository) {}
 
     public function findAllDimensions()
     {
@@ -21,13 +20,15 @@ class DimensionUseCase
     public function createDimension(mixed $body)
     {
         $isValidName = $this->validateName($body->name);
-        if ($isValidName instanceof Exception) return $isValidName;
+        if ($isValidName instanceof Exception) {
+            return $isValidName;
+        }
 
         $dimension = $this->dimensionRespository->create(['name' => $isValidName]);
         return ['message' => 'La dimension se creo correctamente', 'dimension' => $dimension];
     }
 
-    private function validateName(string $name): Exception | string
+    private function validateName(string $name): Exception|string
     {
         $name = mb_strtoupper(trim($name));
         $dimension = $this->dimensionRespository->findByName($name);

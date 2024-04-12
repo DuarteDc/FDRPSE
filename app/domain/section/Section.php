@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\section;
 
 use App\domain\guide\Guide;
 use App\domain\question\Question;
 use Illuminate\Database\Eloquent\Model;
 
-class Section extends Model
+final class Section extends Model
 {
-
-    const GRADABLE  = 'gradable';
-    const NONGRADABLE  = 'nongradable';
+    public const GRADABLE = 'gradable';
+    public const NONGRADABLE = 'nongradable';
 
     protected $table = 'sections';
     protected $fillable = ['name', 'binary', 'question', 'can_finish_guide', 'type', 'guide_id', 'status'];
@@ -25,5 +26,4 @@ class Section extends Model
     {
         return $this->belongsTo(Guide::class);
     }
-
 }

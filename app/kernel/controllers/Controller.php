@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\kernel\controllers;
 
-use Exception;
-
 use App\kernel\authentication\Auth;
+
 use App\kernel\request\Request;
 use App\kernel\views\Views;
+use Exception;
 
 abstract class Controller extends Request
 {
@@ -14,7 +16,9 @@ abstract class Controller extends Request
 
     protected function response(mixed $response, int $statusCode = 200)
     {
-        if($response instanceof Exception) return $this->responseJson(['message' => $response->getMessage()], $response->getCode());
+        if ($response instanceof Exception) {
+            return $this->responseJson(['message' => $response->getMessage()], $response->getCode());
+        }
         $this->responseJson($response, $statusCode);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-/* -------- Run atoload from composer -------- */
+/* -------- Run autoload from composer -------- */
 
 require_once __DIR__ . '/../vendor/autoload.php';
 

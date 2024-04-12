@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\domain\guide;
 
 use App\domain\guideSurvey\GuideSurvey;
@@ -10,14 +12,13 @@ use App\domain\survey\Survey;
 use App\domain\user\User;
 use Illuminate\Database\Eloquent\Model;
 
-class Guide extends Model
+final class Guide extends Model
 {
-
     protected $fillable = ['name', 'status'];
     protected $table = 'guides';
 
-    const ACTIVE = 'active';
-    const DISABLE = 'disable';
+    public const ACTIVE = 'active';
+    public const DISABLE = 'disable';
 
     public function surveys()
     {
@@ -33,7 +34,7 @@ class Guide extends Model
 
     public function qualification()
     {
-        return $this->morphOne(Qualifications::class,  'qualificationable');
+        return $this->morphOne(Qualifications::class, 'qualificationable');
     }
 
     public function users()

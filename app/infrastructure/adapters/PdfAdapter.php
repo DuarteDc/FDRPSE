@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\adapters;
 
 use Dompdf\Dompdf;
@@ -17,15 +19,20 @@ enum OrientationTypes: string
     case Landscape = 'landscape';
 }
 
-class PdfAdapter
+final class PdfAdapter
 {
     public function __construct()
     {
-        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Origin: *');
     }
 
-    public function generatePDF(string $html, PaperTypes $paper, OrientationTypes $orientation, string $fileName, bool $download = true): void
-    {
+    public function generatePDF(
+        string $html,
+        PaperTypes $paper,
+        OrientationTypes $orientation,
+        string $fileName,
+        bool $download = true
+    ): void {
         $options = new Options();
         $options->set('isRemoteEnabled', true);
 

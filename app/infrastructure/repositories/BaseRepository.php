@@ -1,26 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\repositories;
 
-use Illuminate\Database\Eloquent\Model;
+use App\domain\BaseRepository as ContractsRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-use App\domain\BaseRepository as ContractsRepository;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseRepository implements ContractsRepository
 {
-    public function __construct(private readonly Model $model)
-    {
-    }
+    public function __construct(private readonly Model $model) {}
 
     public function findAll(): Collection
     {
         return $this->model::all();
     }
 
-    public function findOne(string $id): Model | null
+    public function findOne(string $id): Model|null
     {
-        if(!is_numeric($id)) return null;
+        if (!is_numeric($id)) {
+            return null;
+        }
         return $this->model::find($id);
     }
 
@@ -30,5 +32,4 @@ abstract class BaseRepository implements ContractsRepository
         $record->save();
         return $record;
     }
-
 }

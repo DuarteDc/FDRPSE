@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\middlewares;
 
 use App\domain\user\User;
 use App\kernel\middleware\Middleware;
 
-class HasAdminRole extends Middleware
+final class HasAdminRole extends Middleware
 {
-
     public function handle(): void
     {
         $user = $this->check($_SERVER['HTTP_SESSION'] ?? '');

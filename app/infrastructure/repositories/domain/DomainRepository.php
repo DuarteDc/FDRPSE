@@ -1,25 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\repositories\domain;
 
 use App\domain\domain\Domain;
 use App\domain\domain\DomainRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
-class DomainRepository extends BaseRepository implements ContractsRepository
+final class DomainRepository extends BaseRepository implements ContractsRepository
 {
-
     public function __construct(private readonly Domain $domain)
     {
         parent::__construct($domain);
     }
 
-    public function findOneWithQualification(string $id, string $qualificationId): Domain | null
+    public function findOneWithQualification(string $id, string $qualificationId): Domain|null
     {
         return $this->domain::where('id', $id)
-            ->with('qualification', function ($query) use($qualificationId) {
+            ->with('qualification', function ($query) use ($qualificationId) {
                 $query->where('id', $qualificationId);
             })->first();
     }
@@ -52,7 +52,8 @@ class DomainRepository extends BaseRepository implements ContractsRepository
         return $this->domain::with('qualifications')->find($domainId);
     }
 
-    public function addNewQualification(Domain $domain, mixed $qualification): Domain {
+    public function addNewQualification(Domain $domain, mixed $qualification): Domain
+    {
         $domain->qualification()->create($qualification);
         return $this->findOneWithQualifications($domain->id);
     }

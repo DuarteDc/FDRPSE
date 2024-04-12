@@ -1,22 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\infrastructure\routes\authentication;
 
-use Bramus\Router\Router;
+use App\application\authentication\AuthenticationUseCase;
 
 use App\domain\user\User;
-use App\application\authentication\AuthenticationUseCase;
 use App\infrastructure\controllers\AuthenticationController;
 use App\infrastructure\repositories\user\UserRepository;
+use Bramus\Router\Router;
 
 function router(Router $router)
 {
-
-    $authenticationRepository = new UserRepository(new User);
-    $authenticationUseCase    = new AuthenticationUseCase($authenticationRepository);
+    $authenticationRepository = new UserRepository(new User());
+    $authenticationUseCase = new AuthenticationUseCase($authenticationRepository);
     $authenticationController = new AuthenticationController($authenticationUseCase);
 
-    $router->post('/signin', function ()  use ($authenticationController) {
+    $router->post('/signin', function () use ($authenticationController) {
         $authenticationController->login();
     });
 

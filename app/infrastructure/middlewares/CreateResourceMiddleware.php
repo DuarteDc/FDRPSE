@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\infrastructure\middlewares;
 
 use App\domain\survey\SurveyRepository;
 use App\kernel\middleware\Middleware;
 
-class CreateResourceMiddleware extends Middleware
+final class CreateResourceMiddleware extends Middleware
 {
-
-    public function __construct(private readonly SurveyRepository $surveyRepository)
-    {
-    }
+    public function __construct(private readonly SurveyRepository $surveyRepository) {}
 
     public function handle(): void
     {

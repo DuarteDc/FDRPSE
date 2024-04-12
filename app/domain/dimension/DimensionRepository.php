@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\domain\dimension;
 
 use App\domain\BaseRepository;
-use App\domain\dimension\Dimension;
 
 interface DimensionRepository extends BaseRepository
 {
-    public function findByName(string $name): Dimension | null;
+    public function findByName(string $name): Dimension|null;
 }

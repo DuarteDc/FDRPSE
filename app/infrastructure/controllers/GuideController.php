@@ -41,4 +41,20 @@ class GuideController extends Controller
         $this->response($this->guideUseCase->searchGuidesByTypeAndName($type, $name));
     }
 
+    public function disableGudie(string $gudieId)
+    {
+        $this->response($this->guideUseCase->findAndDisableGudie($gudieId));
+    }
+
+    public function enableGudie(string $gudieId)
+    {
+        $this->response($this->guideUseCase->findAndEnableGudie($gudieId));
+    }
+
+    public function getGuideDetail(string $guideId)
+    {
+        $this->response($this->guideUseCase->findGuideDetail($guideId));
+    }
+
+
 }

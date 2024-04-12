@@ -21,9 +21,24 @@ class GuideRepository extends BaseRepository implements ContractsRepository
         return $this->guide->where('name', $name)->first();
     }
 
-    public function disableGuide(string $guideId): Guide
+    public function disableGuide(Guide $guide): Guide
     {
-        return $this->guide::find($guideId)->update(['status' => false]);
+        $guide->update(['status' => false]);
+        $guide->sections()->update(['status' => false]);
+        $guide->sections()->each(function ($section) {
+            $section->questions()->update(['status' => false]);
+        });
+        return $guide;
+    }
+
+    public function enableGuide(Guide $guide): Guide
+    {
+        $guide->update(['status' => true]);
+        $guide->sections()->update(['status' => true]);
+        $guide->sections()->each(function ($section) {
+            $section->questions()->update(['status' => true]);
+        });
+        return $guide;
     }
 
     public function createAndSetQualification(object $body): Guide
@@ -79,6 +94,7 @@ class GuideRepository extends BaseRepository implements ContractsRepository
             })->with(['surveys' => function ($query) use ($surveyId) {
                 $query->where('surveys.id', $surveyId)->first();
             }, 'surveys:id', 'surveys:pivot'])
+
             ->find($guideId);
     }
 
@@ -86,5 +102,22 @@ class GuideRepository extends BaseRepository implements ContractsRepository
     {
         $guide->surveys()->updateExistingPivot($surveyId, ['status' => $status->value]);
         return $this->findGuideBySurvey($surveyId, $guide->id);
+    }
+
+    public function findGuideDetail(string $guideId): ?Guide
+    {
+        return $this->guide::with([
+            'sections' => function ($query) {
+                $query->select('id', 'name', 'guide_id');
+            },
+            'sections.questions' => function ($query) {
+                $query->select('id', 'name', 'section_id', 'qualification_id');
+            },
+            'sections.questions.qualification' => function ($query) {
+                $query->select('id', 'name', 'always_op', 'almost_alwyas_op', 'sometimes_op', 'almost_never_op', 'never_op');
+            }
+        ])
+            ->select('id', 'name', 'gradable', 'status')
+            ->find($guideId);
     }
 }

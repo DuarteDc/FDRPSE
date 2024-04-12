@@ -299,7 +299,7 @@ class SurveyService
 
     public function getLastSurveyByUser(string $userId)
     {
-        // return $this->surveyUserRepository->findCurrentSurveyUser($userId);
+        return $this->guideUserRepository->findCurrentSurveyUser($userId);
     }
 
     public function attachGuidesToSurvey(Survey $survey, array $guidesId)

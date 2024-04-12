@@ -116,6 +116,7 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
                     }
                 }
             ])
+            ->orderBy('id', 'desc')
             ->get(['user_id', 'total', 'status', 'guide_id']);
 
 
@@ -136,8 +137,9 @@ class GuideUserRepository extends BaseRepository implements ContractsRepository
     public function findCurrentSurveyUser(string $userId): GuideUser
     {
         return $this->guideUser::where('user_id', $userId)
-            ->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
-            ->first(['user_id', 'total', 'status', 'answers']);
+            ->where('status',true)
+            ->with(['guide:id,name','user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
+            ->latest()->first(['user_id', 'total', 'status', 'answers', 'guide_id']);
     }
 
     public function countSurveyUserAnswers(string $surveyId): int

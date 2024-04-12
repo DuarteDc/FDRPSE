@@ -29,21 +29,27 @@ function router(Router $router)
     $router->get('/{surveyId}/survey/{guideId}', function (string $surveyId, string $guideId)  use ($guideController) {
         $guideController->showGuideBySurvey($surveyId, $guideId);
     });
-    
+
     $router->post('/create', function () use ($guideController) {
         // $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
         // $middleware->handle();
         $guideController->createGuide();
     });
-    
+
+    $router->get('/{id}/detail', function (string $id)  use ($guideController) {
+        $guideController->getGuideDetail($id);
+    });
+
     $router->get('/{id}', function (string $id)  use ($guideController) {
         $guideController->showGuide($id);
     });
 
 
+    $router->delete('/disable/{guideId}', function (string $guideId) use ($guideController) {
+        $guideController->disableGudie($guideId);
+    });
 
-
-    // $router->get('/with/qualification', function () use ($domainController) {
-    //     $domainController->getDomainsWithQualifications();
-    // });
+    $router->patch('/enable/{guideId}', function (string $guideId) use ($guideController) {
+        $guideController->enableGudie($guideId);
+    });
 }

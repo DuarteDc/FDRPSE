@@ -109,10 +109,11 @@ class SectionRepository extends BaseRepository implements ContractsRepository
     public function findAvailableSections(string $type): Collection
     {
         if ($type === $this->section::NONGRADABLE)
-            return $this->section::where('guide_id', null)
-                ->where('type', $this->section::NONGRADABLE)
+            return $this->section::where('type', $this->section::NONGRADABLE)
+                ->where('guide_id', null)
                 ->has('questions')
-                ->OrWhere('can_finish_guide', true)
+                ->orWhere('can_finish_guide', true)
+                ->where('guide_id', null)
                 ->get();
 
         return $this->section::where('guide_id', null)

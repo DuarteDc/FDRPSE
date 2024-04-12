@@ -56,7 +56,8 @@ const QUALIFICATION_NAME = [
             position: absolute;
             bottom: -2px;
         }
-        .signature-section{
+
+        .signature-section {
             margin-top: 10px;
         }
     </style>
@@ -65,7 +66,7 @@ const QUALIFICATION_NAME = [
 
 <body>
     <main>
-        <h1 style="text-align: center;">Cuestionario de Identificación y Análisis de los Factores de Riesgo Psicológicos y Evaluación del Entorno Organizacional en los Centros de Trabajo de IGECEM</h1>
+        <h1 style="text-align: center;"><?php echo $data->guide->name ?></h1>
         <table>
             <thead>
                 <th>#</th>
@@ -79,7 +80,10 @@ const QUALIFICATION_NAME = [
                     <tr>
                         <td>" . $key + 1 . "</td>
                         <td>{$question->name}</td>
-                        <td>". QUALIFICATION_NAME[array_search($question->qualification, (array) $question->qualification_name)]."</td>
+                        <td>" .
+                        (gettype($question->qualification) === 'boolean' ?
+                        ($question->qualification ? 'Si' : 'No')
+                        : (QUALIFICATION_NAME[array_search($question->qualification, (array) $question->qualification_data)]) ). "</td>
                     </tr>
                     ";
                 }

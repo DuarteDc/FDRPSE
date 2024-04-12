@@ -48,7 +48,7 @@ class GuideUseCase
     {
         $guide = $this->guideRepository->findOne($guideId);
         if (!$guide) return new Exception('El cuestionario ya ha sidio desactivado', 400);
-        $this->guideRepository->disableGuide($guideId);
+        $this->guideRepository->disableGuide($guide);
     }
 
     private function validateName(string $name): Exception | string
@@ -72,4 +72,32 @@ class GuideUseCase
 
         return ['guides' => $this->guideRepository->findGuideByTypeAndName($type, $name)];
     }
+
+    public function findAndDisableGudie(string $guideId)
+    {
+        $guide = $this->guideRepository->findOne($guideId);
+        if (!$guide) return new Exception('El cuestionario que intentas desactivar no exite', 400);
+        if(!$guide->status) return new Exception('El cuestionario ya ha sido desactivado', 400);
+        $guide = $this->guideRepository->disableGuide($guide);
+        return !$guide ? new Exception('Parece que hubo un error al desactivar el cuestionario', 500) : 
+        ['message' => 'El cuestionario se desactivo correctamente', 'success' => true];
+    }
+
+    public function findAndEnableGudie(string $guideId)
+    {
+        $guide = $this->guideRepository->findOne($guideId);
+        if (!$guide) return new Exception('El cuestionario que intentas desactivar no exite', 400);
+        if($guide->status) return new Exception('El cuestionario ya ha sido activado', 400);
+        $guide = $this->guideRepository->enableGuide($guide);
+        return !$guide ? new Exception('Parece que hubo un error al activar el cuestionario', 500) : 
+        ['message' => 'El cuestionario se activo correctamente', 'success' => true];
+    }
+
+    public function findGuideDetail(string $guideId)
+    {
+        $guide =  $this->guideRepository->findGuideDetail($guideId);
+        if (!$guide) return new Exception('La guia que buscar no existe o no es valida', 404);
+        return ['guide' => $guide];
+    }
+
 }

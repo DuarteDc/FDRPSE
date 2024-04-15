@@ -42,8 +42,8 @@ final class QuestionUseCase
 		$category = '';
 
 		if (isset($body->domain) || isset($body->categoy)) {
-			$domain = $this->questionService->domainIsValid($body->domain['id'], $body->domain['qualification_id']);
-			$category = $this->questionService->categoryIsValid($body->category['id'], $body->category['qualification_id']);
+			$domain = $this->questionService->domainIsValid((string)$body->domain['id'], $body->domain['qualification_id'] ?? null);
+			$category = $this->questionService->categoryIsValid((string)$body->category['id'], $body->category['qualification_id'] ?? null);
 
 			if ($domain instanceof Exception) {
 				return $domain;

@@ -16,12 +16,15 @@ final class DomainRepository extends BaseRepository implements ContractsReposito
 		parent::__construct($domain);
 	}
 
-	public function findOneWithQualification(string $id, string $qualificationId): Domain|null
+	public function findOneWithQualification(string $id, string | null $qualificationId): Domain|null
 	{
-		return $this->domain::where('id', $id)
+		return $qualificationId ? $this->domain::where('id', $id)
 			->with('qualification', function ($query) use ($qualificationId) {
 				$query->where('id', $qualificationId);
-			})->first();
+			})->first()
+			: $this->domain::where('id', $id)
+			->with('qualification')
+			->first();
 	}
 
 	public function findByName(string $name): ?Domain

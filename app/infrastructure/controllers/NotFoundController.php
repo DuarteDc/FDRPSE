@@ -8,9 +8,9 @@ use App\kernel\controllers\Controller;
 
 final class NotFoundController extends Controller
 {
-    public function __invoke()
-    {
-        header('HTTP/1.1 404 Not Found');
-        $this->view('not-found');
-    }
+	public function __invoke()
+	{
+		header('HTTP/1.1 404 Not Found');
+		$this->view('not-found');
+	}
 }

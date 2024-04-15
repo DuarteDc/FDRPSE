@@ -10,13 +10,13 @@ use App\infrastructure\repositories\BaseRepository;
 
 final class DimensionRepository extends BaseRepository implements ContractsRepository
 {
-    public function __construct(private readonly Dimension $dimension)
-    {
-        parent::__construct($dimension);
-    }
+	public function __construct(private readonly Dimension $dimension)
+	{
+		parent::__construct($dimension);
+	}
 
-    public function findByName(string $name): ?Dimension
-    {
-        return $this->dimension::where('name', $name)->first();
-    }
+	public function findByName(string $name): ?Dimension
+	{
+		return $this->dimension::where('name', $name)->first();
+	}
 }

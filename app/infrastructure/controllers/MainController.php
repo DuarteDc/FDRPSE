@@ -9,10 +9,10 @@ use App\kernel\views\Views;
 
 final class MainController extends Controller
 {
-    use Views;
+	use Views;
 
-    public function __invoke()
-    {
-        return $this->view('index');
-    }
+	public function __invoke()
+	{
+		return $this->view('index');
+	}
 }

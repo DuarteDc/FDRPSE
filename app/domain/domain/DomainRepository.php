@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface DomainRepository extends BaseRepository
 {
-    public function findOneWithQualification(string $id, string $qualificationId): Domain|null;
-    public function findByName(string $name): Domain|null;
-    public function saveDomainAndSetQualification(object $body): Domain;
-    public function setDomainQualification(Domain $domain, object $body): Domain;
-    public function findWithQualifications(): Collection;
-    public function findOneWithQualifications(string $domainId): ?Domain;
-    public function addNewQualification(Domain $domain, mixed $qualification): Domain;
+	public function findOneWithQualification(string $id, string $qualificationId): Domain|null;
+	public function findByName(string $name): Domain|null;
+	public function saveDomainAndSetQualification(object $body): Domain;
+	public function setDomainQualification(Domain $domain, object $body): Domain;
+	public function findWithQualifications(): Collection;
+	public function findOneWithQualifications(string $domainId): ?Domain;
+	public function addNewQualification(Domain $domain, mixed $qualification): Domain;
 }

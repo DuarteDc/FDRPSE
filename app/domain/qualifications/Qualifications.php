@@ -8,24 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Qualifications extends Model
 {
-    protected $table = 'qualifications';
-    protected $fillable = [
-        'despicable',
-        'low',
-        'middle',
-        'high',
-        'very_high',
-        'qualificationable_id',
-        'qualificationable_type',
-    ];
+	protected $table = 'qualifications';
+	protected $fillable = [
+		'despicable',
+		'low',
+		'middle',
+		'high',
+		'very_high',
+		'qualificationable_id',
+		'qualificationable_type',
+	];
 
-    public function qualificationable()
-    {
-        return $this->morphTo();
-    }
+	public function qualificationable()
+	{
+		return $this->morphTo();
+	}
 
-    public function qualifications()
-    {
-        return $this->morphMany(self::class, 'qualificationable');
-    }
+	public function qualifications()
+	{
+		return $this->morphMany(self::class, 'qualificationable');
+	}
 }

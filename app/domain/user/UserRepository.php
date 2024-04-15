@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface UserRepository extends BaseRepository
 {
-    public function findByUsername(string $username): User|null;
-    public function countTotalAvailableUsers(): int;
-    public function getAvailableUsers(): Collection;
+	public function findByUsername(string $username): User|null;
+	public function countTotalAvailableUsers(): int;
+	public function getAvailableUsers(): Collection;
 }

@@ -14,42 +14,42 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Question extends Model
 {
-    public const GRADABLE = 'gradable';
-    public const NONGRADABLE = 'nongradable';
+	public const GRADABLE = 'gradable';
+	public const NONGRADABLE = 'nongradable';
 
-    protected $table = 'questions';
-    protected $fillable = [
-        'name',
-        'qualification_id',
-        'category_id',
-        'dimension_id',
-        'domain_id',
-        'section_id',
-        'type',
-    ];
+	protected $table = 'questions';
+	protected $fillable = [
+		'name',
+		'qualification_id',
+		'category_id',
+		'dimension_id',
+		'domain_id',
+		'section_id',
+		'type',
+	];
 
-    public function section()
-    {
-        return $this->belongsTo(Section::class);
-    }
+	public function section()
+	{
+		return $this->belongsTo(Section::class);
+	}
 
-    public function qualification()
-    {
-        return $this->belongsTo(Qualification::class);
-    }
+	public function qualification()
+	{
+		return $this->belongsTo(Qualification::class);
+	}
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+	public function category()
+	{
+		return $this->belongsTo(Category::class);
+	}
 
-    public function dimension()
-    {
-        return $this->belongsTo(Dimension::class);
-    }
+	public function dimension()
+	{
+		return $this->belongsTo(Dimension::class);
+	}
 
-    public function domain()
-    {
-        return $this->belongsTo(Domain::class);
-    }
+	public function domain()
+	{
+		return $this->belongsTo(Domain::class);
+	}
 }

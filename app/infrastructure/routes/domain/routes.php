@@ -16,31 +16,31 @@ use Bramus\Router\Router;
 
 function router(Router $router)
 {
-    $domainRepository = new DomainRepository(new Domain());
-    $domainseCase = new DomainUseCase($domainRepository);
-    $domainController = new DomainController($domainseCase);
+	$domainRepository = new DomainRepository(new Domain());
+	$domainseCase = new DomainUseCase($domainRepository);
+	$domainController = new DomainController($domainseCase);
 
-    $router->get('/', function () use ($domainController) {
-        $domainController->getAllDomains();
-    });
+	$router->get('/', function () use ($domainController) {
+		$domainController->getAllDomains();
+	});
 
-    $router->post('/create', function () use ($domainController) {
-        $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
-        $middleware->handle();
-        $domainController->createDomain();
-    });
+	$router->post('/create', function () use ($domainController) {
+		$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
+		$middleware->handle();
+		$domainController->createDomain();
+	});
 
 
-    $router->get('/with/qualifications/{categoryId}', function (string $domainId) use ($domainController) {
-        // $checkRole->handle();
-        $domainController->getDomainWithQualifications($domainId);
-    });
+	$router->get('/with/qualifications/{categoryId}', function (string $domainId) use ($domainController) {
+		// $checkRole->handle();
+		$domainController->getDomainWithQualifications($domainId);
+	});
 
-    $router->get('/with/qualification', function () use ($domainController) {
-        $domainController->getDomainsWithQualifications();
-    });
+	$router->get('/with/qualification', function () use ($domainController) {
+		$domainController->getDomainsWithQualifications();
+	});
 
-    $router->post('/add/qualification/{domainId}', function (string $domainId) use ($domainController) {
-        $domainController->addNewQualification($domainId);
-    });
+	$router->post('/add/qualification/{domainId}', function (string $domainId) use ($domainController) {
+		$domainController->addNewQualification($domainId);
+	});
 }

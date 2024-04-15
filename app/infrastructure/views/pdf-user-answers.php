@@ -1,10 +1,10 @@
 <?php
 const QUALIFICATION_NAME = [
-    'always_op' => 'Siempre',
-    'almost_alwyas_op' => 'Casi siempre',
-    'sometimes_op' => 'Algunas veces',
-    'almost_never_op' => 'Casi nunca',
-    'never_op' => 'Nunca',
+	'always_op' => 'Siempre',
+	'almost_alwyas_op' => 'Casi siempre',
+	'sometimes_op' => 'Algunas veces',
+	'almost_never_op' => 'Casi nunca',
+	'never_op' => 'Nunca',
 ];
 ?>
 <!DOCTYPE html>
@@ -75,21 +75,21 @@ const QUALIFICATION_NAME = [
             </thead>
             <tbody>
                 <?php
-                foreach ($data->answers as $key => $question) {
-                    echo '
+				foreach ($data->answers as $key => $question) {
+					echo '
                     <tr>
                         <td>' . $key + 1 . "</td>
                         <td>{$question->name}</td>
                         <td>" .
-                        (gettype($question->qualification) === 'boolean' ?
-                        ($question->qualification ? 'Si' : 'No')
-                        : (QUALIFICATION_NAME[array_search(
-                            $question->qualification,
-                            (array) $question->qualification_data
-                        )])) . '</td>
+						(gettype($question->qualification) === 'boolean' ?
+						($question->qualification ? 'Si' : 'No')
+						: (QUALIFICATION_NAME[array_search(
+							$question->qualification,
+							(array) $question->qualification_data
+						)])) . '</td>
                     </tr>
                     ';
-                }
+				}
 ?>
             </tbody>
         </table>

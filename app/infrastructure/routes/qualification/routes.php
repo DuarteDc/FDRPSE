@@ -13,11 +13,11 @@ use Bramus\Router\Router;
 
 function router(Router $router)
 {
-    $qualificationRepository = new QualificationRepository(new Qualification());
-    $qualificationseCase = new QualificationUseCase($qualificationRepository);
-    $qualificationController = new QualificationController($qualificationseCase);
+	$qualificationRepository = new QualificationRepository(new Qualification());
+	$qualificationseCase = new QualificationUseCase($qualificationRepository);
+	$qualificationController = new QualificationController($qualificationseCase);
 
-    $router->get('/', function () use ($qualificationController) {
-        $qualificationController->getAllQualifications();
-    });
+	$router->get('/', function () use ($qualificationController) {
+		$qualificationController->getAllQualifications();
+	});
 }

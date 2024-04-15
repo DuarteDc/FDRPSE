@@ -31,43 +31,43 @@ use Bramus\Router\Router;
 
 function router(Router $router)
 {
-    $categoryRepository = new CategoryRepository(new Category());
-    $qualificationRepository = new QualificationRepository(new Qualification());
-    $sectionRepository = new SectionRepository(new Section());
-    $domainRepository = new DomainRepository(new Domain());
-    $questionRepository = new QuestionRepository(new Question());
-    $dimensionRepository = new DimensionRepository(new Dimension());
-    $questionService = new QuestionService(
-        $categoryRepository,
-        $qualificationRepository,
-        $sectionRepository,
-        $domainRepository,
-        $dimensionRepository
-    );
-    $qualificationQuestionRepository = new QualificationQuestionRepository(new QualificationQuestion());
-    $questionUseCase = new QuestionUseCase($questionRepository, $questionService, $qualificationQuestionRepository);
-    $questionController = new QuestionController($questionUseCase);
+	$categoryRepository = new CategoryRepository(new Category());
+	$qualificationRepository = new QualificationRepository(new Qualification());
+	$sectionRepository = new SectionRepository(new Section());
+	$domainRepository = new DomainRepository(new Domain());
+	$questionRepository = new QuestionRepository(new Question());
+	$dimensionRepository = new DimensionRepository(new Dimension());
+	$questionService = new QuestionService(
+		$categoryRepository,
+		$qualificationRepository,
+		$sectionRepository,
+		$domainRepository,
+		$dimensionRepository
+	);
+	$qualificationQuestionRepository = new QualificationQuestionRepository(new QualificationQuestion());
+	$questionUseCase = new QuestionUseCase($questionRepository, $questionService, $qualificationQuestionRepository);
+	$questionController = new QuestionController($questionUseCase);
 
-    $router->get('/', function () use ($questionController) {
-        $questionController->getAllQuestions();
-    });
+	$router->get('/', function () use ($questionController) {
+		$questionController->getAllQuestions();
+	});
 
-    $router->get('/sections-all', function () use ($questionController) {
-        $questionController->getQuestionBySections();
-    });
+	$router->get('/sections-all', function () use ($questionController) {
+		$questionController->getQuestionBySections();
+	});
 
 
-    $router->get('/section/{guideId}', function (string $guideId) use ($questionController) {
-        $questionController->getQuestionsBySection($guideId);
-    });
+	$router->get('/section/{guideId}', function (string $guideId) use ($questionController) {
+		$questionController->getQuestionsBySection($guideId);
+	});
 
-    $router->get('/{questionId}', function ($questionId) use ($questionController) {
-        $questionController->getQuestion($questionId);
-    });
+	$router->get('/{questionId}', function ($questionId) use ($questionController) {
+		$questionController->getQuestion($questionId);
+	});
 
-    $router->post('/create', function () use ($questionController) {
-        $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
-        $middleware->handle();
-        $questionController->createQuestion();
-    });
+	$router->post('/create', function () use ($questionController) {
+		$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
+		$middleware->handle();
+		$questionController->createQuestion();
+	});
 };

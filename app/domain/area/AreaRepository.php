@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface AreaRepository extends BaseRepository
 {
-    public function findAreas(): Collection;
+	public function findAreas(): Collection;
 
-    public function findAreaByIdAndGetChildAreas(string $areaId): Collection;
-    public function countAreasByAreasId(array $areasId): int;
+	public function findAreaByIdAndGetChildAreas(string $areaId): Collection;
+	public function countAreasByAreasId(array $areasId): int;
 }

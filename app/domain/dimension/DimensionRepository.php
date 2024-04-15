@@ -8,5 +8,5 @@ use App\domain\BaseRepository;
 
 interface DimensionRepository extends BaseRepository
 {
-    public function findByName(string $name): Dimension|null;
+	public function findByName(string $name): Dimension|null;
 }

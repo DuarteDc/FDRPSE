@@ -10,16 +10,16 @@ use App\kernel\controllers\Controller;
 
 final class DimensionController extends Controller
 {
-    public function __construct(private readonly DimensionUseCase $dimensionUseCase) {}
+	public function __construct(private readonly DimensionUseCase $dimensionUseCase) {}
 
-    public function getAllDimensions()
-    {
-        $this->response($this->dimensionUseCase->findAllDimensions());
-    }
+	public function getAllDimensions()
+	{
+		$this->response($this->dimensionUseCase->findAllDimensions());
+	}
 
-    public function createDimension()
-    {
-        $this->validate(CreateDimensionRequest::rules(), CreateDimensionRequest::messages());
-        $this->response($this->dimensionUseCase->createDimension($this->request()), 201);
-    }
+	public function createDimension()
+	{
+		$this->validate(CreateDimensionRequest::rules(), CreateDimensionRequest::messages());
+		$this->response($this->dimensionUseCase->createDimension($this->request()), 201);
+	}
 }

@@ -9,5 +9,5 @@ use App\kernel\request\Request;
 
 abstract class Middleware extends Request implements HttpMiddleware
 {
-    use Auth;
+	use Auth;
 }

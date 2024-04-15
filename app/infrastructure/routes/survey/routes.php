@@ -29,91 +29,91 @@ use Bramus\Router\Router;
 
 function router(Router $router)
 {
-    $surveyRepository = new SurveyRepository(new Survey());
-    $guideUserRepository = new GuideUserRepository(new GuideUser());
-    $questionRepository = new QuestionRepository(new Question());
-    $userRepository = new UserRepository(new User());
-    $guideRepository = new GuideRepository(new Guide());
-    $guideSurveyRepository = new GuideSurveyRepository(new GuideSurvey());
-    $qualificationQuestionRepository = new QualificationQuestionRepository(new QualificationQuestion());
-    $surveyService = new SurveyService(
-        $surveyRepository,
-        $guideUserRepository,
-        $questionRepository,
-        $guideSurveyRepository,
-        $qualificationQuestionRepository
-    );
-    $areaRepository = new AreaRepository(new Area());
-    $surveyUseCase = new SurveyUseCase($surveyService, $userRepository, $areaRepository, $guideRepository);
-    $pdfAdapter = new PdfAdapter();
-    $surveyController = new SurveyController($surveyUseCase, $pdfAdapter);
+	$surveyRepository = new SurveyRepository(new Survey());
+	$guideUserRepository = new GuideUserRepository(new GuideUser());
+	$questionRepository = new QuestionRepository(new Question());
+	$userRepository = new UserRepository(new User());
+	$guideRepository = new GuideRepository(new Guide());
+	$guideSurveyRepository = new GuideSurveyRepository(new GuideSurvey());
+	$qualificationQuestionRepository = new QualificationQuestionRepository(new QualificationQuestion());
+	$surveyService = new SurveyService(
+		$surveyRepository,
+		$guideUserRepository,
+		$questionRepository,
+		$guideSurveyRepository,
+		$qualificationQuestionRepository
+	);
+	$areaRepository = new AreaRepository(new Area());
+	$surveyUseCase = new SurveyUseCase($surveyService, $userRepository, $areaRepository, $guideRepository);
+	$pdfAdapter = new PdfAdapter();
+	$surveyController = new SurveyController($surveyUseCase, $pdfAdapter);
 
-    $router->get('/', function () use ($surveyController) {
-        $surveyController->getAllSurveys();
-    });
+	$router->get('/', function () use ($surveyController) {
+		$surveyController->getAllSurveys();
+	});
 
-    $router->get('/show/{surveyId}', function (string $surveyId) use ($surveyController) {
-        $surveyController->showSurvey($surveyId);
-    });
+	$router->get('/show/{surveyId}', function (string $surveyId) use ($surveyController) {
+		$surveyController->showSurvey($surveyId);
+	});
 
-    $router->post('/start', function () use ($surveyController) {
-        $surveyController->startSurvey();
-    });
+	$router->post('/start', function () use ($surveyController) {
+		$surveyController->startSurvey();
+	});
 
-    $router->post('/save-questions', function () use ($surveyController) {
-        $surveyController->saveUserAnswers();
-    });
+	$router->post('/save-questions', function () use ($surveyController) {
+		$surveyController->saveUserAnswers();
+	});
 
-    $router->post('/start-user', function () use ($surveyController) {
-        $surveyController->startSurveyByUser();
-    });
+	$router->post('/start-user', function () use ($surveyController) {
+		$surveyController->startSurveyByUser();
+	});
 
-    $router->post('/end-user', function () use ($surveyController) {
-        $surveyController->finishUserSurvey();
-    });
+	$router->post('/end-user', function () use ($surveyController) {
+		$surveyController->finishUserSurvey();
+	});
 
-    $router->get('/current', function () use ($surveyController) {
-        $surveyController->getCurrentSurvey();
-    });
+	$router->get('/current', function () use ($surveyController) {
+		$surveyController->getCurrentSurvey();
+	});
 
-    $router->get('/details/{surveId}/{$guideId}/{userId}', function (string $id, string $guideId, string $userId) use (
-        $surveyController
-    ) {
-        $surveyController->getDetailsByUser($id, $userId, $guideId);
-    });
+	$router->get('/details/{surveId}/{$guideId}/{userId}', function (string $id, string $guideId, string $userId) use (
+		$surveyController
+	) {
+		$surveyController->getDetailsByUser($id, $userId, $guideId);
+	});
 
-    $router->get('/report', function () use ($surveyController) {
-        $surveyController->generateReportByUser();
-    });
+	$router->get('/report', function () use ($surveyController) {
+		$surveyController->generateReportByUser();
+	});
 
-    $router->get('/total-users', function () use ($surveyController) {
-        $surveyController->getTotalUserInSurvey();
-    });
+	$router->get('/total-users', function () use ($surveyController) {
+		$surveyController->getTotalUserInSurvey();
+	});
 
-    $router->get('/{surveyId}/guide/{guideId}find-by', function (string $surveyId, string $guideId) use (
-        $surveyController
-    ) {
-        $surveyController->findSurveyDetailByUserName($surveyId, $guideId);
-    });
+	$router->get('/{surveyId}/guide/{guideId}find-by', function (string $surveyId, string $guideId) use (
+		$surveyController
+	) {
+		$surveyController->findSurveyDetailByUserName($surveyId, $guideId);
+	});
 
-    // $router->get('/{id}/details/{guideId}', function (string $id, string $guideId) use ($surveyController) {
-    //     $surveyController->getGudeDetailBySurvey($id, $guideId);
-    // });
+	// $router->get('/{id}/details/{guideId}', function (string $id, string $guideId) use ($surveyController) {
+	//     $surveyController->getGudeDetailBySurvey($id, $guideId);
+	// });
 
-    $router->post('/end/{id}', function (string $id) use ($surveyController) {
-        $surveyController->finalizeSurvey($id);
-    });
+	$router->post('/end/{id}', function (string $id) use ($surveyController) {
+		$surveyController->finalizeSurvey($id);
+	});
 
-    $router->patch('/{surveyId}/guide/{guideId}/change-status', function (string $surveyId, string $guideId) use (
-        $surveyController
-    ) {
-        $surveyController->pauseGuideBySurvey($surveyId, $guideId);
-    });
+	$router->patch('/{surveyId}/guide/{guideId}/change-status', function (string $surveyId, string $guideId) use (
+		$surveyController
+	) {
+		$surveyController->pauseGuideBySurvey($surveyId, $guideId);
+	});
 
 
-    $router->patch('/{surveyId}/guide/{guideId}/finalized', function (string $surveyId, string $guideId) use (
-        $surveyController
-    ) {
-        $surveyController->finalizeGuideSurvey($surveyId, $guideId);
-    });
+	$router->patch('/{surveyId}/guide/{guideId}/finalized', function (string $surveyId, string $guideId) use (
+		$surveyController
+	) {
+		$surveyController->finalizeGuideSurvey($surveyId, $guideId);
+	});
 }

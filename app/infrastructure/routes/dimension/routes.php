@@ -16,17 +16,17 @@ use Bramus\Router\Router;
 
 function router(Router $router)
 {
-    $dimensionRepository = new DimensionRepository(new Dimension());
-    $dimensionUseCase = new DimensionUseCase($dimensionRepository);
-    $dimensionController = new DimensionController($dimensionUseCase);
+	$dimensionRepository = new DimensionRepository(new Dimension());
+	$dimensionUseCase = new DimensionUseCase($dimensionRepository);
+	$dimensionController = new DimensionController($dimensionUseCase);
 
-    $router->get('/', function () use ($dimensionController) {
-        $dimensionController->getAllDimensions();
-    });
+	$router->get('/', function () use ($dimensionController) {
+		$dimensionController->getAllDimensions();
+	});
 
-    $router->post('/create', function () use ($dimensionController) {
-        $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
-        $middleware->handle();
-        $dimensionController->createDimension();
-    });
+	$router->post('/create', function () use ($dimensionController) {
+		$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
+		$middleware->handle();
+		$dimensionController->createDimension();
+	});
 }

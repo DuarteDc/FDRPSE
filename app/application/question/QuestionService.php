@@ -16,79 +16,79 @@ use Illuminate\Database\Eloquent\Model;
 
 final class QuestionService implements QuestionServiceContracts
 {
-    public function __construct(
-        private readonly CategoryRepository $categoryRepository,
-        private readonly QualificationRepository $qualificationRepository,
-        private readonly SectionRepository $sectionRepository,
-        private readonly DomainRepository $domainRepository,
-        private readonly DimensionRepository $dimensionRepository,
-    ) {}
+	public function __construct(
+		private readonly CategoryRepository $categoryRepository,
+		private readonly QualificationRepository $qualificationRepository,
+		private readonly SectionRepository $sectionRepository,
+		private readonly DomainRepository $domainRepository,
+		private readonly DimensionRepository $dimensionRepository,
+	) {}
 
-    public function categoryIsValid(string $id, string $qualificationId): Exception|Model
-    {
-        $category = $this->categoryRepository->findOneWithQualification($id, $qualificationId);
-        return $category ? $category : new Exception('La categoría no es valida', 400);
-    }
+	public function categoryIsValid(string $id, string $qualificationId): Exception|Model
+	{
+		$category = $this->categoryRepository->findOneWithQualification($id, $qualificationId);
+		return $category ? $category : new Exception('La categoría no es valida', 400);
+	}
 
-    public function qualificationIsValid(string $id): Exception|Model
-    {
-        $qualification = $this->qualificationRepository->findOne($id);
-        return $qualification ? $qualification : new Exception('La calificaión no es valida', 400);
-    }
+	public function qualificationIsValid(string $id): Exception|Model
+	{
+		$qualification = $this->qualificationRepository->findOne($id);
+		return $qualification ? $qualification : new Exception('La calificaión no es valida', 400);
+	}
 
-    public function sectionIsValid(string $id): Exception|Model
-    {
-        $section = $this->sectionRepository->findOne($id);
-        return $section ? $section : new Exception('La sección no es valida', 400);
-    }
+	public function sectionIsValid(string $id): Exception|Model
+	{
+		$section = $this->sectionRepository->findOne($id);
+		return $section ? $section : new Exception('La sección no es valida', 400);
+	}
 
-    public function domainIsValid(string $id, string $qualificationId): Exception|Model
-    {
-        $domain = $this->domainRepository->findOneWithQualification($id, $qualificationId);
-        return $domain ? $domain : new Exception('El dominio no es valido', 400);
-    }
+	public function domainIsValid(string $id, string $qualificationId): Exception|Model
+	{
+		$domain = $this->domainRepository->findOneWithQualification($id, $qualificationId);
+		return $domain ? $domain : new Exception('El dominio no es valido', 400);
+	}
 
-    public function dimensionIsValid(string $id): Exception|Model
-    {
-        $dimension = $this->dimensionRepository->findOne($id);
-        return $dimension ? $dimension : new Exception('La dimensión no es valida', 400);
-    }
+	public function dimensionIsValid(string $id): Exception|Model
+	{
+		$dimension = $this->dimensionRepository->findOne($id);
+		return $dimension ? $dimension : new Exception('La dimensión no es valida', 400);
+	}
 
-    public function getQuestionsBySections(): Collection
-    {
-        return $this->sectionRepository->findSectionsWithQuestions();
-    }
+	public function getQuestionsBySections(): Collection
+	{
+		return $this->sectionRepository->findSectionsWithQuestions();
+	}
 
-    public function getQuestionBySection(string $guideId, string $page): Paginator|null
-    {
-        return $this->sectionRepository->findSectionWithQuestions($guideId, $page);
-    }
+	public function getQuestionBySection(string $guideId, string $page): Paginator|null
+	{
+		return $this->sectionRepository->findSectionWithQuestions($guideId, $page);
+	}
 
-    public function getTotalSections(string $guideId): int
-    {
-        return $this->sectionRepository->countTotalSections($guideId);
-    }
+	public function getTotalSections(string $guideId): int
+	{
+		return $this->sectionRepository->countTotalSections($guideId);
+	}
 
-    public function prepareDataToInsert(mixed $body): array|Exception
-    {
-        $exitsQualification = $this->qualificationIsValid($body->qualification_id);
-        $exitsSection = $this->sectionIsValid($body->section_id);
-        $exitsDimension = $this->dimensionIsValid($body->dimension_id);
+	public function prepareDataToInsert(mixed $body): array|Exception
+	{
+		$exitsQualification = $this->qualificationIsValid($body->qualification_id);
+		$exitsSection = $this->sectionIsValid($body->section_id);
+		$exitsDimension = $this->dimensionIsValid($body->dimension_id);
 
-        if ($exitsQualification instanceof Exception) {
-            return $exitsQualification;
-        }
-        if ($exitsSection instanceof Exception) {
-            return $exitsSection;
-        }
-        if ($exitsDimension instanceof Exception) {
-            return $exitsDimension;
-        }
+		if ($exitsQualification instanceof Exception) {
+			return $exitsQualification;
+		}
+		if ($exitsSection instanceof Exception) {
+			return $exitsSection;
+		}
+		if ($exitsDimension instanceof Exception) {
+			return $exitsDimension;
+		}
 
-        return [
-            'qualification' => $exitsQualification,
-            'section' => $exitsSection,
-            'dimension' => $exitsDimension,
-        ];
-    }
+		return [
+			'qualification' => $exitsQualification,
+			'section' => $exitsSection,
+			'dimension' => $exitsDimension,
+		];
+	}
 }

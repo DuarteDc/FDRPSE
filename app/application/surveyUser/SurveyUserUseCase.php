@@ -8,5 +8,5 @@ use App\domain\surveyUser\SurveyUserRepository;
 
 final class SurveyUserUseCase
 {
-    public function __construct(private readonly SurveyUserRepository $surveyUserRepository) {}
+	public function __construct(private readonly SurveyUserRepository $surveyUserRepository) {}
 }

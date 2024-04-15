@@ -1,4 +1,4 @@
- <!doctype html>
+<!doctype html>
  <html lang="es">
 
  <head>
@@ -17,4 +17,4 @@
    <div id="root"></div>
  </body>
 
- </html> -->
+ </html>

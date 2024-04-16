@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\controllers;
 
 use App\application\authentication\AuthenticationUseCase;

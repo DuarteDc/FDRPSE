@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\application\category;
 
 use App\domain\category\CategoryRepository;
@@ -9,7 +7,9 @@ use Exception;
 
 final class CategoryUseCase
 {
-	public function __construct(private readonly CategoryRepository $categoryRepository) {}
+	public function __construct(private readonly CategoryRepository $categoryRepository)
+	{
+	}
 
 	public function findAllCategories(): mixed
 	{
@@ -25,7 +25,7 @@ final class CategoryUseCase
 		}
 
 		$category = $this->categoryRepository->saveCategoryAndSetQualification(
-			(object) [...(array) $body, 'name' => $isValidName, ]
+			(object) [...(array) $body, 'name' => $isValidName,]
 		);
 		return ['message' => 'La categoría se creo correctamente', 'category' => $category];
 	}
@@ -54,6 +54,21 @@ final class CategoryUseCase
 		}
 		$category = $this->categoryRepository->addNewQualification($category, $body);
 		return ['category' => $category, 'message' => 'La calificación se agrego correctamente'];
+	}
+
+	public function deleteQualificationFromCategory(string $categoryId, string $qualificationId)
+	{
+		$category = $this->categoryRepository->findOne($categoryId);
+		if (!$category) {
+			return new Exception('La categoría no existe o no es valida', 404);
+		}
+
+		if ($category->qualifications_count <= 1) {
+			return new Exception('La categoría debe contener al menos una calificación', 400);
+		}
+
+		$category = $this->categoryRepository->removeQualification($category, $qualificationId);
+		return ['message' => 'La calificación se eliminó correctamente'];
 	}
 
 	private function validateName($name): Exception|string

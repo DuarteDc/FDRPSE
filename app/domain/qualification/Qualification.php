@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\domain\qualification;
 
 use App\domain\qualificationQuestion\QualificationQuestion;

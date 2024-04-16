@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\routes\section;
 
 use App\application\section\SectionUseCase;
@@ -45,12 +43,18 @@ function router(Router $router)
 	});
 	
 	$router->post('/create', function () use ($sectionController) {
-		// $middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
-		// $middleware->handle();
+		$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
+		$middleware->handle();
 		$sectionController->createSection();
 	});
 
 	$router->post('/details', function () use ($sectionController) {
 		$sectionController->getSectionsWithHisQuestions();
+	});
+
+	$router->delete('/{sectionId}/question/{questionId}', function (string $sectionId, string $questionId) use ($sectionController) {
+		$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
+		$middleware->handle();
+		$sectionController->deteleQuestion($sectionId, $questionId);
 	});
 }

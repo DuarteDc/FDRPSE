@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace App\application\domain;
 
@@ -57,6 +56,20 @@ final class DomainUseCase
 		return ['domain' => $domain, 'message' => 'La calificación se agrego correctamente'];
 	}
 
+	public function deleteQualificationFromDomain(string $categoryId, string $qualificationId)
+	{
+		$domain = $this->domainRepository->findOne($categoryId);
+		if (!$domain) {
+			return new Exception('El dominio no existe o no es valida', 404);
+		}
+
+		if ($domain->qualifications_count <= 1) {
+			return new Exception('El dominio debe contener al menos una calificación', 400);
+		}
+
+		$domain = $this->domainRepository->removeQualification($domain, $qualificationId);
+		return ['message' => 'La calificación se eliminó correctamente'];
+	}
 
 	private function validateDomainName(string $name): Exception|string
 	{

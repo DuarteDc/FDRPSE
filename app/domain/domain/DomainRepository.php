@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\domain\domain;
 
 use App\domain\BaseRepository;
@@ -16,4 +14,5 @@ interface DomainRepository extends BaseRepository
 	public function findWithQualifications(): Collection;
 	public function findOneWithQualifications(string $domainId): ?Domain;
 	public function addNewQualification(Domain $domain, mixed $qualification): Domain;
+	public function removeQualification(Domain $domain, string $qualificationId): void;
 }

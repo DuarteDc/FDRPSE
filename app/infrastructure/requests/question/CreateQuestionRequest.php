@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\requests\question;
 
 use App\kernel\request\HttpRulesRequest;

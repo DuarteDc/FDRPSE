@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\domain\guideUser;
 
 use App\domain\guide\Guide;

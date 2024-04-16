@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\repositories\category;
 
 use App\domain\category\Category;
@@ -60,4 +58,11 @@ final class CategoryRepository extends BaseRepository implements ContractsReposi
 		$category->qualification()->create($qualification);
 		return $this->findOneWithQualifications($category->id);
 	}
+
+	public function removeQualification(Category $category, string $qualificationId): void
+	{
+		$qualification = $category->qualification()->where('id', $qualificationId)->first();
+		$qualification->delete();
+	}
+
 }

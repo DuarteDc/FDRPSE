@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\routes\MainRouter {
 	use Bramus\Router\Router;
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\controllers;
 
 use App\application\domain\DomainUseCase;
@@ -36,5 +34,10 @@ final class DomainController extends Controller
 	public function addNewQualification(string $domainId)
 	{
 		$this->response($this->domainUseCase->addQualification($domainId, $this->request()->qualification));
+	}
+
+	public function deleteQualification(string $domainId, string $qualificationId) 
+	{
+		$this->response($this->domainUseCase->deleteQualificationFromDomain($domainId, $qualificationId));
 	}
 }

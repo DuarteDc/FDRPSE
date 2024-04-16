@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\repositories\domain;
 
 use App\domain\domain\Domain;
@@ -59,5 +57,11 @@ final class DomainRepository extends BaseRepository implements ContractsReposito
 	{
 		$domain->qualification()->create($qualification);
 		return $this->findOneWithQualifications($domain->id);
+	}
+
+	public function removeQualification(Domain $domain, string $qualificationId): void
+	{
+		$qualification = $domain->qualification()->where('id', $qualificationId)->first();
+		$qualification->delete();
 	}
 }

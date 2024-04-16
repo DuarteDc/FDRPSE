@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\requests\authentication;
 
 use App\kernel\request\HttpRulesRequest;

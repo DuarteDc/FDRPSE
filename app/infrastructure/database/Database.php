@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\database;
 
 use Exception;
@@ -31,11 +29,11 @@ final class Database
 	{
 		try {
 			$this->capsule->addConnection([
-				'driver'    => getenv('DBDRIVER'),
+				'driver'    => getenv('USER_DBDRIVER'),
 				'host'      => getenv('HOST'),
 				'database'  => getenv('DATABASE'),
 				'username'  => getenv('USERNAME'),
-				'password'  => getenv('USER_PASSWORD'),
+				'password'  => getenv('PASSWORD'),
 				'charset'   => 'utf8',
 				'collation' => '',
 				'prefix'    => '',
@@ -55,10 +53,10 @@ final class Database
 	private function addConnection()
 	{
 		$this->capsule->addConnection([
-			'driver'    => getenv('DBDRIVER'),
-			'host'      => getenv('HOST'),
+			'driver'    => getenv('USER_DBDRIVER'),
+			'host'      => getenv('USER_HOST'),
 			'database'  => getenv('USER_DATABASE'),
-			'username'  => getenv('USERNAME'),
+			'username'  => getenv('USER_USERNAME'),
 			'password'  => getenv('USER_PASSWORD'),
 			'charset'   => 'utf8',
 			'collation' => '',

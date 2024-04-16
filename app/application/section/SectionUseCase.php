@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\application\section;
 
 use App\domain\section\SectionRepository;
@@ -9,7 +7,9 @@ use Exception;
 
 final class SectionUseCase
 {
-	public function __construct(private readonly SectionRepository $sectionRepository) {}
+	public function __construct(private readonly SectionRepository $sectionRepository)
+	{
+	}
 
 	public function searchSections(string $type, string $name): mixed
 	{
@@ -86,5 +86,27 @@ final class SectionUseCase
 		}
 		$sections = $this->sectionRepository->findMultipleSectionsWithQuestions($sectionsId);
 		return ['sections' => $sections];
+	}
+
+
+	public function deleteQuestionInsideSection(string $sectionId, string $questionId)
+	{
+		$section = $this->sectionRepository->findOne($sectionId);
+		if (!$section) {
+			return new Exception('La sección no existe o no esta disponible', 404);
+		}
+
+		if ($section->questions_count <= 1) {
+			return new Exception('La pregunta no se puede eliminar porque la sección no se puede quedar vacia', 400);
+		}
+		$section = $this->sectionRepository->findQuestion($section, $questionId);
+
+		if (count($section->questions) < 1) {
+			return new Exception('La pregunta no corresponde a la sección', 400);
+		}
+
+		$this->sectionRepository->deleteQuestionBySection($section, $questionId);
+
+		return ['message' => 'La pregunta se elimino correctamente'];
 	}
 }

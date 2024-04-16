@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\repositories\section;
 
 use App\domain\section\Section;
@@ -137,5 +135,21 @@ final class SectionRepository extends BaseRepository implements ContractsReposit
 			$section->save();
 		});
 		return $sections;
+	}
+
+	public function findQuestion(Section $section, string $questionId): Section
+	{
+		return $this->section
+		->where('id', $section->id)
+		->with(['questions' => function ($query) use ($questionId) {
+			$query->where('id', $questionId);
+		}])->first();
+	}
+
+	public function deleteQuestionBySection(Section $section, string $questionId)
+	{
+		$question = $section->questions()->where('id', $questionId)->first();
+		$question->qualificationsQuestion()->delete();
+		$question->delete();
 	}
 }

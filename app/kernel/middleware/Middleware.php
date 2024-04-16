@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\kernel\middleware;
 
 use App\kernel\authentication\Auth;

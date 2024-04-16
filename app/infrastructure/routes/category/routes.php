@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\routes\category;
 
 use App\application\category\CategoryUseCase;
@@ -46,6 +44,8 @@ function router(Router $router)
 		$checkRole
 	) {
 		$checkRole->handle();
+		$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
+		$middleware->handle();
 		$categoryController->addNewQualification($categoryId);
 	});
 
@@ -56,4 +56,12 @@ function router(Router $router)
 		$middleware->handle();
 		$categoryController->createCategory();
 	});
+
+	$router->delete('/{categoryId}/qualification/{qualificationId}', function(string $categoryId, string $qualificationId) use($categoryController, $checkRole) {
+		$checkRole->handle();
+		$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
+		$middleware->handle();
+		$categoryController->deleteQualification($categoryId, $qualificationId);
+	});
+
 }

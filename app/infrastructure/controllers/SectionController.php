@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\controllers;
 
 use App\application\section\SectionUseCase;
@@ -57,4 +55,10 @@ final class SectionController extends Controller
 		$sectionsId = (array) $this->request()->sections;
 		$this->response($this->sectionUseCase->getSectionsWithHisQuestions($sectionsId));
 	}
+
+	public function deteleQuestion(string $sectionId, string $questionId)  
+	{
+		$this->response($this->sectionUseCase->deleteQuestionInsideSection($sectionId, $questionId));
+	}
+
 }

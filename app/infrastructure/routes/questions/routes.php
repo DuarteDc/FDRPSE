@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\routes\questions;
 
 use App\application\question\QuestionService;
@@ -18,6 +16,7 @@ use App\domain\survey\Survey;
 use App\infrastructure\controllers\QuestionController;
 
 use App\infrastructure\middlewares\CreateResourceMiddleware;
+use App\infrastructure\middlewares\HasAdminRoleMiddleware;
 use App\infrastructure\repositories\category\CategoryRepository;
 use App\infrastructure\repositories\dimension\DimensionRepository;
 use App\infrastructure\repositories\domain\DomainRepository;
@@ -51,8 +50,9 @@ function router(Router $router)
 		$qualificationQuestionRepository
 	);
 	$questionController              = new QuestionController($questionUseCase);
+	$hasAdminRole					 = new HasAdminRoleMiddleware();
 
-	$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
+	$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey));
 
 	$router->get('/', function () use ($questionController) {
 		$questionController->getAllQuestions();
@@ -71,12 +71,14 @@ function router(Router $router)
 		$questionController->getQuestion($questionId);
 	});
 
-	$router->post('/create', function () use ($questionController, $middleware) {
+	$router->post('/create', function () use ($questionController, $middleware, $hasAdminRole) {
+		$hasAdminRole->handle();
 		$middleware->handle();
 		$questionController->createQuestion();
 	});
 
-	$router->patch('/update/{questionId}', function (string $questionId) use ($questionController, $middleware) {
+	$router->patch('/update/{questionId}', function (string $questionId) use ($questionController, $middleware, $hasAdminRole) {
+		$hasAdminRole->handle();
 		$middleware->handle();
 		$questionController->updateQuestion($questionId);
 	});

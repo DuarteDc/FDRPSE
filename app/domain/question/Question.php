@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\domain\question;
 
 use App\domain\category\Category;
@@ -9,6 +7,8 @@ use App\domain\category\Category;
 use App\domain\dimension\Dimension;
 use App\domain\domain\Domain;
 use App\domain\qualification\Qualification;
+use App\domain\qualificationQuestion\QualificationQuestion;
+use App\domain\qualifications\Qualifications;
 use App\domain\section\Section;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,6 +36,11 @@ final class Question extends Model
 	public function qualification()
 	{
 		return $this->belongsTo(Qualification::class);
+	}
+
+	public function qualificationsQuestion()
+	{
+		return $this->hasOne(QualificationQuestion::class, 'question_id');
 	}
 
 	public function category()

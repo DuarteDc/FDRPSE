@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\domain\section;
 
 use App\domain\BaseRepository;
@@ -25,4 +23,6 @@ interface SectionRepository extends BaseRepository
 	public function findAvailableSections(string $type): ?Collection;
 	public function attachGuide(string $guideId, mixed $sectionsId): ?Collection;
 	public function validateSectionsId(array $sectionsId): Collection;
+	public function findQuestion(Section $section, string $questionId): Section;
+	public function deleteQuestionBySection(Section $section, string $questionId);
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\domain\category;
 
 use App\domain\BaseRepository;
@@ -22,4 +20,6 @@ interface CategoryRepository extends BaseRepository
 	public function findOneWithQualification(string $id, string|null $qualificationId): Category|null;
 
 	public function addNewQualification(Category $category, mixed $qualification): Category;
+
+	public function removeQualification(Category $category, string $qualificationId): void;
 }

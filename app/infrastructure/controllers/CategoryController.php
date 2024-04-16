@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\infrastructure\controllers;
 
 use App\application\category\CategoryUseCase;
@@ -38,4 +36,10 @@ final class CategoryController extends Controller
 	{
 		$this->response($this->categoryUseCase->addQualification($categoryId, $this->request()->qualification));
 	}
+
+	public function deleteQualification(string $categoryId, string $qualificationId) 
+	{
+		$this->response($this->categoryUseCase->deleteQualificationFromCategory($categoryId, $qualificationId));
+	}
+
 }

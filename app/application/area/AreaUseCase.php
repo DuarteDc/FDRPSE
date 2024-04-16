@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\application\area;
 
 use App\domain\area\AreaRepository;

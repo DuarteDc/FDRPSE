@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Area extends Model
 {
-	protected $table = 'areas';
+	protected $table      = 'areas';
 	protected $connection = 'user_db';
 
 	protected $withCount = ['users'];

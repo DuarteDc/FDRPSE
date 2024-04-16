@@ -61,7 +61,7 @@ final class GuideUserRepository extends BaseRepository implements ContractsRepos
 			->where('user_id', $userId)
 			->first();
 		$surveyUser->status = GuideUser::FINISHED;
-		$surveyUser->total = $userQualification;
+		$surveyUser->total  = $userQualification;
 		$surveyUser->save();
 		return $surveyUser;
 	}
@@ -172,7 +172,7 @@ final class GuideUserRepository extends BaseRepository implements ContractsRepos
 	public function clearOldAnswers(GuideUser $guideUser): GuideUser
 	{
 		$guideUser->answers = [];
-		$guideUser->status = GuideUser::INPROGRESS;
+		$guideUser->status  = GuideUser::INPROGRESS;
 		$guideUser->save();
 		return $guideUser;
 	}

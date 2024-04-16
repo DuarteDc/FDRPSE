@@ -58,7 +58,7 @@ final class CategoryUseCase
 
 	private function validateName($name): Exception|string
 	{
-		$name = mb_strtoupper(trim($name));
+		$name     = mb_strtoupper(trim($name));
 		$category = $this->categoryRepository->findByName($name);
 		return $category ? new Exception('Ya existe una categoría con ese nombre', 400) : $name;
 	}

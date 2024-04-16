@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Dimension extends Model
 {
-	protected $table = 'dimensions';
+	protected $table    = 'dimensions';
 	protected $fillable = ['name'];
 
 	public function questions()

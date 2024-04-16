@@ -30,7 +30,7 @@ final class AuthenticationController extends Controller
 	public function revalidateToke()
 	{
 		$session = $_SERVER['HTTP_SESSION'] ?? '';
-		$user = $this->check($session);
+		$user    = $this->check($session);
 		if (!$user) {
 			return $this->response(['message' => 'Unathorized'], 401);
 		}

@@ -14,7 +14,7 @@ use Bramus\Router\Router;
 function router(Router $router)
 {
 	$qualificationRepository = new QualificationRepository(new Qualification());
-	$qualificationseCase = new QualificationUseCase($qualificationRepository);
+	$qualificationseCase     = new QualificationUseCase($qualificationRepository);
 	$qualificationController = new QualificationController($qualificationseCase);
 
 	$router->get('/', function () use ($qualificationController) {

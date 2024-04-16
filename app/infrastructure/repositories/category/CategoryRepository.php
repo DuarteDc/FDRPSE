@@ -44,7 +44,7 @@ final class CategoryRepository extends BaseRepository implements ContractsReposi
 		return $this->category::with('qualifications')->find($categoryId);
 	}
 
-	public function findOneWithQualification(string $id, string | null $qualificationId): Category|null
+	public function findOneWithQualification(string $id, string|null $qualificationId): Category|null
 	{
 		return $qualificationId ? $this->category::where('id', $id)
 			->with('qualification', function ($query) use ($qualificationId) {

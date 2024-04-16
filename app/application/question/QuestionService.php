@@ -22,10 +22,9 @@ final class QuestionService implements QuestionServiceContracts
 		private readonly SectionRepository $sectionRepository,
 		private readonly DomainRepository $domainRepository,
 		private readonly DimensionRepository $dimensionRepository,
-	) {
-	}
+	) {}
 
-	public function categoryIsValid(string $id, string | null $qualificationId): Exception|Model
+	public function categoryIsValid(string $id, string|null $qualificationId): Exception|Model
 	{
 		$category = $this->categoryRepository->findOneWithQualification($id, $qualificationId);
 		return $category ? $category : new Exception('La categoría no es valida', 400);
@@ -43,7 +42,7 @@ final class QuestionService implements QuestionServiceContracts
 		return $section ? $section : new Exception('La sección no es valida', 400);
 	}
 
-	public function domainIsValid(string $id, string | null $qualificationId): Exception|Model
+	public function domainIsValid(string $id, string|null $qualificationId): Exception|Model
 	{
 		$domain = $this->domainRepository->findOneWithQualification($id, $qualificationId);
 		return $domain ? $domain : new Exception('El dominio no es valido', 400);
@@ -73,8 +72,8 @@ final class QuestionService implements QuestionServiceContracts
 	public function prepareDataToInsert(mixed $body): array|Exception
 	{
 		$exitsQualification = $this->qualificationIsValid((string) $body->qualification_id);
-		$exitsSection = $this->sectionIsValid((string)$body->section_id);
-		$exitsDimension = $this->dimensionIsValid((string)$body->dimension_id);
+		$exitsSection       = $this->sectionIsValid((string) $body->section_id);
+		$exitsDimension     = $this->dimensionIsValid((string) $body->dimension_id);
 
 		if ($exitsQualification instanceof Exception) {
 			return $exitsQualification;
@@ -88,8 +87,8 @@ final class QuestionService implements QuestionServiceContracts
 
 		return [
 			'qualification' => $exitsQualification,
-			'section' => $exitsSection,
-			'dimension' => $exitsDimension,
+			'section'       => $exitsSection,
+			'dimension'     => $exitsDimension,
 		];
 	}
 }

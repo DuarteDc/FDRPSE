@@ -1,10 +1,10 @@
 <?php
 const QUALIFICATION_NAME = [
-	'always_op' => 'Siempre',
+	'always_op'        => 'Siempre',
 	'almost_alwyas_op' => 'Casi siempre',
-	'sometimes_op' => 'Algunas veces',
-	'almost_never_op' => 'Casi nunca',
-	'never_op' => 'Nunca',
+	'sometimes_op'     => 'Algunas veces',
+	'almost_never_op'  => 'Casi nunca',
+	'never_op'         => 'Nunca',
 ];
 ?>
 <!DOCTYPE html>

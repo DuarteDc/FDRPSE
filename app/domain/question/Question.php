@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Question extends Model
 {
-	public const GRADABLE = 'gradable';
+	public const GRADABLE    = 'gradable';
 	public const NONGRADABLE = 'nongradable';
 
-	protected $table = 'questions';
+	protected $table    = 'questions';
 	protected $fillable = [
 		'name',
 		'qualification_id',

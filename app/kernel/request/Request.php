@@ -31,7 +31,7 @@ abstract class Request extends Response implements HttpRequest
 	public static function validate(array $validations, array $messages = [])
 	{
 		$validator = new Validator();
-		$rules = $validator->make((array) static::request(), $validations);
+		$rules     = $validator->make((array) static::request(), $validations);
 
 		$rules->setMessages($messages);
 		$rules->validate();

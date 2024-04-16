@@ -15,10 +15,10 @@ use Bramus\Router\Router;
 
 function router(Router $router)
 {
-	$guideRepository = new GuideRepository(new Guide());
+	$guideRepository   = new GuideRepository(new Guide());
 	$sectionRepository = new SectionRepository(new Section());
-	$guideseCase = new GuideUseCase($guideRepository, $sectionRepository);
-	$guideController = new GuideController($guideseCase);
+	$guideseCase       = new GuideUseCase($guideRepository, $sectionRepository);
+	$guideController   = new GuideController($guideseCase);
 
 	$router->get('/', function () use ($guideController) {
 		$guideController->getGuides();

@@ -15,9 +15,9 @@ use Illuminate\Database\Eloquent\Model;
 final class Guide extends Model
 {
 	protected $fillable = ['name', 'status'];
-	protected $table = 'guides';
+	protected $table    = 'guides';
 
-	public const ACTIVE = 'active';
+	public const ACTIVE  = 'active';
 	public const DISABLE = 'disable';
 
 	public function surveys()

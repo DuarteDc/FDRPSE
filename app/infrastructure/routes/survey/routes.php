@@ -29,23 +29,23 @@ use Bramus\Router\Router;
 
 function router(Router $router)
 {
-	$surveyRepository = new SurveyRepository(new Survey());
-	$guideUserRepository = new GuideUserRepository(new GuideUser());
-	$questionRepository = new QuestionRepository(new Question());
-	$userRepository = new UserRepository(new User());
-	$guideRepository = new GuideRepository(new Guide());
-	$guideSurveyRepository = new GuideSurveyRepository(new GuideSurvey());
+	$surveyRepository                = new SurveyRepository(new Survey());
+	$guideUserRepository             = new GuideUserRepository(new GuideUser());
+	$questionRepository              = new QuestionRepository(new Question());
+	$userRepository                  = new UserRepository(new User());
+	$guideRepository                 = new GuideRepository(new Guide());
+	$guideSurveyRepository           = new GuideSurveyRepository(new GuideSurvey());
 	$qualificationQuestionRepository = new QualificationQuestionRepository(new QualificationQuestion());
-	$surveyService = new SurveyService(
+	$surveyService                   = new SurveyService(
 		$surveyRepository,
 		$guideUserRepository,
 		$questionRepository,
 		$guideSurveyRepository,
 		$qualificationQuestionRepository
 	);
-	$areaRepository = new AreaRepository(new Area());
-	$surveyUseCase = new SurveyUseCase($surveyService, $userRepository, $areaRepository, $guideRepository);
-	$pdfAdapter = new PdfAdapter();
+	$areaRepository   = new AreaRepository(new Area());
+	$surveyUseCase    = new SurveyUseCase($surveyService, $userRepository, $areaRepository, $guideRepository);
+	$pdfAdapter       = new PdfAdapter();
 	$surveyController = new SurveyController($surveyUseCase, $pdfAdapter);
 
 	$router->get('/', function () use ($surveyController) {

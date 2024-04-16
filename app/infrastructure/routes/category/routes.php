@@ -10,17 +10,17 @@ use App\domain\category\Category;
 use App\domain\survey\Survey;
 use App\infrastructure\controllers\CategoryController;
 use App\infrastructure\middlewares\CreateResourceMiddleware;
-use App\infrastructure\middlewares\HasAdminRole;
+use App\infrastructure\middlewares\HasAdminRoleMiddleware;
 use App\infrastructure\repositories\category\CategoryRepository;
 use App\infrastructure\repositories\survey\SurveyRepository;
 use Bramus\Router\Router;
 
 function router(Router $router)
 {
-	$checkRole = new HasAdminRole();
+	$checkRole = new HasAdminRoleMiddleware();
 
 	$categoryRepository = new CategoryRepository(new Category());
-	$categoryUseCase = new CategoryUseCase($categoryRepository);
+	$categoryUseCase    = new CategoryUseCase($categoryRepository);
 	$categoryController = new CategoryController($categoryUseCase);
 
 	$router->get('/', function () use ($categoryController, $checkRole) {

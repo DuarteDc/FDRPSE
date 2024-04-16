@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Qualifications extends Model
 {
-	protected $table = 'qualifications';
+	protected $table    = 'qualifications';
 	protected $fillable = [
 		'despicable',
 		'low',

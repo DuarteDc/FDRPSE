@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Category extends Model
 {
-	protected $table = 'categories';
-	protected $fillable = ['name'];
+	protected $table     = 'categories';
+	protected $fillable  = ['name'];
 	protected $withCount = ['qualifications'];
 
 	public function questions()

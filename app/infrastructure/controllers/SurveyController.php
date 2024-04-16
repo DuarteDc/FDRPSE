@@ -58,10 +58,10 @@ final class SurveyController extends Controller
 
 	public function findSurveyDetailByUserName(string $surveyId, string $guideId)
 	{
-		$name = (string) $this->get('name') ?? '';
-		$areaId = (string) $this->get('area') ?? '';
+		$name      = (string) $this->get('name') ?? '';
+		$areaId    = (string) $this->get('area') ?? '';
 		$subareaId = (string) $this->get('subarea') ?? '';
-		$name = trim(mb_strtoupper($name));
+		$name      = trim(mb_strtoupper($name));
 		$this->response($this->surveyUseCase->findSurveyByName($surveyId, $guideId, $name, $areaId, $subareaId));
 	}
 

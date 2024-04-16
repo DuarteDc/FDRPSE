@@ -11,17 +11,17 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 enum TypeQuestion: string
 {
-	case SECTION = 'section';
+	case SECTION  = 'section';
 	case QUESTION = 'question';
 }
 final class GuideUser extends Pivot
 {
 	public const INPROGRESS = false;
-	public const FINISHED = true;
+	public const FINISHED   = true;
 
-	protected $table = 'guide_survey_user';
+	protected $table    = 'guide_survey_user';
 	protected $fillable = ['guide_id', 'user_id', 'survey_id', 'answers', 'status', 'total'];
-	protected $casts = ['answers' => 'json'];
+	protected $casts    = ['answers' => 'json'];
 
 	public function guide()
 	{

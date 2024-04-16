@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Section extends Model
 {
-	public const GRADABLE = 'gradable';
+	public const GRADABLE    = 'gradable';
 	public const NONGRADABLE = 'nongradable';
 
-	protected $table = 'sections';
-	protected $fillable = ['name', 'binary', 'question', 'can_finish_guide', 'type', 'guide_id', 'status'];
+	protected $table     = 'sections';
+	protected $fillable  = ['name', 'binary', 'question', 'can_finish_guide', 'type', 'guide_id', 'status'];
 	protected $withCount = ['questions'];
 
 	public function questions()

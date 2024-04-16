@@ -62,4 +62,10 @@ final class QuestionRepository extends BaseRepository implements ContractsReposi
 			['always_op', 'almost_alwyas_op', 'sometimes_op', 'almost_never_op', 'never_op']
 		);
 	}
+
+	public function updateQuestion(Question $question, array $body): Question
+	{
+		$question->update($body);
+		return $this->findOne((string) $question->id);
+	}
 }

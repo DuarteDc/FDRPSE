@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 
 final class QualificationQuestion extends Model
 {
-	protected $table = 'qualifications_question';
+	protected $table    = 'qualifications_question';
 	protected $fillable = ['question_id', 'qualificationable_id', 'qualificationable_type'];
 
 	public const CATEGORY = 'category';
-	public const DOMIAN = 'domain';
+	public const DOMIAN   = 'domain';
 
 	public function qualificationable()
 	{

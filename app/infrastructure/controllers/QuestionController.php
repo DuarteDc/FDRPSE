@@ -6,6 +6,7 @@ namespace App\infrastructure\controllers;
 
 use App\application\question\QuestionUseCase;
 use App\infrastructure\requests\question\CreateQuestionRequest;
+use App\infrastructure\requests\question\UpdateQuestionRequest;
 use App\kernel\controllers\Controller;
 
 final class QuestionController extends Controller
@@ -14,8 +15,8 @@ final class QuestionController extends Controller
 
 	public function getAllQuestions()
 	{
-		$type = (string) $this->get('type');
-		$name = (string) $this->get('name');
+		$type      = (string) $this->get('type');
+		$name      = (string) $this->get('name');
 		$questions = $this->questionUseCase->searchSections($type, $name);
 		$this->response(['questions' => $questions]);
 	}
@@ -42,5 +43,11 @@ final class QuestionController extends Controller
 	{
 		$page = (string) $this->get('page');
 		$this->response($this->questionUseCase->getQuestionsBySectionAndTotalSections($guideId, $page));
+	}
+
+	public function updateQuestion(string $questionId)
+	{
+		$this->validate(UpdateQuestionRequest::rules(), UpdateQuestionRequest::messages());
+		$this->response($this->questionUseCase->updateQuestion($questionId, $this->request()));
 	}
 }

@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Domain extends Model
 {
-	protected $table = 'domains';
-	protected $fillable = ['name'];
+	protected $table     = 'domains';
+	protected $fillable  = ['name'];
 	protected $withCount = ['qualifications'];
 
 	public function questions()

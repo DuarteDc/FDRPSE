@@ -31,16 +31,16 @@ final class Database
 	{
 		try {
 			$this->capsule->addConnection([
-				'driver' => getenv('DBDRIVER'),
-				'host' => getenv('HOST'),
-				'database' => getenv('DATABASE'),
-				'username' => getenv('USERNAME'),
-				'password' => getenv('PASSWORD'),
-				'charset' => 'utf8',
+				'driver'    => getenv('DBDRIVER'),
+				'host'      => getenv('HOST'),
+				'database'  => getenv('DATABASE'),
+				'username'  => getenv('USERNAME'),
+				'password'  => getenv('USER_PASSWORD'),
+				'charset'   => 'utf8',
 				'collation' => '',
-				'prefix' => '',
-				'schema' => 'public',
-				'sslmode' => 'prefer',
+				'prefix'    => '',
+				'schema'    => 'public',
+				'sslmode'   => 'prefer',
 			]);
 
 			$this->capsule->setAsGlobal();
@@ -55,16 +55,16 @@ final class Database
 	private function addConnection()
 	{
 		$this->capsule->addConnection([
-			'driver' => getenv('DBDRIVER'),
-			'host' => getenv('HOST'),
-			'database' => getenv('USER_DATABASE'),
-			'username' => getenv('USER_USERNAME'),
-			'password' => getenv('PASSWORD'),
-			'charset' => 'utf8',
+			'driver'    => getenv('DBDRIVER'),
+			'host'      => getenv('HOST'),
+			'database'  => getenv('USER_DATABASE'),
+			'username'  => getenv('USERNAME'),
+			'password'  => getenv('USER_PASSWORD'),
+			'charset'   => 'utf8',
 			'collation' => '',
-			'prefix' => '',
-			'schema' => 'public',
-			'sslmode' => 'prefer',
+			'prefix'    => '',
+			'schema'    => 'public',
+			'sslmode'   => 'prefer',
 		], 'user_db');
 
 		$this->capsule->setAsGlobal();

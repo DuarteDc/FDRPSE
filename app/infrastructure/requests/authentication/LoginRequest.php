@@ -22,7 +22,7 @@ final class LoginRequest extends Request implements HttpRulesRequest
 		return [
 			'username:required' => 'El nombre de usuario es requerido',
 			'password:required' => 'La contraseña es requerida',
-			'password:min' => 'La contraseña debe contener al menos 8 caracteres',
+			'password:min'      => 'La contraseña debe contener al menos 8 caracteres',
 		];
 	}
 }

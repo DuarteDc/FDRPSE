@@ -20,7 +20,7 @@ final class StartNewSurveyRequest extends Request implements HttpRulesRequest
 	{
 		return [
 			'guides:required' => 'Para poder comenzar una la serie de cuestionarios es necesario agregar cuestionarios',
-			'guides:array' => 'El formato de las preguntas no es valido',
+			'guides:array'    => 'El formato de las preguntas no es valido',
 		];
 	}
 }

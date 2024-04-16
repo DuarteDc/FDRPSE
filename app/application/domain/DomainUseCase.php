@@ -60,7 +60,7 @@ final class DomainUseCase
 
 	private function validateDomainName(string $name): Exception|string
 	{
-		$name = mb_strtoupper(trim($name));
+		$name   = mb_strtoupper(trim($name));
 		$domain = $this->domainRepository->findByName($name);
 		return $domain ? new Exception('Ya existe un dominio con ese nombre', 400) : $name;
 	}

@@ -61,7 +61,7 @@ final class SurveyRepository extends BaseRepository implements ContractsReposito
 	public function endSurvey(Survey $survey): Survey
 	{
 		$survey->end_date = date('Y-m-d\TH:i:s.000');
-		$survey->status = Survey::FINISHED;
+		$survey->status   = Survey::FINISHED;
 		$survey->save();
 		return $survey;
 	}

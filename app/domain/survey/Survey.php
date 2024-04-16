@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Survey extends Model
 {
-	public const PENDING = false;
+	public const PENDING  = false;
 	public const FINISHED = true;
 
-	protected $table = 'surveys';
+	protected $table    = 'surveys';
 	protected $fillable = ['start_date', 'end_date', 'status'];
 
 	public function users()

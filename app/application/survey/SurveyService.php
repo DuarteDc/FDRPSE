@@ -272,7 +272,7 @@ final class SurveyService
 
 		return [
 			'current_guide' => $currentGuideSurvey,
-			'next_guide' => $nextGuideUser,
+			'next_guide'    => $nextGuideUser,
 		];
 	}
 
@@ -325,13 +325,13 @@ final class SurveyService
 	private function validateSectionBinaryToSaveQuestion(Section $section, bool $qualification)
 	{
 		return [
-			'question_id' => uniqid('uuid'),
-			'name' => $section->question,
-			'category' => '',
-			'section' => $section->id,
-			'domain' => '',
-			'dimension' => '',
-			'qualification' => $qualification,
+			'question_id'        => uniqid('uuid'),
+			'name'               => $section->question,
+			'category'           => '',
+			'section'            => $section->id,
+			'domain'             => '',
+			'dimension'          => '',
+			'qualification'      => $qualification,
 			'qualification_name' => '',
 		];
 	}
@@ -340,30 +340,30 @@ final class SurveyService
 	{
 		return [
 			'question_id' => $question->id,
-			'name' => $question->name,
-			'category' => [
-				'id' => $question->category->id ?? '',
-				'name' => $question->category->name ?? '',
+			'name'        => $question->name,
+			'category'    => [
+				'id'            => $question->category->id ?? '',
+				'name'          => $question->category->name ?? '',
 				'qualification' => $this->parseQualificationData(
 					$this->qualificationQuestionRepository->findQualificationByQuestion($question->id, Category::class)
 				),
 			],
 			'section' => [
-				'id' => $question->section->id ?? '',
+				'id'   => $question->section->id ?? '',
 				'name' => $question->section->name ?? '',
 			],
 			'domain' => [
-				'id' => $question->domain->id ?? '',
-				'name' => $question->domain->name ?? '',
+				'id'            => $question->domain->id ?? '',
+				'name'          => $question->domain->name ?? '',
 				'qualification' => $this->parseQualificationData(
 					$this->qualificationQuestionRepository->findQualificationByQuestion($question->id, Domain::class)
 				),
 			],
 			'dimension' => [
-				'id' => $question->dimension->id ?? '',
+				'id'   => $question->dimension->id ?? '',
 				'name' => $question->dimension->name ?? '',
 			],
-			'qualification' => $qualification,
+			'qualification'      => $qualification,
 			'qualification_data' => $this->questionRepository->getQualification($question) ?? '',
 		];
 	}
@@ -392,12 +392,12 @@ final class SurveyService
 			return '';
 		}
 		return [
-			'id' => $body->qualificationable->id,
+			'id'         => $body->qualificationable->id,
 			'despicable' => $body->qualificationable->despicable,
-			'low' => $body->qualificationable->low,
-			'middle' => $body->qualificationable->middle,
-			'high' => $body->qualificationable->high,
-			'very_high' => $body->qualificationable->very_high,
+			'low'        => $body->qualificationable->low,
+			'middle'     => $body->qualificationable->middle,
+			'high'       => $body->qualificationable->high,
+			'very_high'  => $body->qualificationable->very_high,
 		];
 	}
 }

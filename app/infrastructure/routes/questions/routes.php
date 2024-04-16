@@ -31,13 +31,13 @@ use Bramus\Router\Router;
 
 function router(Router $router)
 {
-	$categoryRepository = new CategoryRepository(new Category());
+	$categoryRepository      = new CategoryRepository(new Category());
 	$qualificationRepository = new QualificationRepository(new Qualification());
-	$sectionRepository = new SectionRepository(new Section());
-	$domainRepository = new DomainRepository(new Domain());
-	$questionRepository = new QuestionRepository(new Question());
-	$dimensionRepository = new DimensionRepository(new Dimension());
-	$questionService = new QuestionService(
+	$sectionRepository       = new SectionRepository(new Section());
+	$domainRepository        = new DomainRepository(new Domain());
+	$questionRepository      = new QuestionRepository(new Question());
+	$dimensionRepository     = new DimensionRepository(new Dimension());
+	$questionService         = new QuestionService(
 		$categoryRepository,
 		$qualificationRepository,
 		$sectionRepository,
@@ -45,8 +45,14 @@ function router(Router $router)
 		$dimensionRepository
 	);
 	$qualificationQuestionRepository = new QualificationQuestionRepository(new QualificationQuestion());
-	$questionUseCase = new QuestionUseCase($questionRepository, $questionService, $qualificationQuestionRepository);
-	$questionController = new QuestionController($questionUseCase);
+	$questionUseCase                 = new QuestionUseCase(
+		$questionRepository,
+		$questionService,
+		$qualificationQuestionRepository
+	);
+	$questionController              = new QuestionController($questionUseCase);
+
+	$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
 
 	$router->get('/', function () use ($questionController) {
 		$questionController->getAllQuestions();
@@ -65,9 +71,13 @@ function router(Router $router)
 		$questionController->getQuestion($questionId);
 	});
 
-	$router->post('/create', function () use ($questionController) {
-		$middleware = new CreateResourceMiddleware(new SurveyRepository(new Survey()));
+	$router->post('/create', function () use ($questionController, $middleware) {
 		$middleware->handle();
 		$questionController->createQuestion();
+	});
+
+	$router->patch('/update/{questionId}', function (string $questionId) use ($questionController, $middleware) {
+		$middleware->handle();
+		$questionController->updateQuestion($questionId);
 	});
 };

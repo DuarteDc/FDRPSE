@@ -7,7 +7,7 @@ use Symplify\EasyCodingStandard\ValueObject\Option;
 return function (ECSConfig $ecsConfig): void {
     $ecsConfig->paths([__DIR__ . '/app',]);
 
-    $ecsConfig->sets([CodingStyle::DEFAULT]);
+    $ecsConfig->sets([CodingStyle::ALIGNED]);
     // Or this if you prefer to have the code aligned
     // $ecsConfig->sets([CodingStyle::ALIGNED]);
 };

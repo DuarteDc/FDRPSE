@@ -21,7 +21,7 @@ final class SaveQuestionRequest extends Request implements HttpRulesRequest
 	{
 		return [
 			'questions:required' => 'Las preguntas son requeridas',
-			'questions:array' => 'El formato de las preguntas no es valido',
+			'questions:array'    => 'El formato de las preguntas no es valido',
 			// 'section_id:required'    => 'La sección es requerida',
 			// 'section_id:integer'     => 'La sección no es valida',
 		];

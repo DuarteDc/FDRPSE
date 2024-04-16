@@ -14,7 +14,7 @@ use Bramus\Router\Router;
 function router(Router $router)
 {
 	$areaRepository = new AreaRepository(new Area());
-	$areaUseCase = new AreaUseCase($areaRepository);
+	$areaUseCase    = new AreaUseCase($areaRepository);
 	$areaController = new AreaController($areaUseCase);
 
 	$router->get('/', function () use ($areaController) {

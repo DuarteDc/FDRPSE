@@ -6,6 +6,7 @@ namespace App\infrastructure\controllers;
 
 use App\application\dimension\DimensionUseCase;
 use App\infrastructure\requests\dimension\CreateDimensionRequest;
+use App\infrastructure\requests\dimension\UpdateDimensionRequest;
 use App\kernel\controllers\Controller;
 
 final class DimensionController extends Controller
@@ -21,5 +22,16 @@ final class DimensionController extends Controller
 	{
 		$this->validate(CreateDimensionRequest::rules(), CreateDimensionRequest::messages());
 		$this->response($this->dimensionUseCase->createDimension($this->request()), 201);
+	}
+
+	public function updateDimension(string $dimensionId)
+	{
+		$this->validate(UpdateDimensionRequest::rules(), UpdateDimensionRequest::messages());
+		$this->response($this->dimensionUseCase->updateDimension($dimensionId, (array) $this->request()));
+	}
+
+	public function deleteDimension(string $dimensionId)
+	{
+		$this->response($this->dimensionUseCase->deleteDimension($dimensionId));
 	}
 }

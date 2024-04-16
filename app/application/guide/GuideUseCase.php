@@ -61,7 +61,7 @@ final class GuideUseCase
 
 	private function validateName(string $name): Exception|string
 	{
-		$name = trim(mb_strtoupper($name));
+		$name  = trim(mb_strtoupper($name));
 		$guide = $this->guideRepository->findByName($name);
 		return $guide ? new Exception('Ya existe un cuestionario con ese nombre', 400) : $name;
 	}

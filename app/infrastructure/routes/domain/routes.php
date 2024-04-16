@@ -17,7 +17,7 @@ use Bramus\Router\Router;
 function router(Router $router)
 {
 	$domainRepository = new DomainRepository(new Domain());
-	$domainseCase = new DomainUseCase($domainRepository);
+	$domainseCase     = new DomainUseCase($domainRepository);
 	$domainController = new DomainController($domainseCase);
 
 	$router->get('/', function () use ($domainController) {

@@ -17,7 +17,7 @@ use Bramus\Router\Router;
 function router(Router $router)
 {
 	$sectionRepository = new SectionRepository(new Section());
-	$sectionUseCase = new SectionUseCase($sectionRepository);
+	$sectionUseCase    = new SectionUseCase($sectionRepository);
 	$sectionController = new SectionController($sectionUseCase);
 
 	$router->get('/', function () use ($sectionController) {

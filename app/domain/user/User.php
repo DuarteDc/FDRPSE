@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 final class User extends Model
 {
 	public const ADMIN = 5;
-	public const USER = 1;
+	public const USER  = 1;
 
-	protected $table = 'usuarios';
+	protected $table      = 'usuarios';
 	protected $connection = 'user_db';
 
 	public function area()

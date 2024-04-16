@@ -9,9 +9,7 @@ use Exception;
 
 final class AuthenticationUseCase
 {
-	public function __construct(private readonly UserRepository $userRepository)
-	{
-	}
+	public function __construct(private readonly UserRepository $userRepository) {}
 
 	public function signin(string $username, string $password)
 	{
@@ -27,7 +25,7 @@ final class AuthenticationUseCase
 		if (!$user) {
 			return new Exception('Unauthorized', 401);
 		}
-		$user = $this->userRepository->findOne((string)$user->id);
+		$user = $this->userRepository->findOne((string) $user->id);
 		return $user ? $user : new Exception('Unauthorized', 401);
 	}
 }

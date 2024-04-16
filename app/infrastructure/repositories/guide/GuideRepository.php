@@ -53,10 +53,10 @@ final class GuideRepository extends BaseRepository implements ContractsRepositor
 	{
 		$guide->qualification()->create([
 			'despicable' => $body->despicable,
-			'low' => $body->low,
-			'middle' => $body->middle,
-			'high' => $body->high,
-			'very_high' => $body->very_high,
+			'low'        => $body->low,
+			'middle'     => $body->middle,
+			'high'       => $body->high,
+			'very_high'  => $body->very_high,
 		]);
 		return $guide;
 	}

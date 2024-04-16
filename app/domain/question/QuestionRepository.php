@@ -16,4 +16,5 @@ interface QuestionRepository extends BaseRepository
 	public function getQuestionDetail(string $questionId): Question|null;
 	public function countQuestions(): int;
 	public function getQualification(Question $question): ?Qualification;
+	public function updateQuestion(Question $question, array $body): Question;
 }

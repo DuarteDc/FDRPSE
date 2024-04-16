@@ -15,7 +15,7 @@ abstract class BaseRepository implements ContractsRepository
 
 	public function findAll(): Collection
 	{
-		return $this->model::all();
+		return $this->model::orderBy('id', 'asc')->get();
 	}
 
 	public function findOne(string $id): Model|null

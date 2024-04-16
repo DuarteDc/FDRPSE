@@ -19,4 +19,22 @@ final class DimensionRepository extends BaseRepository implements ContractsRepos
 	{
 		return $this->dimension::where('name', $name)->first();
 	}
+
+	public function update(Dimension $dimension, array $body): Dimension
+	{
+		$dimension->update($body);
+		return $this->findOne((string) $dimension->id);
+	}
+
+	public function canUpdateName(string $dimensionId, string $name): ?Dimension
+	{
+		return $this->dimension::where('id', '<>', $dimensionId)
+			->where('name', $name)
+			->first();
+	}
+
+	public function delete(Dimension $dimension): void
+	{
+		$dimension->deleteOrFail();
+	}
 }

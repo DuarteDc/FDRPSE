@@ -30,6 +30,7 @@ final class QuestionRepository extends BaseRepository implements ContractsReposi
 				$this->question::GRADABLE
 		)
 			->where('name', 'like', "%{$name}%")
+			->orderBy('id', 'desc')
 			->get();
 	}
 

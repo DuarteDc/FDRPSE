@@ -25,6 +25,8 @@ final class SectionRepository extends BaseRepository implements ContractsReposit
 				$this->section::GRADABLE
 		)
 			->where('name', 'like', "%{$name}%")
+			->orderBy('id', 'desc')
+			->with('guide')
 			->get();
 	}
 
@@ -81,6 +83,8 @@ final class SectionRepository extends BaseRepository implements ContractsReposit
 			$this->section::NONGRADABLE :
 			$this->section::GRADABLE)
 			->where('can_finish_guide', false)
+			->with('guide')
+			->orderBy('id', 'desc')
 			->get();
 	}
 

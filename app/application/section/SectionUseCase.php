@@ -35,8 +35,8 @@ final class SectionUseCase
 		$name = trim(mb_strtoupper($body->name));
 
 		$section = $this->sectionRepository->findByName($name);
-		if ($section) {
-			return new Exception('Ya existe una sección con ese nombre', 400);
+		if ($section && $section->guide_id === null) {
+			return new Exception('Ya existe una sección con ese nombre, para poder crear una sección con el mismo nombre debes asignar la sección anterior a una guia', 400);
 		}
 
 		if (!$body->binary) {

@@ -15,7 +15,8 @@ final class QuestionController extends Controller
 	{
 		$type      = (string) $this->get('type');
 		$name      = (string) $this->get('name');
-		$questions = $this->questionUseCase->searchSections($type, $name);
+		$page      = (string) $this->get('page');
+		$questions = $this->questionUseCase->searchSections($type, $name, $page);
 		$this->response(['questions' => $questions]);
 	}
 

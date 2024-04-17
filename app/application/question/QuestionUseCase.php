@@ -15,7 +15,8 @@ final class QuestionUseCase
 		private readonly QuestionRepository $questionRepository,
 		private readonly QuestionService $questionService,
 		private readonly QualificationQuestionRepository $qualificationQuestionRepository,
-	) {}
+	) {
+	}
 
 	public function searchSections(string $type, string $name): Collection
 	{
@@ -40,21 +41,23 @@ final class QuestionUseCase
 		$domain   = '';
 		$category = '';
 
-		if (isset($body->domain) || isset($body->categoy)) {
-			$domain = $this->questionService->domainIsValid(
-				(string) $body->domain['id'],
-				$body->domain['qualification_id'] ?? null
-			);
+		if (isset($body->categoy)) {
 			$category = $this->questionService->categoryIsValid(
 				(string) $body->category['id'],
 				$body->category['qualification_id'] ?? null
 			);
+			if ($category instanceof Exception) {
+				return $category;
+			}
+		}
+		if (isset($body->domain)) {
+			$domain = $this->questionService->domainIsValid(
+				(string) $body->domain['id'],
+				$body->domain['qualification_id'] ?? null
+			);
 
 			if ($domain instanceof Exception) {
 				return $domain;
-			}
-			if ($category instanceof Exception) {
-				return $category;
 			}
 		}
 

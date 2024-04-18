@@ -41,11 +41,14 @@ final class QuestionUseCase
 		$domain   = '';
 		$category = '';
 
-		if (isset($body->categoy)) {
+		if (isset($body->category)) {
+
 			$category = $this->questionService->categoryIsValid(
-				(string) $body->category['id'],
-				$body->category['qualification_id'] ?? null
+				$body->category['id'],
+				$body->category['qualification_id']
 			);
+
+
 			if ($category instanceof Exception) {
 				return $category;
 			}
@@ -53,7 +56,7 @@ final class QuestionUseCase
 		if (isset($body->domain)) {
 			$domain = $this->questionService->domainIsValid(
 				(string) $body->domain['id'],
-				$body->domain['qualification_id'] ?? null
+				$body->domain['qualification_id']
 			);
 
 			if ($domain instanceof Exception) {
@@ -67,7 +70,7 @@ final class QuestionUseCase
 			'domain_id'   => $body->domain['id'] ?? null,
 		]);
 
-		if ($category && $category->qualification->id) {
+		if ($category) {
 			$this->qualificationQuestionRepository->setQualification([
 				'qualificationable_id'   => $category->qualification->id,
 				'qualificationable_type' => get_class($category->qualification),
@@ -75,7 +78,7 @@ final class QuestionUseCase
 			]);
 		}
 
-		if ($domain && $domain->qualification->id) {
+		if ($domain) {
 			$this->qualificationQuestionRepository->setQualification([
 				'qualificationable_id'   => $domain->qualification->id,
 				'qualificationable_type' => get_class($domain->qualification),

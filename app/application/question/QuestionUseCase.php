@@ -7,6 +7,7 @@ use App\domain\question\Question;
 use App\domain\question\QuestionRepository;
 use App\domain\section\Section;
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 
 final class QuestionUseCase
@@ -18,9 +19,9 @@ final class QuestionUseCase
 	) {
 	}
 
-	public function searchSections(string $type, string $name): Collection
+	public function searchSections(string $type, string $name, string $page): Paginator
 	{
-		return $this->questionRepository->findQuestionsByTypeAndSection($type, trim($name));
+		return $this->questionRepository->findQuestionsByTypeAndSection($type, trim($name), $page);
 	}
 
 	public function createQuestion(mixed $body): array|Exception

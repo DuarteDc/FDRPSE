@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface SectionRepository extends BaseRepository
 {
-	public function getSectionsByType(string $type, string $name): Collection;
+	public function getSectionsByType(string $type, string $name, string $guide): Collection;
 	public function getAllSections(): Collection;
 	public function findOne(string $id): ?Section;
 	public function findSectionsWithQuestions(): Collection;

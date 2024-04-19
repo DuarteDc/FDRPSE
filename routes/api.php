@@ -19,7 +19,7 @@ use function App\infrastructure\routes\MainRouter\{
 $router = new Router();
 
 $router->setNamespace('App\infrastructure\controllers');
-$router->setBasePath('/cuestionario');
+//$router->setBasePath('/cuestionario');
 
 function sendCorsHeaders()
 {

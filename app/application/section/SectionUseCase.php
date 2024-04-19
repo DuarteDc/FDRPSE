@@ -11,9 +11,9 @@ final class SectionUseCase
 	{
 	}
 
-	public function searchSections(string $type, string $name): mixed
-	{
-		$sections = $this->sectionRepository->getSectionsByType($type, mb_strtoupper($name));
+	public function searchSections(string $type, string $name, string $guide): mixed
+	{ 
+		$sections = $this->sectionRepository->getSectionsByType($type, mb_strtoupper($name), $guide);
 		return ['sections' => $sections];
 	}
 

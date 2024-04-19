@@ -14,7 +14,8 @@ final class SectionController extends Controller
 	{
 		$type = (string) $this->get('type');
 		$name = (string) $this->get('name');
-		$this->response($this->sectionUseCase->searchSections($type, $name));
+		$guide = (string) $this->get('guide');
+		$this->response($this->sectionUseCase->searchSections($type, $name, $guide));
 	}
 
 	public function getOneSection(string $id)

@@ -16,14 +16,26 @@ final class SectionRepository extends BaseRepository implements ContractsReposit
 		parent::__construct($section);
 	}
 
-	public function getSectionsByType(string $type, string $name): Collection
+	public function getSectionsByType(string $type, string $name, string $guide): Collection
 	{
-		return $this->section::where(
+		return $guide ?  $this->section::where(
 			'type',
 			$type === $this->section::NONGRADABLE ?
 				$this->section::NONGRADABLE :
 				$this->section::GRADABLE
 		)
+			->where('name', 'like', "%{$name}%")
+			->orderBy('id', 'desc')
+			->where('guide_id', $guide)
+			->with('guide')
+			->get()
+			:
+			$this->section::where(
+				'type',
+				$type === $this->section::NONGRADABLE ?
+					$this->section::NONGRADABLE :
+					$this->section::GRADABLE
+			)
 			->where('name', 'like', "%{$name}%")
 			->orderBy('id', 'desc')
 			->with('guide')
@@ -144,10 +156,10 @@ final class SectionRepository extends BaseRepository implements ContractsReposit
 	public function findQuestion(Section $section, string $questionId): Section
 	{
 		return $this->section
-		->where('id', $section->id)
-		->with(['questions' => function ($query) use ($questionId) {
-			$query->where('id', $questionId);
-		}])->first();
+			->where('id', $section->id)
+			->with(['questions' => function ($query) use ($questionId) {
+				$query->where('id', $questionId);
+			}])->first();
 	}
 
 	public function deleteQuestionBySection(Section $section, string $questionId)

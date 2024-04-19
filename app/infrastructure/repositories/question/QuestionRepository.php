@@ -6,6 +6,7 @@ use App\domain\qualification\Qualification;
 use App\domain\question\Question;
 use App\domain\question\QuestionRepository as ContractsRepository;
 use App\infrastructure\repositories\BaseRepository;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 
 final class QuestionRepository extends BaseRepository implements ContractsRepository
@@ -21,7 +22,8 @@ final class QuestionRepository extends BaseRepository implements ContractsReposi
 		$question->save();
 		return $question;
 	}
-	public function findQuestionsByTypeAndSection(string $type, string $name): Collection
+
+	public function findQuestionsByTypeAndSection(string $type, string $name, string $page): Paginator
 	{
 		return $this->question::where(
 			'type',
@@ -31,7 +33,7 @@ final class QuestionRepository extends BaseRepository implements ContractsReposi
 		)
 			->where('name', 'like', "%{$name}%")
 			->orderBy('id', 'desc')
-			->get();
+			->paginate(10, '*', 'page', $page);
 	}
 
 	public function getQuestionBySection(): Collection

@@ -23,7 +23,7 @@ trait Auth
 		$key  = getenv('JWT_SECRET_KEY');
 		$user = static::parseUserData($payload);
 		$data = [
-			//'exp' => strtotime('now') + 3600,
+			'exp' => strtotime('now') + 7200,
 			'user' => $user,
 		];
 		$token = JWT::encode($data, $key, 'HS256');

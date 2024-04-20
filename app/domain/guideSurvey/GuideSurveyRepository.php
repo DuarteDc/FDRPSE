@@ -4,6 +4,7 @@ namespace App\domain\guideSurvey;
 
 use App\domain\BaseRepository;
 use App\domain\section\Section;
+use Illuminate\Database\Eloquent\Collection;
 
 interface GuideSurveyRepository extends BaseRepository
 {
@@ -16,4 +17,6 @@ interface GuideSurveyRepository extends BaseRepository
 	public function startNextGuide(): ?GuideSurvey;
 
 	public function findByGuideSurvey(string $surveyId, string $guideId): ?GuideSurvey;
+
+	public function startGuideAndPauseOtherGuides(GuideSurvey $guideSurvey) : array;
 }

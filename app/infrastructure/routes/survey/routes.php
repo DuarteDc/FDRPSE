@@ -95,9 +95,13 @@ function router(Router $router)
 		$surveyController->findSurveyDetailByUserName($surveyId, $guideId);
 	});
 
-	// $router->get('/{id}/details/{guideId}', function (string $id, string $guideId) use ($surveyController) {
-	//     $surveyController->getGudeDetailBySurvey($id, $guideId);
-	// });
+	$router->get('/{id}/exist-guide/{guideId}', function (string $id, string $guideId) use ($surveyController) {
+	    $surveyController->existInProgressGuideUser($id, $guideId);
+	});
+
+	$router->post('/{id}/start-guide/{guideId}', function (string $id, string $guideId) use ($surveyController) {
+	    $surveyController->startGuide($id, $guideId);
+	});
 
 	$router->post('/end/{id}', function (string $id) use ($surveyController) {
 		$surveyController->finalizeSurvey($id);
@@ -108,7 +112,6 @@ function router(Router $router)
 	) {
 		$surveyController->pauseGuideBySurvey($surveyId, $guideId);
 	});
-
 
 	$router->patch('/{surveyId}/guide/{guideId}/finalized', function (string $surveyId, string $guideId) use (
 		$surveyController

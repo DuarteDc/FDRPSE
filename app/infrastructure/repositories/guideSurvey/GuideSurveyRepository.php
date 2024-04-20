@@ -59,4 +59,31 @@ final class GuideSurveyRepository extends BaseRepository implements ContractRepo
 			->where('guide_id', $guideId)
 			->first();
 	}
+
+	public function startGuideAndPauseOtherGuides(GuideSurvey $guideSurvey): array
+	{
+		$guides = $this->guideSurvey::where('survey_id', $guideSurvey->survey_id)
+			->orderBy('id', 'asc')
+			->get();
+
+		$guides->map(function ($guide) use ($guideSurvey) {
+			if ($guide->id == $guideSurvey->id) {
+				$guide->status = GuideStatus::INPROGRESS;
+				$guide->save();
+				return $guide;
+			}
+
+			if ($guide->status == GuideStatus::INPROGRESS->value) {
+				$guide->status = GuideStatus::PAUSED;
+				$guide->save();
+				return $guide;
+			}
+			return $guide;
+		});
+
+		return $this->guideSurvey::where('survey_id', $guideSurvey->survey_id)
+			->orderBy('id', 'asc')
+			->get()
+			->toArray();
+	}
 }

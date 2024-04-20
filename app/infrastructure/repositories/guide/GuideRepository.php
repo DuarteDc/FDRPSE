@@ -42,7 +42,7 @@ final class GuideRepository extends BaseRepository implements ContractsRepositor
 
 	public function createAndSetQualification(object $body): Guide
 	{
-		$guide = new $this->guide(['name' => $body->name]);
+		$guide = new $this->guide(['name' => $body->name, 'gradable' => $body->gradable === 'gradable' ? true : false]);
 		$guide->save();
 		return $this->setGuideQualification($guide, $body);
 	}
@@ -72,8 +72,7 @@ final class GuideRepository extends BaseRepository implements ContractsRepositor
 			->whereIn('id', $guidesId)->get()
 			->sortBy(function ($model) use ($guidesId) {
 				return array_search($model->id, $guidesId);
-			})->values()->toArray();
-		;
+			})->values()->toArray();;
 	}
 
 	public function deleteGuide(string $guideId)
@@ -98,9 +97,25 @@ final class GuideRepository extends BaseRepository implements ContractsRepositor
 			->find($guideId);
 	}
 
-	public function changeGuideSurveyStatus(Guide $guide, string $surveyId, GuideStatus $status): Guide
+	public function changeGuideSurveyStatus(Guide $guide, string $surveyId, GuideStatus $status)
 	{
-		$guide->surveys()->updateExistingPivot($surveyId, ['status' => $status->value]);
+		$survey = $guide->surveys()->where('survey_id', $surveyId)
+			->with('guides')
+			->first();
+
+		$guides = $survey->guides;
+		$guides->map(function ($currentguide) use ($guide, $surveyId, $status) {
+			if ($currentguide->id === $guide->id) {
+				$currentguide->surveys()->updateExistingPivot($surveyId, ['status' => $status->value]);
+				return $currentguide;
+			}
+			if ($currentguide->pivot->status == GuideStatus::INPROGRESS->value) {
+				$currentguide->surveys()->updateExistingPivot($surveyId, ['status' => GuideStatus::PAUSED->value]);
+				return $currentguide;
+			}
+			return $currentguide;
+		});
+
 		return $this->findGuideBySurvey($surveyId, $guide->id);
 	}
 
@@ -108,7 +123,7 @@ final class GuideRepository extends BaseRepository implements ContractsRepositor
 	{
 		return $this->guide::with([
 			'sections' => function ($query) {
-				$query->select('id', 'name', 'guide_id', 'binary', 'can_finish_guide', 'question');
+				$query->orderBy('position', 'asc')->select('id', 'name', 'guide_id', 'binary', 'can_finish_guide', 'question', 'position');
 			},
 			'sections.questions' => function ($query) {
 				$query->select('id', 'name', 'section_id', 'qualification_id', 'type');

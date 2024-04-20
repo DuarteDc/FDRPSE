@@ -17,7 +17,8 @@ final class SurveyUseCase
 		private readonly UserRepository $userRepository,
 		private readonly AreaRepository $areaRepository,
 		private readonly GuideRepository $guideRepository,
-	) {}
+	) {
+	}
 
 	public function getAllSurveys(int $page)
 	{
@@ -157,4 +158,15 @@ final class SurveyUseCase
 			400
 		);
 	}
+
+	public function hasProgresGuide(string $surveyId, string $guideId)
+	{
+		return ['guide_count' => $this->surveyService->getInProgressGuideSurvey($surveyId, $guideId)];
+	}
+
+	public function startGuideInsideSurvey(string $surveyId, string $guideId) 
+	{
+		return $this->surveyService->startGuideAndPauseOthersGuides($surveyId, $guideId);
+	}
+
 }

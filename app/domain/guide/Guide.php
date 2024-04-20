@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 final class Guide extends Model
 {
-	protected $fillable = ['name', 'status'];
+	protected $fillable = ['name', 'status', 'gradable'];
 	protected $table    = 'guides';
 
 	public const ACTIVE  = 'active';

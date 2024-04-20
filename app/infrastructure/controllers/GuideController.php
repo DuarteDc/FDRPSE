@@ -8,7 +8,9 @@ use App\kernel\controllers\Controller;
 
 final class GuideController extends Controller
 {
-	public function __construct(private readonly GuideUseCase $guideUseCase) {}
+	public function __construct(private readonly GuideUseCase $guideUseCase)
+	{
+	}
 
 	public function getGuides()
 	{

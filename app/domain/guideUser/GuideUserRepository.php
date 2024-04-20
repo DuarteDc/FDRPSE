@@ -19,7 +19,7 @@ interface GuideUserRepository extends BaseRepository
 		int $userQualification
 	): GuideUser;
 	public function canAvailableSurveyPerUser(string $userId): ?GuideUser;
-	public function getDetailsSurveyUser(string $surveyId, string $guideId);
+	public function getDetailsSurveyUser(string $surveyId, string $guideId): ?int;
 	public function searchByNameAndAreas(
 		string $surveyId,
 		string $guideId,

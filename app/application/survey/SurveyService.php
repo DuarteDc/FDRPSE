@@ -30,7 +30,8 @@ final class SurveyService
 		private readonly QuestionRepository $questionRepository,
 		private readonly GuideSurveyRepository $guideSurveyRepository,
 		private readonly QualificationQuestionRepository $qualificationQuestionRepository,
-	) {}
+	) {
+	}
 
 	public function getSurvys(int $page)
 	{
@@ -376,6 +377,26 @@ final class SurveyService
 	{
 		return $this->surveyRepository->setGuidesToNewSurvey($survey, $guidesId);
 	}
+
+	public function getInProgressGuideSurvey(string $surveyId, string $guideId)
+	{
+		$guideSurvey = $this->guideUserRepository->getDetailsSurveyUser($surveyId, $guideId);
+		return $guideSurvey;
+	}
+
+	public function startGuideAndPauseOthersGuides(string $surveyId, string $guideId)
+	{
+		$guide = $this->guideSurveyRepository->findByGuideSurvey($surveyId, $guideId);
+		if (!$guide) {
+			return new Exception('El cuestionario que intentas comenzar no existe o no esta disponible', 400);
+		}
+		$guides = $this->guideSurveyRepository->startGuideAndPauseOtherGuides($guide);
+
+		$guide = collect(...array_filter([...$guides], fn ($guide) => $guide['guide_id'] == $guideId));
+		return ($guide && $guide['status'] === GuideStatus::INPROGRESS->value) ?
+			['message' => 'El cuestionario cambio de estatus correctamente'] : new Exception('Parece que hubo un error al intentar comenzar el cuestionario', 400);
+	}
+
 
 	private function calculateUserQualification(GuideUser $guideUser): int
 	{

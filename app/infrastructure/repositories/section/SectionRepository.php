@@ -72,8 +72,8 @@ final class SectionRepository extends BaseRepository implements ContractsReposit
 				'questions.qualification:id,name,always_op,almost_alwyas_op,sometimes_op,almost_never_op,never_op',
 			]
 		)->where('guide_id', $guideId)
-			// ->has('questions', '>', 0)
-			->simplePaginate(1, ['id', 'name', 'binary', 'question'], 'page', $page);
+			->orderBy('position', 'asc')
+			->simplePaginate(1, ['id', 'name', 'binary', 'question', 'position'], 'page', $page);
 	}
 
 	public function countTotalSections(string $guideId): int
@@ -109,8 +109,8 @@ final class SectionRepository extends BaseRepository implements ContractsReposit
 	public function findMultipleSectionsWithQuestions(array $sectionsId): Collection
 	{
 		return $this->section::with('questions.qualification')
-			->whereIn('id', $sectionsId)->get()->sortBy(function ($model) use ($sectionsId) {
-				return array_search($model->id, $sectionsId);
+			->whereIn('id', $sectionsId)->get()->sortBy(function ($section) use ($sectionsId) {
+				return array_search($section->id, $sectionsId);
 			})->values();
 	}
 
@@ -145,9 +145,12 @@ final class SectionRepository extends BaseRepository implements ContractsReposit
 
 	public function attachGuide(string $guideId, mixed $sectionsId): ?Collection
 	{
-		$sections = $this->section::find($sectionsId);
-		$sections->each(function (Section $section) use ($guideId) {
+		$sections = $this->section::whereIn('id', $sectionsId)->get()->sortBy(function ($section) use ($sectionsId) {
+			return array_search($section->id, $sectionsId);
+		})->values();
+		$sections->each(function (Section $section, int $index) use ($guideId) {
 			$section->guide_id = $guideId;
+			$section->position = $index;
 			$section->save();
 		});
 		return $sections;

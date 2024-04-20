@@ -12,7 +12,9 @@ use Exception;
 
 final class SurveyController extends Controller
 {
-	public function __construct(private readonly SurveyUseCase $surveyUseCase, private readonly PdfAdapter $pdfAdapter) {}
+	public function __construct(private readonly SurveyUseCase $surveyUseCase, private readonly PdfAdapter $pdfAdapter)
+	{
+	}
 
 	public function getAllSurveys()
 	{
@@ -85,12 +87,16 @@ final class SurveyController extends Controller
 
 	public function generateReportByUser()
 	{
-		$surveyUser = $this->surveyUseCase->getDataToGenerateSurveyUserResume($this->auth()->id);
-		if ($surveyUser instanceof Exception) {
-			return $this->response($surveyUser);
+		try {
+			$surveyUser = $this->surveyUseCase->getDataToGenerateSurveyUserResume($this->auth()->id);
+			if ($surveyUser instanceof Exception) {
+				return $this->response($surveyUser);
+			}
+			$view = $this->renderBufferView('pdf-user-answers', $surveyUser);
+			$this->pdfAdapter->generatePDF($view, PaperTypes::Letter, OrientationTypes::Portrait, 'Acuse de entraga');
+		} catch (\Throwable $th) {
+			$this->response(new Exception('No hay reportes disponibles', 400));
 		}
-		$view = $this->renderBufferView('pdf-user-answers', $surveyUser);
-		$this->pdfAdapter->generatePDF($view, PaperTypes::Letter, OrientationTypes::Portrait, 'Acuse de entraga');
 	}
 
 	public function pauseGuideBySurvey(string $surveyId, string $guideId)
@@ -98,5 +104,15 @@ final class SurveyController extends Controller
 		$status = (int) $this->get('status');
 
 		$this->response($this->surveyUseCase->changeGuideStatusToPaused($surveyId, $guideId, $status));
+	}
+
+	public function existInProgressGuideUser(string $surveyId, string $guideId)
+	{
+		$this->response($this->surveyUseCase->hasProgresGuide($surveyId, $guideId));
+	}
+
+	public function startGuide(string $surveyId, string $guideId)
+	{
+		$this->response($this->surveyUseCase->startGuideInsideSurvey($surveyId, $guideId));
 	}
 }

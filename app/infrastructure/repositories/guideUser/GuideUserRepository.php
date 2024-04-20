@@ -71,20 +71,12 @@ final class GuideUserRepository extends BaseRepository implements ContractsRepos
 			->first();
 	}
 
-	public function getDetailsSurveyUser(string $surveyId, string $guideId)
+	public function getDetailsSurveyUser(string $surveyId, string $guideId): ?int
 	{
-		// id,nombre,userName,apellidoP,apellidoM,id_area',
 		return $this->guideUser::where('survey_id', $surveyId)
 			->where('guide_id', $guideId)
-			->with([
-				'guide:id,name',
-				'user' => function ($query) {
-					$query->where('nombre', 'EDUARDO');
-				},
-				'user.area:id,nombreArea',
-				'user.area.subdirections',
-			])
-			->get(['user_id', 'total', 'status']);
+			->where('status', GuideUser::INPROGRESS)
+			->count();
 	}
 
 	public function searchByNameAndAreas(

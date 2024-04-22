@@ -9,7 +9,7 @@
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
    <title>Cuestionario de análisis de riesgos</title>
-   <script type="module" crossorigin src="/cuestionario/public/assets/index-CgulTY2t.js"></script>
+   <script type="module" crossorigin src="/cuestionario/public/assets/index-BG05uYkY.js"></script>
    <link rel="stylesheet" crossorigin href="/cuestionario/public/assets/index-BP3V76st.css">
  </head>
 

@@ -103,7 +103,7 @@ function router(Router $router)
 	    $surveyController->startGuide($id, $guideId);
 	});
 
-	$router->post('/end/{id}', function (string $id) use ($surveyController) {
+	$router->post('/end-survey/{id}', function (string $id) use ($surveyController) {
 		$surveyController->finalizeSurvey($id);
 	});
 

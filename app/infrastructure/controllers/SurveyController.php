@@ -29,7 +29,6 @@ final class SurveyController extends Controller
 
 	public function startSurvey()
 	{
-		// $this->validate(StartNewSurveyRequest::rules(), StartNewSurveyRequest::messages());
 		$guides = $this->request()->guides;
 		$this->response($this->surveyUseCase->startNewSurvey($guides));
 	}

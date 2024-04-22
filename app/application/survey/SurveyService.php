@@ -172,7 +172,7 @@ final class SurveyService
 		}
 
 		$survey = $this->surveyRepository->endSurvey($survey);
-		return ['survey' => $survey];
+		return ['survey' => $survey, 'message' => 'La serie de cuestionarios finalizo correctamente'];
 	}
 
 	public function setSurveyToUser()

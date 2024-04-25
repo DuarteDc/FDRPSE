@@ -14,6 +14,7 @@ use App\domain\qualificationQuestion\QualificationQuestion;
 use App\domain\question\Question;
 use App\domain\survey\Survey;
 use App\domain\user\User;
+use App\infrastructure\adapters\ExcelAdapter;
 use App\infrastructure\adapters\PdfAdapter;
 use App\infrastructure\controllers\SurveyController;
 use App\infrastructure\repositories\area\AreaRepository;
@@ -45,7 +46,8 @@ function router(Router $router)
 	$areaRepository   = new AreaRepository(new Area());
 	$surveyUseCase    = new SurveyUseCase($surveyService, $userRepository, $areaRepository, $guideRepository);
 	$pdfAdapter       = new PdfAdapter();
-	$surveyController = new SurveyController($surveyUseCase, $pdfAdapter);
+	$excelAdapter       = new ExcelAdapter();
+	$surveyController = new SurveyController($surveyUseCase, $pdfAdapter, $excelAdapter);
 
 	$router->get('/', function () use ($surveyController) {
 		$surveyController->getAllSurveys();
@@ -117,5 +119,11 @@ function router(Router $router)
 		$surveyController
 	) {
 		$surveyController->finalizeGuideSurvey($surveyId, $guideId);
+	});
+
+	$router->get('/{surveyId}/guide/{guideId}/report/{userId}', function (string $surveyId, string $guideId, string $userId) use (
+		$surveyController
+	) {
+		$surveyController->generateReportBy($surveyId, $guideId, $userId);
 	});
 }

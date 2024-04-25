@@ -3,6 +3,7 @@
 namespace App\infrastructure\controllers;
 
 use App\application\survey\SurveyUseCase;
+use App\infrastructure\adapters\ExcelAdapter;
 use App\infrastructure\adapters\OrientationTypes;
 use App\infrastructure\adapters\PaperTypes;
 use App\infrastructure\adapters\PdfAdapter;
@@ -12,7 +13,7 @@ use Exception;
 
 final class SurveyController extends Controller
 {
-	public function __construct(private readonly SurveyUseCase $surveyUseCase, private readonly PdfAdapter $pdfAdapter)
+	public function __construct(private readonly SurveyUseCase $surveyUseCase, private readonly PdfAdapter $pdfAdapter, private readonly ExcelAdapter $excelAdapter)
 	{
 	}
 
@@ -113,5 +114,16 @@ final class SurveyController extends Controller
 	public function startGuide(string $surveyId, string $guideId)
 	{
 		$this->response($this->surveyUseCase->startGuideInsideSurvey($surveyId, $guideId));
+	}
+
+	public function generateReportBy(string  $surveyId, string $guideId, string $userId)
+	{
+		try {
+			$surveyUser = $this->surveyUseCase->findUserDetails($surveyId, $userId, $guideId);
+			//$this->response($surveyUser['guide_user']->answers);
+			$this->response($this->excelAdapter->generateReport($surveyUser['guide_user']));
+		} catch (\Throwable $th) {
+			$this->response(['message' => $th->getMessage()], 500);
+		}
 	}
 }

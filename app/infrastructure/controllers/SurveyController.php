@@ -13,6 +13,7 @@ use Exception;
 
 final class SurveyController extends Controller
 {
+
 	public function __construct(private readonly SurveyUseCase $surveyUseCase, private readonly PdfAdapter $pdfAdapter, private readonly ExcelAdapter $excelAdapter)
 	{
 	}
@@ -120,10 +121,96 @@ final class SurveyController extends Controller
 	{
 		try {
 			$surveyUser = $this->surveyUseCase->findUserDetails($surveyId, $userId, $guideId);
-			//$this->response($surveyUser['guide_user']->answers);
-			$this->response($this->excelAdapter->generateReport($surveyUser['guide_user']));
+
+			return $this->response($this->calculcateQualificationByCriteria('category', $surveyUser['guide_user']['answers']));
+
+			$this->excelAdapter->setHeader([
+				'<center><middle><b><style height="30" bgcolor="#059669" color="#FFFFFF">' . $surveyUser['guide_user']['guide']['name'] . '</style></b></middle></center>'
+			])->mergeCellDocument('A1:E1');
+
+			$this->excelAdapter->setHeader([
+				'<b><center><middle><style height="30" border="#000000" bgcolor="#059669" color="#FFFFFF">Usuario:</middle></center></style></b>',
+				"<middle><left>" . $surveyUser['guide_user']['user']['nombre']
+					. " " . $surveyUser['guide_user']['user']['apellidoP'] . " " . $surveyUser['guide_user']['user']['apellidoM'] . "</left></middle>",
+				null
+			])->mergeCellDocument('B2:E2');
+
+			$this->excelAdapter->setHeader([
+				'<b><center><middle><style height="30" border="#000000" bgcolor="#059669" color="#FFFFFF">Área:</middle></center></style></b>',
+				"<middle><left>" . $surveyUser['guide_user']['user']['area']['nombreArea'] . "</left></middle>",
+				null
+			])->mergeCellDocument('B3:E3');
+
+			if ($surveyUser['guide_user']['guide']['gradable']) {
+				$this->excelAdapter->setHeader([
+					'<center><left><style height="30"></style></left></center>',
+				]);
+				$name = $this->getNameOfQualificationGuide($surveyUser['guide_user']['total'], $surveyUser['guide_user']['guide']['qualification']);
+				$this->excelAdapter->setHeader([
+					"<middle><b>CALIFICACIÓN DEL CUESTIONARIO:</b></middle>",
+					"<middle><left>Pts:" . $surveyUser['guide_user']['total'] . "</left></middle>",
+					'<middle><center><style height="30" bgcolor="' . $this->getColorByQualification($name) . '">' . $name . "</style></center></middle>",
+				]);
+				$this->excelAdapter->setHeader([
+					'<center><left><style height="30"></style></left></center>',
+				]);
+				$qualification = $this->calculcateQualificationByCriteria('category', $surveyUser['guide_user']['answers']);
+				foreach ($qualification as $key => $value) {
+					$name = $this->getNameOfQualificationGuide($value['qualification'], (object)$value['qualifications']);
+					$this->excelAdapter->setHeader([
+						"<middle><b>CATEGORÍA - "  . $key . ": </b></middle>",
+						"<middle><left>Pts:" . $value['qualification'] . "</left></middle>",
+						'<middle><center><style height="30" bgcolor="' . $this->getColorByQualification($name) . '">' . $name . "</style></center></middle>",
+					]);
+				}
+				$this->excelAdapter->setHeader([
+					'<center><left><style height="30"></style></left></center>',
+				]);
+				$qualification = $this->calculcateQualificationByCriteria('domain', $surveyUser['guide_user']['answers']);
+				foreach ($qualification as $key => $value) {
+					$name = $this->getNameOfQualificationGuide($value['qualification'], (object)$value['qualifications']);
+					$this->excelAdapter->setHeader([
+						"<middle><b>DOMINIO - "  . $key . ":</b></middle>",
+						"<middle><left>Pts:" . $value['qualification'] . "</left></middle>",
+						'<middle><center><style height="30" bgcolor="' . $this->getColorByQualification($name) . '">' . $name . "</style></center></middle>",
+					]);
+				}
+			}
+			$this->excelAdapter->setHeader([
+				'<center><left><style height="30"></style></left></center>',
+			]);
+
+			$this->setHeaderReport();
+
+			$this->setBodyReport($surveyUser['guide_user']);
+			$this->excelAdapter->generateReport();
 		} catch (\Throwable $th) {
 			$this->response(['message' => $th->getMessage()], 500);
 		}
+	}
+
+	private function setHeaderReport()
+	{
+		$headers = [
+			'<center><middle><b><style height="30" bgcolor="#059669" color="#FFFFFF">Pregunta</style></b></middle></center>',
+			'<center><middle><b><style height="30" bgcolor="#059669" color="#FFFFFF">Calificación</style></b></middle></center>',
+			'<center><middle><b><style height="30" bgcolor="#059669" color="#FFFFFF">Categoría</style></b></middle></center>',
+			'<center><middle><b><style height="30" bgcolor="#059669" color="#FFFFFF">Dominio</style></b></middle></center>',
+			'<center><middle><b><style height="30" bgcolor="#059669" color="#FFFFFF">Dimensión</style></b</middle></center>>'
+		];
+		$this->excelAdapter->setHeader($headers);
+	}
+
+	private function setBodyReport(mixed $surveyUser)
+	{
+		$this->excelAdapter->setData(array_map(function (int $key, array $answer,) {
+			return [
+				'<middle><style  height="30">' . $answer['name'] . '</style></middle>',
+				"<center><b>" . $this->getNameOfQualifications($answer['qualification'], $answer['qualification_data'] ?? "") . "</b></center>",
+				isset($answer['category']['name']) ? "<middle>" . $answer['category']['name'] . "</middle>"  : "",
+				isset($answer['domain']['name']) ? "<middle>" . $answer['domain']['name'] . "</middle>"  : "",
+				isset($answer['dimension']['name']) ? "<middle>" . $answer['dimension']['name'] . "</middle>"  : "",
+			];
+		}, (array) array_keys($surveyUser['answers']), array_values($surveyUser['answers'])));
 	}
 }

@@ -1,0 +1,19 @@
+name: UNIT TEST
+
+on: 
+  push:
+    branches: 
+      - code-rules-codely    
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
+      - uses: php-actions/composer@v6
+      - run: echo "Composer dependencies have been installed"
+      - run: vendor/bin/phpunit ./test
+
+

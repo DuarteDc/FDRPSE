@@ -2,59 +2,48 @@
 
 namespace App\infrastructure\adapters;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Shuchkin\SimpleXLSXGen;
 
 final class ExcelAdapter
 {
 
-    const QUALIFICATION_NAME = [
-        'always_op'        => 'Siempre',
-        'almost_alwyas_op' => 'Casi siempre',
-        'sometimes_op'     => 'Algunas veces',
-        'almost_never_op'  => 'Casi nunca',
-        'never_op'         => 'Nunca',
-    ];
-
-    private readonly Spreadsheet $spreadsheet;
+    private array $cells = [];
+    private array $merge = [];
+    private readonly SimpleXLSXGen $xlsx;
 
     public function __construct()
     {
-        $this->spreadsheet = new Spreadsheet();
+        $this->xlsx = new SimpleXLSXGen;
     }
 
-
-    public function generateReport(mixed $surveyUser)
+    public function mergeCellDocument(string $cellsMerge)
     {
-        $surveyUser = (object) $surveyUser;
-        $this->spreadsheet->getActiveSheet()->setCellValue("A1", "Pregunta");
-        $this->spreadsheet->getActiveSheet()->setCellValue("B1", "Respuesta");
-        $this->spreadsheet->getActiveSheet()->setCellValue("C1", "Categoría");
-        $this->spreadsheet->getActiveSheet()->setCellValue("D1", "Dominio");
-        $this->spreadsheet->getActiveSheet()->setCellValue("E1", "Dimensions");
-        foreach ($surveyUser->answers as $key => $answer) {
-            $key += 1;
-            $this->spreadsheet->getActiveSheet()->setCellValue("A" . $key + 1, $answer['name'])->getColumnDimension('A')->setAutoSize(true);
-            $this->spreadsheet->getActiveSheet()->setCellValue("B" . $key + 1, $this->getNameOfQualifications($answer['qualification'], $answer['qualification_data']))->getColumnDimension('B')->setAutoSize(true);
-            $this->spreadsheet->getActiveSheet()->setCellValue("C" . $key + 1, $answer['category']['name'] ??  "")->getColumnDimension('C')->setAutoSize(true);
-            $this->spreadsheet->getActiveSheet()->setCellValue("D" . $key + 1, $answer['domain']['name'] ?? "")->getColumnDimension('D')->setAutoSize(true);
-            $this->spreadsheet->getActiveSheet()->setCellValue("E" . $key + 1, $answer['dimension']['name'] ?? "")->getColumnDimension('E')->setAutoSize(true);
-        }
-
-        $writer = new Xlsx($this->spreadsheet);
-        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        // header('Content-Disposition: attachment; filename="' . urlencode("xd.xlsx") . '"');
-        //$writer->save('php://output');
-        $writer->save('xd.xlsx');
+        $this->merge = [$cellsMerge, ...$this->merge];
+        return $this;
     }
 
-
-    private function getNameOfQualifications(mixed $qualification, mixed $qualificationData)
+    public function setHeader(array $headers)
     {
-        if (gettype($qualification) === 'boolean') {
-            return $qualification ? 'Si' : 'No';
-        }
+        $this->cells = [...$this->cells, $headers];
+        return $this;
+    }
 
-        return self::QUALIFICATION_NAME[array_search($qualification, (array) $qualificationData)];
+    public function setData(array $data)
+    {
+        $this->cells = [...$this->cells, ...$data];
+    }
+
+    public function generateReport(string $title = 'Reporte', string $name = 'Reporte de cuestionario')
+    {
+        $xlsx = $this->xlsx::fromArray($this->cells);
+        foreach ($this->merge as $key => $merge) {
+            $xlsx->mergeCells($merge);
+        }
+        $xlsx->setDefaultFont('Arial')
+            ->setDefaultFontSize(12)
+            ->setCompany('IGECM')
+            ->setTitle($title)
+            ->setLanguage('es-MX')
+            ->downloadAs($name);
     }
 }

@@ -4,6 +4,7 @@ namespace App\infrastructure\repositories\guideUser;
 
 use App\domain\guideUser\GuideUser;
 use App\domain\guideUser\GuideUserRepository as ContractsRepository;
+use App\domain\qualifications\Qualifications;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -134,8 +135,8 @@ final class GuideUserRepository extends BaseRepository implements ContractsRepos
 	{
 		return $this->guideUser::where('survey_id', $surveyId)->where('user_id', $userId)
 			->where('guide_id', $guideId)
-			->with(['user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
-			->first(['user_id', 'total', 'status', 'answers']);
+			->with(['guide.qualification', 'user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
+			->first(['user_id', 'total', 'status', 'answers', 'guide_id']);
 	}
 
 	public function findCurrentSurveyUser(string $userId): GuideUser

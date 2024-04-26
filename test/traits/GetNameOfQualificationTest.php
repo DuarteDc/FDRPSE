@@ -7,9 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 final class GetNameOfQualificationTest extends TestCase
 {
-    use ExcelTrait;
-
-    
+    use ExcelTrait; 
 
     public function test_get_name_of_qualificartion()
     {

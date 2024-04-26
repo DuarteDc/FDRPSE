@@ -46,7 +46,6 @@ trait ExcelTrait
         };
     }
 
-
     public function calculcateQualificationByCriteria(string $criteria, mixed $answer)
     {
         return array_reduce($answer, function ($prev, $curr) use ($criteria) {

@@ -19,8 +19,6 @@ jobs:
         run: |
           php -S 0.0.0.0:8001 -t public/ &
           sleep 5
-          vendor/bin/phpunit --verbose
-          
-      - run: vendor/bin/phpunit ./test
+          vendor/bin/phpunit ./test
 
 

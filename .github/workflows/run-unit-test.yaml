@@ -14,12 +14,13 @@ jobs:
       - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
       - uses: php-actions/composer@v6
       - run: echo "Composer dependencies have been installed"
-      - run: vendor/bin/phpunit ./test
 
       - name: Run PHPUnit tests against local server
         run: |
           php -S 0.0.0.0:8001 -t public/ &
           sleep 5
           vendor/bin/phpunit --verbose
+          
+      - run: vendor/bin/phpunit ./test
 
 

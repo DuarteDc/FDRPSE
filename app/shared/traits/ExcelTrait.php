@@ -4,21 +4,22 @@ namespace App\shared\traits;
 
 trait ExcelTrait
 {
-    const QUALIFICATION_NAME = [
-        'always_op'        => 'Siempre',
-        'almost_alwyas_op' => 'Casi siempre',
-        'sometimes_op'     => 'Algunas veces',
-        'almost_never_op'  => 'Casi nunca',
-        'never_op'         => 'Nunca',
-    ];
-
     public function getNameOfQualifications(mixed $qualification, mixed $qualificationData)
     {
         if (gettype($qualification) === 'boolean') {
             return $qualification ? 'Si' : 'No';
         }
 
-        return self::QUALIFICATION_NAME[array_search($qualification, (array) $qualificationData)];
+        $QUALIFICATION_NAME = [
+            'always_op'        => 'Siempre',
+            'almost_alwyas_op' => 'Casi siempre',
+            'sometimes_op'     => 'Algunas veces',
+            'almost_never_op'  => 'Casi nunca',
+            'never_op'         => 'Nunca',
+        ];
+    
+
+        return $QUALIFICATION_NAME[array_search($qualification, (array) $qualificationData)];
     }
 
     public function getNameOfQualificationGuide(int $total, object $qualification)

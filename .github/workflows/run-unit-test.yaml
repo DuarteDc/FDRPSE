@@ -16,4 +16,10 @@ jobs:
       - run: echo "Composer dependencies have been installed"
       - run: vendor/bin/phpunit ./test
 
+      - name: Run PHPUnit tests against local server
+        run: |
+          php -S 0.0.0.0:8001 -t public/ &
+          sleep 5
+          vendor/bin/phpunit --verbose
+
 

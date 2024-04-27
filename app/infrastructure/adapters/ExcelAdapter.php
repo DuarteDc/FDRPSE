@@ -16,6 +16,16 @@ final class ExcelAdapter
         $this->xlsx = new SimpleXLSXGen;
     }
 
+    public function addNewSheet(string $name)
+    {
+        $this->xlsx->addSheet($this->cells, $name);
+        foreach ($this->merge as $key => $merge) {
+            $this->xlsx->mergeCells($merge);
+        }
+        $this->cells = [];
+        $this->merge = [];
+    }
+
     public function mergeCellDocument(string $cellsMerge)
     {
         $this->merge = [$cellsMerge, ...$this->merge];
@@ -33,17 +43,14 @@ final class ExcelAdapter
         $this->cells = [...$this->cells, ...$data];
     }
 
-    public function generateReport(string $title = 'Reporte', string $name = 'Reporte de cuestionario')
+    public function generateReport(string $title = 'Reporte')
     {
-        $xlsx = $this->xlsx::fromArray($this->cells);
-        foreach ($this->merge as $key => $merge) {
-            $xlsx->mergeCells($merge);
-        }
+        $xlsx = $this->xlsx;
         $xlsx->setDefaultFont('Arial')
             ->setDefaultFontSize(12)
-            ->setCompany('IGECM')
+            ->setCompany('IGECEM')
             ->setTitle($title)
             ->setLanguage('es-MX')
-            ->downloadAs($name);
+            ->downloadAs($title . '.xlsx');
     }
 }

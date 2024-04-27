@@ -51,7 +51,7 @@ final class SurveyService
 		return $this->surveyRepository->create(['start_date' => date('Y-m-d\TH:i:s.000'), 'status' => Survey::PENDING]);
 	}
 
-	public function saveNongradableAnswersByUser(array $body)
+	public function saveNongradableAnswersByUser(array $body, string $surveyId, string $guideId)
 	{
 		$guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
 
@@ -100,11 +100,15 @@ final class SurveyService
 		return ['message' => 'La preguntas se guardaron correctmente', 'guide' => $guideUser];
 	}
 
-	public function saveAnswersByUser(array $body)
+	public function saveAnswersByUser(array $body, string $surveyId, string $guideId)
 	{
 		$guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
 		if (!$guideSurvey) {
 			return new Exception('Parece que hubo un error al registar la respusta', 400);
+		}
+
+		if ($guideSurvey->guide_id != $guideId && $guideSurvey->survey_id != $surveyId) {
+			return new Exception('Al parecer las preguntas que intentas guardar no corresponden al cuestionario en proceso', 400);
 		}
 
 		$guideUser = $this->guideUserRepository->getCurrentGuideUser(
@@ -115,7 +119,6 @@ final class SurveyService
 		if (!$guideUser) {
 			return new Exception('Parece que hubo un error al registar la respusta', 500);
 		}
-
 
 		$isValidRequest = array_map(function ($question) use ($guideSurvey) {
 			$question = (object) $question;
@@ -298,6 +301,13 @@ final class SurveyService
 		return $this->guideUserRepository->searchByNameAndAreas($surveyId, $guideId, $name, $areaId, $subareaId);
 	}
 
+
+	public function getSurveyGuideByArea(string $surveyId, string $guideId, string $areaId)
+	{
+		$survey = $this->guideUserRepository->searchByArea($surveyId, $guideId, $areaId);
+		return !$survey ? new Exception('Parece que hubo un error al consultar la información', 400) : $survey;
+	}
+
 	public function getDetailsByUser(string $surveyId, string $userId, string $guideId)
 	{
 		$survey = $this->surveyRepository->findOne($surveyId);
@@ -321,6 +331,7 @@ final class SurveyService
 		}
 		return [...$answers, ...$newBody];
 	}
+
 
 	private function validateSectionBinaryToSaveQuestion(Section $section, bool $qualification)
 	{

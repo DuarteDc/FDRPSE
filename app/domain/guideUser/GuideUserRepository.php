@@ -27,10 +27,14 @@ interface GuideUserRepository extends BaseRepository
 		string $areaId,
 		string $subareaId
 	);
+	//
 	public function getDetailsByUser(string $surveyId, string $userId, string $guideId): ?GuideUser;
+	//
 	public function countSurveyUserAnswers(string $surveyId): int;
 	public function findCurrentSurveyUser(string $userId): GuideUser;
 	public function findUserGuideBySurvey(string $surveyId, string $guideId): ?Collection;
 	public function clearOldAnswers(GuideUser $guideUser): GuideUser;
 	public function countGudesUsersAvailable(string $surveyId, string $guideId): int;
+	public function searchByArea(string $surveyId,string $guideId,string $areaId);
+
 }

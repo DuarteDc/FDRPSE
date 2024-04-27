@@ -53,12 +53,12 @@ final class SurveyUseCase
 		];
 	}
 
-	public function saveAnswers(array $body, string $type)
+	public function saveAnswers(array $body, string $type, string $surveyId, string $guideId)
 	{
 		if ($type === Question::NONGRADABLE) {
-			return $this->surveyService->saveNongradableAnswersByUser($body);
+			return $this->surveyService->saveNongradableAnswersByUser($body, $surveyId, $guideId);
 		}
-		return $this->surveyService->saveAnswersByUser($body);
+		return $this->surveyService->saveAnswersByUser($body, $surveyId, $guideId);
 	}
 
 	public function getQuestionsByUser()
@@ -164,9 +164,13 @@ final class SurveyUseCase
 		return ['guide_count' => $this->surveyService->getInProgressGuideSurvey($surveyId, $guideId)];
 	}
 
-	public function startGuideInsideSurvey(string $surveyId, string $guideId) 
+	public function startGuideInsideSurvey(string $surveyId, string $guideId)
 	{
 		return $this->surveyService->startGuideAndPauseOthersGuides($surveyId, $guideId);
 	}
 
+	public function getSurveyDetailByArea(string $surveyId, string $guideId, string $areaId)
+	{
+		return $this->surveyService->getSurveyGuideByArea($surveyId, $guideId, $areaId);
+	}
 }

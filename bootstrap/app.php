@@ -24,7 +24,7 @@ Database::getInstance()->connection();
 
 /* -------- Timezone ------------*/
 
-date_default_timezone_set(getenv('TIMEZONE'));
+date_default_timezone_set(getenv('TIMEZONE') ?? 'America/Mexico_City');
 
 /* -------- Load Routes -------- */
 

@@ -174,4 +174,28 @@ final class GuideUserRepository extends BaseRepository implements ContractsRepos
 		return $this->guideUser::where('survey_id', $surveyId)->where('guide_id', $guideId)
 			->where('status', GuideUser::FINISHED)->count();
 	}
+
+	public function searchByArea(string $surveyId, string $guideId, string $areaId)
+	{
+		$guidesUser = $this->guideUser::where('survey_id', $surveyId)
+			->where('guide_id', $guideId)
+			->where('status', true)
+			->with([
+				'guide.qualification', 'user:id,nombre,apellidoP,apellidoM,id_area',
+				'user.area' => function ($query) use ($areaId) {
+					$query->where(function ($q) use ($areaId) {
+						$q->where('area_padre', $areaId)
+							->orWhereHas('father', function ($subquery) use ($areaId) {
+								$subquery->where('area_padre', $areaId)->where('area_nivel', '>', 1);
+							})
+							->orWhere('id', $areaId);
+					});
+				},
+			])
+			->get(['user_id', 'total', 'status', 'answers', 'guide_id']);
+
+		return collect([...$guidesUser->filter(function ($guide) {
+			return $guide->user !== null && $guide->user->area !== null;
+		})]);
+	}
 }

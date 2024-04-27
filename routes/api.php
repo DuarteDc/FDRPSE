@@ -39,6 +39,7 @@ $router->options('/api/.*', function () {
 
 $router->get('/api', function () {
     Response::responseJson(['api' => 'ok']);
+    exit();
 });
 
 $router->mount('/api.*', function () use ($router) {

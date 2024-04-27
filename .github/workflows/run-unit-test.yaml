@@ -4,6 +4,7 @@ on:
   push:
     branches: 
       - code-rules-codely    
+      - develop*
 
 jobs:
   build-test:

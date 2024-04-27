@@ -7,6 +7,7 @@ use App\domain\guideSurvey\GuideSurvey;
 use App\domain\guideSurvey\GuideSurveyRepository as ContractRepository;
 use App\domain\section\Section;
 use App\infrastructure\repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 final class GuideSurveyRepository extends BaseRepository implements ContractRepository
 {
@@ -86,4 +87,6 @@ final class GuideSurveyRepository extends BaseRepository implements ContractRepo
 			->get()
 			->toArray();
 	}
+
 }
+

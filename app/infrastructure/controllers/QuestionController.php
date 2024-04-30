@@ -2,45 +2,51 @@
 
 namespace App\infrastructure\controllers;
 
-use App\kernel\controllers\Controller;
 use App\application\question\QuestionUseCase;
 use App\infrastructure\requests\question\CreateQuestionRequest;
+use App\infrastructure\requests\question\UpdateQuestionRequest;
+use App\kernel\controllers\Controller;
 
-class QuestionController extends Controller
+final class QuestionController extends Controller
 {
-    public function __construct(private readonly QuestionUseCase $questionUseCase)
-    {
-    }
+	public function __construct(private readonly QuestionUseCase $questionUseCase) {}
 
-    public function getAllQuestions()
-    {
-        $questions = $this->questionUseCase->findAllQuestions();
-        $this->response(['questions' => $questions]);
-    }
+	public function getAllQuestions()
+	{
+		$type      = (string) $this->get('type');
+		$name      = (string) $this->get('name');
+		$page      = (string) $this->get('page');
 
-    public function createQuestion()
-    {
-        $this->validate(CreateQuestionRequest::rules(), CreateQuestionRequest::messages());
-        $questions = $this->questionUseCase->createQuestion($this->request());
-        $this->response($questions);
-    }
+		$this->response($this->questionUseCase->searchSections($type, $name, $page));
+	}
 
-    public function getQuestion(string $id)
-    {
-        $response = $this->questionUseCase->getOneQuestion($id);
-        $this->response($response);
-    }
+	public function createQuestion()
+	{
+		$this->validate(CreateQuestionRequest::rules(), CreateQuestionRequest::messages());
+		$questions = $this->questionUseCase->createQuestion($this->request());
+		$this->response($questions);
+	}
 
-    public function getQuestionBySections() 
-    {
-        $this->response($this->questionUseCase->getQuestionsBySections());
-    }
+	public function getQuestion(string $id)
+	{
+		$response = $this->questionUseCase->getOneQuestion($id);
+		$this->response($response);
+	}
 
-    public function getQuestionsBySection() 
-    {
-        $page = (int) $this->get('page');
-        $userId = $this->auth()->id;
-        $this->response($this->questionUseCase->getQuestionsBySectionAndTotalSections($page, $userId));
-    }
+	public function getQuestionBySections()
+	{
+		$this->response($this->questionUseCase->getQuestionsBySections());
+	}
 
+	public function getQuestionsBySection(string $guideId)
+	{
+		$page = (string) $this->get('page');
+		$this->response($this->questionUseCase->getQuestionsBySectionAndTotalSections($guideId, $page));
+	}
+
+	public function updateQuestion(string $questionId)
+	{
+		$this->validate(UpdateQuestionRequest::rules(), UpdateQuestionRequest::messages());
+		$this->response($this->questionUseCase->updateQuestion($questionId, $this->request()));
+	}
 }

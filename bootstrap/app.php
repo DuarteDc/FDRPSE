@@ -1,6 +1,6 @@
 <?php
 
-/* -------- Run atoload from composer -------- */
+/* -------- Run autoload from composer -------- */
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -24,7 +24,7 @@ Database::getInstance()->connection();
 
 /* -------- Timezone ------------*/
 
-date_default_timezone_set(getenv('TIMEZONE'));
+date_default_timezone_set(getenv('TIMEZONE') ?? 'America/Mexico_City');
 
 /* -------- Load Routes -------- */
 

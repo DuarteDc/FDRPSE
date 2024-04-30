@@ -7,32 +7,37 @@ use Dompdf\Options;
 
 enum PaperTypes: string
 {
-    case A4 = 'A4';
-    case Letter = 'letter';
+	case A4     = 'A4';
+	case Letter = 'letter';
 }
 
 enum OrientationTypes: string
 {
-    case Portrait = 'portrait';
-    case Landscape = 'landscape';
+	case Portrait  = 'portrait';
+	case Landscape = 'landscape';
 }
 
-class PdfAdapter
+final class PdfAdapter
 {
-    public function __construct()
-    {
-        header("Access-Control-Allow-Origin: *");
-    }
+	public function __construct()
+	{
+		header('Access-Control-Allow-Origin: *');
+	}
 
-    public function generatePDF(string $html, PaperTypes $paper, OrientationTypes $orientation, string $fileName, bool $download = true): void
-    {
-        $options = new Options();
-        $options->set('isRemoteEnabled', true);
+	public function generatePDF(
+		string $html,
+		PaperTypes $paper,
+		OrientationTypes $orientation,
+		string $fileName,
+		bool $download = true
+	): void {
+		$options = new Options();
+		$options->set('isRemoteEnabled', true);
 
-        $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper($paper->value, $orientation->value);
-        $dompdf->render();
-        $dompdf->stream("$fileName.pdf", ['Attachment' => $download]);
-    }
+		$dompdf = new Dompdf($options);
+		$dompdf->loadHtml($html);
+		$dompdf->setPaper($paper->value, $orientation->value);
+		$dompdf->render();
+		$dompdf->stream("$fileName.pdf", ['Attachment' => $download]);
+	}
 }

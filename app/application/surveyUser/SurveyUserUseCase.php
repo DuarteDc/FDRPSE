@@ -1,12 +1,11 @@
 <?php
 
+
 namespace App\application\surveyUser;
 
 use App\domain\surveyUser\SurveyUserRepository;
 
-class SurveyUserUseCase
+final class SurveyUserUseCase
 {
-    public function __construct(private readonly SurveyUserRepository $surveyUserRepository)
-    {
-    }
+	public function __construct(private readonly SurveyUserRepository $surveyUserRepository) {}
 }

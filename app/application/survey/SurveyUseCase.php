@@ -3,118 +3,180 @@
 
 namespace App\application\survey;
 
-use App\domain\area\Area;
 use App\domain\area\AreaRepository;
-use App\domain\user\User;
+use App\domain\guide\GuideRepository;
+use App\domain\guideSurvey\GuideStatus;
+use App\domain\question\Question;
 use App\domain\user\UserRepository;
 use Exception;
 
-class SurveyUseCase
+final class SurveyUseCase
 {
+	public function __construct(
+		private readonly SurveyService $surveyService,
+		private readonly UserRepository $userRepository,
+		private readonly AreaRepository $areaRepository,
+		private readonly GuideRepository $guideRepository,
+	) {
+	}
 
-    public function __construct(private readonly SurveyService $surveyService, private readonly UserRepository $userRepository, private readonly AreaRepository $areaRepository)
-    {
-    }
+	public function getAllSurveys(int $page)
+	{
+		return $this->surveyService->getSurvys($page);
+	}
 
-    public function getAllSurveys()
-    {
-        return $this->surveyService->getSurvys();
-    }
+	public function getSurveyById(string $surveyId)
+	{
+		return ['survey' => $this->surveyService->getSurveyDetail($surveyId)];
+	}
 
-    public function startNewSurvey(mixed $areas)
-    {
-        $survey = $this->surveyService->startSurvey();
-        if ($survey instanceof Exception) return $survey;
-        //return ['survey' => $survey, 'message' => 'El cuestionario se creo correctamente'];
+	public function startNewSurvey(array $guides)
+	{
+		$survey = $this->surveyService->startSurvey();
+		if ($survey instanceof Exception) {
+			return $survey;
+		}
 
-        $countAreas = $this->areaRepository->countAreasByAreasId(array_column($areas, 'id'));
-        if ($countAreas !== count($areas)) return new Exception('Por favor verifica que las areas sean correctas', 400);
-        $surveyUsers = [];
-        $users = $this->userRepository->getAvailableUsers();
-        $users->each(function (User $user) use($surveyUsers, $survey) {
-            $surveyUsers = [...$surveyUsers, ['user_id', $user->id, 'survey_id' => $survey->id]];
-        });
+		$areValidIds = $this->guideRepository->countGuidesById($guides);
+		if (count($guides) !== count($areValidIds)) {
+			return new Exception('Los cuestionarios no son validos', 400);
+		}
 
-        return $surveyUsers;
+		$guides = [];
+		foreach ($areValidIds as $key => $guide) {
+			$guides[$guide['id']] = ['qualification' => $guide['qualification'], 'status' => 1];
+		}
+
+		return [
+			'survey'  => $this->surveyService->attachGuidesToSurvey($survey, $guides),
+			'message' => 'Se ha generado una serie de cuestionarios',
+		];
+	}
+
+	public function saveAnswers(array $body, string $type, string $surveyId, string $guideId)
+	{
+		if ($type === Question::NONGRADABLE) {
+			return $this->surveyService->saveNongradableAnswersByUser($body, $surveyId, $guideId);
+		}
+		return $this->surveyService->saveAnswersByUser($body,  $surveyId, $guideId);
+	}
+
+	public function getQuestionsByUser()
+	{
+		return $this->surveyService->getQuestionInsideSection();
+	}
+
+	public function startSurveyByUser(string $surveyId, string $guideId)
+	{
+		return $this->surveyService->setSurveyToUser($surveyId, $guideId);
+	}
+
+	public function finalizeSurveyByUser(string $surveyId, string $guideId)
+	{
+		return $this->surveyService->finalzeUserSurvey($surveyId, $guideId);
+	}
+
+	public function getInProgressSurvey()
+	{
+		return $this->surveyService->existSurveyInProgress();
+	}
+
+	public function getGuideDetail(string $guideId)
+	{
+		return [
+			'guide' => $this->guideRepository->findOne($guideId),
+		];
+	}
+
+	public function findSurveyByName(string $surveyId, string $guideId, string $name, string $areaId, string $subareaId)
+	{
+		return [
+			'survey' => $this->surveyService->findSurveyByNameAndAreas($surveyId, $guideId, $name, $areaId, $subareaId),
+		];
+	}
+
+	public function findUserDetails(string $surveyId, string $userId, string $guideId)
+	{
+		$surveyUser = $this->surveyService->getDetailsByUser($surveyId, $userId, $guideId);
+		if ($surveyUser instanceof Exception) {
+			return $surveyUser;
+		}
+		return ['guide_user' => $surveyUser];
+	}
+
+	public function getUserWithoutSurvey()
+	{
+		$users = $this->userRepository->countTotalAvailableUsers();
+		return ['users' => $users];
+	}
+
+	public function finalizeSurvey(string $surveyId)
+	{
+		return $this->surveyService->finalizeSurvey($surveyId);
+	}
+
+	public function tryToFinalizeGuide(string $surveyId, string $guideId)
+	{
+		$totalUsers = $this->userRepository->countTotalAvailableUsers();
+		return $this->surveyService->finalizedGuideInsideSurvey($surveyId, $guideId, $totalUsers);
+	}
 
 
-    }
+	// private function calculateUsersHaveToAnswers(int $usersCount): int
+	// {
+	// 	$totalUsers = 0.9604 * $usersCount;
+	// 	$totalConst = 0.0025 * ($usersCount - 1) + 0.9604;
+	// 	return round($totalUsers / $totalConst);
+	// }
 
-    public function saveAnswers(mixed $body)
-    {
-        return $this->surveyService->saveAnswersByUser($body);
-    }
+	public function getDataToGenerateSurveyUserResume(string $userId)
+	{
+		$surveyUser = $this->surveyService->getLastSurveyByUser($userId);
+		return !$surveyUser ? new Exception('El cuestionario no esta disponible', 404) : $surveyUser;
+	}
 
-    public function getQuestionsByUser()
-    {
-        return $this->surveyService->getQuestionInsideSection();
-    }
+	public function changeGuideStatusToPaused(string $surveyId, string $guideId, int $status)
+	{
+		$guideSurvey = $this->guideRepository->findGuideBySurvey($surveyId, $guideId);
+		if (!$guideSurvey) {
+			return new Exception('El cuestionario no existe o no es valido', 404);
+		}
 
-    public function startSurveyByUser()
-    {
-        return $this->surveyService->setSurveyToUser();
-    }
+		$guide = '';
 
-    public function finalizeSurveyByUser()
-    {
-        return $this->surveyService->finalzeUserSurvey();
-    }
+		if ($status === GuideStatus::PAUSED->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::INPROGRESS->value) {
+			// if ($this->surveyService->canContinueGuide($surveyId, $guideId) > 0 && $this->surveyService->existGuideInProgress($surveyId) > 0) {
+			// 	return new Exception('El cuestionario no puede ser pausado porque existen usuarios respondiendo el cuestionario', 400);
+			// }
+			$guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::PAUSED);
+			return ['guide' => $guide];
+		}
+		if ($status === GuideStatus::INPROGRESS->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::PAUSED->value) {
+			// if ($this->surveyService->canContinueGuide($surveyId, $guideId) > 0 && $this->surveyService->existGuideInProgress($surveyId) > 0) {
+			// 	return new Exception('El cuestionario no puede ser pausado porque existen usuarios respondiendo el cuestionario', 400);
+			// }
+			$guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::INPROGRESS);
+			return ['guide' => $guide];
+		}
 
-    public function getInProgressSurvey()
-    {
-        return $this->surveyService->existSurveyInProgress();
-    }
+		return new Exception(
+			'Parece que hubo un error al ' . ($status === GuideStatus::PAUSED->value ? 'pausar' : 'continuar') . ' la guía',
+			400
+		);
+	}
 
-    public function findSurveyById(string $surveyId)
-    {
-        $survey =  $this->surveyService->findOneSurvey($surveyId);
-        return $survey ? ['survey' => $survey] : new Exception('La encuesta no existe o no esta disponible', 404);
-    }
+	public function hasProgresGuide(string $surveyId, string $guideId)
+	{
+		return ['guide_count' => $this->surveyService->getInProgressGuideSurvey($surveyId, $guideId)];
+	}
 
-    public function getOneSurvey(string $surveyId)
-    {
-        return ['survey' => $this->surveyService->getSurveyDetails($surveyId)];
-    }
+	public function startGuideInsideSurvey(string $surveyId, string $guideId)
+	{
+		return $this->surveyService->startGuideAndPauseOthersGuides($surveyId, $guideId);
+	}
 
-    public function findSurveyByName(string $surveyId, string $name, string $areaId)
-    {
-        return ['survey' => $this->surveyService->findSurveyByName($surveyId, $name, $areaId)];
-    }
-
-    public function findUserDetails(string $surveyId, string $userId)
-    {
-        $surveyUser = $this->surveyService->getDetailsByUser($surveyId, $userId);
-        if ($surveyUser instanceof Exception) return $surveyUser;
-        return ['survey_user' => $surveyUser];
-    }
-
-    public function getUserWithoutSurvey()
-    {
-        $users = $this->userRepository->countTotalAvailableUsers();
-        return ['users' => $users];
-    }
-
-    public function finalizeSurvey(string $surveyId)
-    {
-        $survey = $this->surveyService->findOneSurvey($surveyId);
-        if (!$survey) return new Exception('El cuestionario no existe o no esta disponible', 404);
-        if ($survey->status) return new Exception('El cuestionario ya ha sido finalizado', 404);
-        $totalSurveyUsers = $this->surveyService->getTotalUsersInSurvey($surveyId);
-        $totalUsers = $this->userRepository->countTotalAvailableUsers();
-        $users = $this->calculateUsersHaveToAnswers($totalUsers);
-        return $totalSurveyUsers >= $users ? $this->surveyService->endSurvey($surveyId) : new Exception("El cuestionario no puede ser finalizado, es necesario {$users} usuarios o más", 400);
-    }
-
-    private function calculateUsersHaveToAnswers(int $usersCount): int
-    {
-        $totalUsers = 0.9604 * $usersCount;
-        $totalConst = 0.0025 * ($usersCount - 1) + 0.9604;
-        return round($totalUsers / $totalConst);
-    }
-
-    public function getDataToGenerateSurveyUserResume(string $userId)
-    {
-        $surveyUser =  $this->surveyService->getLastSurveyByUser($userId);
-        return !$surveyUser ? new Exception('El cuestionario no esta disponible', 404) : $surveyUser;
-    }
+	public function getSurveyDetailByArea(string $surveyId, string $guideId, string $areaId)
+	{
+		return $this->surveyService->getSurveyGuideByArea($surveyId, $guideId, $areaId);
+	}
 }

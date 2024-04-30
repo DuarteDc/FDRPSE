@@ -1,6 +1,7 @@
 <?php
 
 use App\infrastructure\middlewares\CheckAuthMiddleware;
+use App\kernel\response\Response;
 use Bramus\Router\Router;
 
 use function App\infrastructure\routes\MainRouter\{
@@ -34,6 +35,11 @@ function sendCorsHeaders()
 
 $router->options('/api/.*', function () {
     sendCorsHeaders();
+});
+
+$router->get('/api', function () {
+    Response::responseJson(['api' => 'ok']);
+    exit();
 });
 
 $router->mount('/api.*', function () use ($router) {
@@ -82,12 +88,11 @@ $router->mount('/api.*', function () use ($router) {
         $router->mount('/guides', function () use ($router) {
             guideRoutes($router);
         });
-
     });
 });
 
 $router->get('/.*', 'MainController@__invoke');
 
-$router->set404('/.*','NotFoundController@__invoke');
+$router->set404('/.*', 'NotFoundController@__invoke');
 
 $router->run();

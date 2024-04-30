@@ -2,17 +2,16 @@
 
 namespace App\domain\dimension;
 
-use Illuminate\Database\Eloquent\Model;
 use App\domain\question\Question;
+use Illuminate\Database\Eloquent\Model;
 
-class Dimension extends Model
+final class Dimension extends Model
 {
+	protected $table    = 'dimensions';
+	protected $fillable = ['name'];
 
-    protected $table = 'dimensions';
-    protected $fillable = ['name'];
-
-    public function questions()
-    {
-        return $this->hasMany(Question::class);
-    }
+	public function questions()
+	{
+		return $this->hasMany(Question::class);
+	}
 }

@@ -4,21 +4,19 @@ namespace App\application\area;
 
 use App\domain\area\AreaRepository;
 
-class AreaUseCase
+final class AreaUseCase
 {
-    public function __construct(private readonly AreaRepository $areaRepository)
-    {
-    }
+	public function __construct(private readonly AreaRepository $areaRepository) {}
 
-    public function findAllAreas()
-    {
-        $areas = $this->areaRepository->findAreasWithUsers();
-        return ['areas' => $areas];
-    }
+	public function findAllAreas()
+	{
+		$areas = $this->areaRepository->findAreas();
+		return ['areas' => $areas];
+	}
 
-    public function getAreaDetailsById(string $areaId)
-    {   
-        return $this->areaRepository->findAreaByIdAndGetChildAreas($areaId);
-
-    }
+	public function getAreaDetailsById(string $areaId)
+	{
+		$subareas = $this->areaRepository->findAreaByIdAndGetChildAreas($areaId);
+		return ['areas' => $subareas];
+	}
 }

@@ -2,29 +2,41 @@
 
 namespace App\domain\domain;
 
-use Illuminate\Database\Eloquent\Model;
-
-use App\domain\question\Question;
+use App\domain\qualificationQuestion\QualificationQuestion;
 use App\domain\qualifications\Qualifications;
 
-class Domain extends Model
+use App\domain\question\Question;
+use Illuminate\Database\Eloquent\Model;
+
+final class Domain extends Model
 {
+	protected $table     = 'domains';
+	protected $fillable  = ['name'];
+	protected $withCount = ['qualifications'];
 
-    protected $table = 'domains';
-    protected $fillable = ['name'];
+	public function questions()
+	{
+		return $this->hasMany(Question::class);
+	}
 
-    public function questions()
-    {
-        return $this->hasMany(Question::class);
-    }
+	public function qualifications()
+	{
+		return $this->morphMany(Qualifications::class, 'qualificationable');
+	}
 
-    public function qualifications()
-    {
-        return $this->morphMany(Qualifications::class, 'qualificationable');
-    }
+	public function qualification()
+	{
+		return $this->morphOne(Qualifications::class, 'qualificationable');
+	}
 
-    public function qualification()
-    {
-        return $this->morphOne(Qualifications::class, 'qualificationable');
-    }
+	public function qualificationQuestion()
+	{
+		return $this->morphOne(QualificationQuestion::class, 'qualificationable');
+	}
+
+
+	public function qualificationsQuestion()
+	{
+		return $this->morphMany(QualificationQuestion::class, 'qualificationable');
+	}
 }

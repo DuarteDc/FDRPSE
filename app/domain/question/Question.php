@@ -2,43 +2,59 @@
 
 namespace App\domain\question;
 
-use Illuminate\Database\Eloquent\Model;
-
 use App\domain\category\Category;
+
 use App\domain\dimension\Dimension;
 use App\domain\domain\Domain;
 use App\domain\qualification\Qualification;
+use App\domain\qualificationQuestion\QualificationQuestion;
+use App\domain\qualifications\Qualifications;
 use App\domain\section\Section;
+use Illuminate\Database\Eloquent\Model;
 
-class Question  extends Model
+final class Question extends Model
 {
+	public const GRADABLE    = 'gradable';
+	public const NONGRADABLE = 'nongradable';
 
-    protected $table = 'questions';
-    protected $fillable = ['name', 'qualification_id', 'category_id', 'dimension_id', 'domain_id', 'section_id'];
+	protected $table    = 'questions';
+	protected $fillable = [
+		'name',
+		'qualification_id',
+		'category_id',
+		'dimension_id',
+		'domain_id',
+		'section_id',
+		'type',
+	];
 
-    public function section()
-    {
-        return $this->belongsTo(Section::class);
-    }
+	public function section()
+	{
+		return $this->belongsTo(Section::class);
+	}
 
-    public function qualification()
-    {
-        return $this->belongsTo(Qualification::class);
-    }
+	public function qualification()
+	{
+		return $this->belongsTo(Qualification::class);
+	}
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+	public function qualificationsQuestion()
+	{
+		return $this->hasOne(QualificationQuestion::class, 'question_id');
+	}
 
-    public function dimension()
-    {
-        return $this->belongsTo(Dimension::class);
-    }
+	public function category()
+	{
+		return $this->belongsTo(Category::class);
+	}
 
-    public function domain()
-    {
-        return $this->belongsTo(Domain::class);
-    }
+	public function dimension()
+	{
+		return $this->belongsTo(Dimension::class);
+	}
 
+	public function domain()
+	{
+		return $this->belongsTo(Domain::class);
+	}
 }

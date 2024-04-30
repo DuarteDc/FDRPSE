@@ -36,5 +36,5 @@ interface GuideUserRepository extends BaseRepository
 	public function clearOldAnswers(GuideUser $guideUser): GuideUser;
 	public function countGudesUsersAvailable(string $surveyId, string $guideId): int;
 	public function searchByArea(string $surveyId,string $guideId,string $areaId);
-
+	public function existGuidesInProgres(string $surveyId, $guideId): int;
 }

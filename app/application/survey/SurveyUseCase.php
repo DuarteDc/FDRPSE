@@ -58,7 +58,7 @@ final class SurveyUseCase
 		if ($type === Question::NONGRADABLE) {
 			return $this->surveyService->saveNongradableAnswersByUser($body, $surveyId, $guideId);
 		}
-		return $this->surveyService->saveAnswersByUser($body, $surveyId, $guideId);
+		return $this->surveyService->saveAnswersByUser($body,  $surveyId, $guideId);
 	}
 
 	public function getQuestionsByUser()
@@ -66,9 +66,9 @@ final class SurveyUseCase
 		return $this->surveyService->getQuestionInsideSection();
 	}
 
-	public function startSurveyByUser()
+	public function startSurveyByUser(string $surveyId, string $guideId)
 	{
-		return $this->surveyService->setSurveyToUser();
+		return $this->surveyService->setSurveyToUser($surveyId, $guideId);
 	}
 
 	public function finalizeSurveyByUser()
@@ -145,10 +145,16 @@ final class SurveyUseCase
 		$guide = '';
 
 		if ($status === GuideStatus::PAUSED->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::INPROGRESS->value) {
+			if ($this->surveyService->canContinueGuide($surveyId, $guideId) > 0 && $this->surveyService->existGuideInProgress($surveyId) > 0) {
+				return new Exception('El cuestionario no puede ser pausado porque existen usuarios respondiendo el cuestionario', 400);
+			}
 			$guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::PAUSED);
 			return ['guide' => $guide];
 		}
 		if ($status === GuideStatus::INPROGRESS->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::PAUSED->value) {
+			if ($this->surveyService->canContinueGuide($surveyId, $guideId) > 0 && $this->surveyService->existGuideInProgress($surveyId) > 0) {
+				return new Exception('El cuestionario no puede ser pausado porque existen usuarios respondiendo el cuestionario', 400);
+			}
 			$guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::INPROGRESS);
 			return ['guide' => $guide];
 		}

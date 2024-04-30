@@ -41,14 +41,13 @@ final class SurveyController extends Controller
 	public function saveUserAnswers(string $surveyId, string $guideId)
 	{
 		$type = $this->get('type');
-		//TODO fix save answer by guide
 		$this->validate(SaveQuestionRequest::rules(), SaveQuestionRequest::messages());
 		$this->response($this->surveyUseCase->saveAnswers($this->request()->questions, $type, $surveyId, $guideId));
 	}
 
-	public function startSurveyByUser()
+	public function startSurveyByUser(string $surveyId, string $guideId)
 	{
-		$this->response($this->surveyUseCase->startSurveyByUser());
+		$this->response($this->surveyUseCase->startSurveyByUser($surveyId, $guideId));
 	}
 
 	public function finishUserSurvey()

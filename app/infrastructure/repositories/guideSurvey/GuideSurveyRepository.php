@@ -7,7 +7,6 @@ use App\domain\guideSurvey\GuideSurvey;
 use App\domain\guideSurvey\GuideSurveyRepository as ContractRepository;
 use App\domain\section\Section;
 use App\infrastructure\repositories\BaseRepository;
-use Illuminate\Database\Eloquent\Collection;
 
 final class GuideSurveyRepository extends BaseRepository implements ContractRepository
 {
@@ -28,7 +27,7 @@ final class GuideSurveyRepository extends BaseRepository implements ContractRepo
 		$guide = $guideSurvey->guides()
 			->where('id', $guideSurvey->guide_id)
 			->first();
-
+			
 		return $guide->sections()->where('id', $questionId)->first();
 	}
 
@@ -88,5 +87,19 @@ final class GuideSurveyRepository extends BaseRepository implements ContractRepo
 			->toArray();
 	}
 
-}
+	public function existInProgressGuide(string $surveyId): int
+	{
+		return $this->guideSurvey::where('survey_id', $surveyId)
+			->where('status', GuideStatus::INPROGRESS->value)
+			->count();
+	}
 
+	public function findAvailableGuides(string $surveyId, string $guideId): ?GuideSurvey
+	{
+		return $this->guideSurvey::where('survey_id', $surveyId)
+			->where('status', GuideStatus::INPROGRESS->value)
+			->where('guide_id', '<>', $guideId)
+			->orderBy('id', 'asc')
+			->first();
+	}
+}

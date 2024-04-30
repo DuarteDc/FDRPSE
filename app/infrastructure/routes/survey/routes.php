@@ -61,12 +61,12 @@ function router(Router $router)
 		$surveyController->startSurvey();
 	});
 
-	$router->post('/save-questions', function () use ($surveyController) {
-		$surveyController->saveUserAnswers();
+	$router->post('/save-questions/{surveyId}/guide/{guideId}', function (string $surveyId, string $guideId) use ($surveyController) {
+		$surveyController->saveUserAnswers($surveyId, $guideId);
 	});
 
-	$router->post('/start-user', function () use ($surveyController) {
-		$surveyController->startSurveyByUser();
+	$router->post('/start-user/{surveyId}/guide/{guideId}', function (string $surveyId, string $guideId) use ($surveyController) {
+		$surveyController->startSurveyByUser($surveyId, $guideId);
 	});
 
 	$router->post('/end-user', function () use ($surveyController) {

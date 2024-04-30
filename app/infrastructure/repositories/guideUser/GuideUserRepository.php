@@ -4,7 +4,6 @@ namespace App\infrastructure\repositories\guideUser;
 
 use App\domain\guideUser\GuideUser;
 use App\domain\guideUser\GuideUserRepository as ContractsRepository;
-use App\domain\qualifications\Qualifications;
 use App\infrastructure\repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -30,6 +29,7 @@ final class GuideUserRepository extends BaseRepository implements ContractsRepos
 		$guideUser = $this->guideUser::Where('guide_id', $guideId)
 			->where('user_id', $userId)
 			->where('survey_id', $surveyId)
+			->with('guide')
 			->first();
 
 		return $guideUser ? $guideUser : $this->create(
@@ -198,4 +198,13 @@ final class GuideUserRepository extends BaseRepository implements ContractsRepos
 			return $guide->user !== null && $guide->user->area !== null;
 		})]);
 	}
+
+	public function existGuidesInProgres(string $surveyId, $guideId): int
+	{
+		return $this->guideUser::where('survey_id', $surveyId)
+			->where('guide_id', '<>', $guideId)
+			->where('status', false)
+			->count();
+	}
+
 }

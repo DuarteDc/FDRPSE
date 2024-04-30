@@ -21,4 +21,5 @@ interface GuideRepository extends BaseRepository
 	public function findGuideBySurvey(string $surveyId, string $guideId): ? Guide;
 	public function changeGuideSurveyStatus(Guide $guide, string $surveyId, GuideStatus $status);
 	public function findGuideDetail(string $guideId): ? Guide;
+
 }

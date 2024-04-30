@@ -44,7 +44,7 @@ final class SurveyUseCase
 
 		$guides = [];
 		foreach ($areValidIds as $key => $guide) {
-			$guides[$guide['id']] = ['qualification' => $guide['qualification'], 'status' => ($key === 0) ? 1 : 0];
+			$guides[$guide['id']] = ['qualification' => $guide['qualification'], 'status' => 1];
 		}
 
 		return [
@@ -71,9 +71,9 @@ final class SurveyUseCase
 		return $this->surveyService->setSurveyToUser($surveyId, $guideId);
 	}
 
-	public function finalizeSurveyByUser()
+	public function finalizeSurveyByUser(string $surveyId, string $guideId)
 	{
-		return $this->surveyService->finalzeUserSurvey();
+		return $this->surveyService->finalzeUserSurvey($surveyId, $guideId);
 	}
 
 	public function getInProgressSurvey()
@@ -145,16 +145,16 @@ final class SurveyUseCase
 		$guide = '';
 
 		if ($status === GuideStatus::PAUSED->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::INPROGRESS->value) {
-			if ($this->surveyService->canContinueGuide($surveyId, $guideId) > 0 && $this->surveyService->existGuideInProgress($surveyId) > 0) {
-				return new Exception('El cuestionario no puede ser pausado porque existen usuarios respondiendo el cuestionario', 400);
-			}
+			// if ($this->surveyService->canContinueGuide($surveyId, $guideId) > 0 && $this->surveyService->existGuideInProgress($surveyId) > 0) {
+			// 	return new Exception('El cuestionario no puede ser pausado porque existen usuarios respondiendo el cuestionario', 400);
+			// }
 			$guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::PAUSED);
 			return ['guide' => $guide];
 		}
 		if ($status === GuideStatus::INPROGRESS->value && $guideSurvey->surveys[0]->pivot->status === GuideStatus::PAUSED->value) {
-			if ($this->surveyService->canContinueGuide($surveyId, $guideId) > 0 && $this->surveyService->existGuideInProgress($surveyId) > 0) {
-				return new Exception('El cuestionario no puede ser pausado porque existen usuarios respondiendo el cuestionario', 400);
-			}
+			// if ($this->surveyService->canContinueGuide($surveyId, $guideId) > 0 && $this->surveyService->existGuideInProgress($surveyId) > 0) {
+			// 	return new Exception('El cuestionario no puede ser pausado porque existen usuarios respondiendo el cuestionario', 400);
+			// }
 			$guide = $this->guideRepository->changeGuideSurveyStatus($guideSurvey, $surveyId, GuideStatus::INPROGRESS);
 			return ['guide' => $guide];
 		}

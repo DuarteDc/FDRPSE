@@ -53,17 +53,12 @@ final class SurveyService
 
 	public function saveNongradableAnswersByUser(array $body, string $surveyId, string $guideId)
 	{
-		$guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
-
+		$guideSurvey = $this->guideSurveyRepository->findByGuideSurvey($surveyId, $guideId);
 		if (!$guideSurvey) {
 			return new Exception('Parece que hubo un error al registar la respusta', 400);
 		}
 
-		if ($guideSurvey->survey_id != $surveyId || $guideSurvey->guide_id != $guideId) {
-			return new Exception('La encuesta que intentas responder no esta disponible', 400);
-		}
-
-		if ($guideSurvey->guides->gradable) {
+		if ($guideSurvey->status != GuideStatus::INPROGRESS->value) {
 			return new Exception('La encuesta que intentas responder no esta disponible', 400);
 		}
 
@@ -110,30 +105,17 @@ final class SurveyService
 
 	public function saveAnswersByUser(array $body, string $surveyId, string $guideId)
 	{
-		$guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
+		$guideSurvey = $this->guideSurveyRepository->findByGuideSurvey($surveyId, $guideId);
 		if (!$guideSurvey) {
 			return new Exception('Parece que hubo un error al registar la respusta', 400);
-		} 
+		}
 
-		$currentGuideUser = $this->guideUserRepository->getUserAnwserInCurrentSurvey($this->auth()->id);
-		
-
-		//TODO Fix save answer by user and answer guides step by step
-
-		return $currentGuideUser;
-
-		if ($currentGuideUser->survey_id != $surveyId || $currentGuideUser->guide_id != $guideId) {
+		if ($guideSurvey->status != GuideStatus::INPROGRESS->value) {
 			return new Exception('La encuesta que intentas responder no esta disponible', 400);
 		}
-		
-		return $currentGuideUser;
 
-		if (!$guideSurvey->guides->gradable || $currentGuideUser->status) {
-			return new Exception('La encuesta que intentas responder no esta disponible', 400);
-		}
-			
 		$guideUser = $this->guideUserRepository->getCurrentGuideUser(
-			$currentGuideUser->guide_id,
+			$guideSurvey->guide_id,
 			$this->auth()->id,
 			$guideSurvey->survey_id
 		);
@@ -222,21 +204,24 @@ final class SurveyService
 		return ['survey' => $guideUser, 'success' => true];
 	}
 
-	public function finalzeUserSurvey()
+	public function finalzeUserSurvey(string $surveyId, string $guideId)
 	{
-		$survey = $this->guideSurveyRepository->findGuideInProgress();
+		$survey = $this->surveyRepository->getCurrentSurvey();
 		if (!$survey) {
+			return new Exception('La encuesta que intentas guardar no existe', 404);
+		}
+		$guide = $this->guideSurveyRepository->findByGuideSurvey($surveyId, $guideId);
+		if (!$guide) {
 			return new Exception('La encuesta que intentas guardar no existe', 404);
 		}
 
 		$userQualification = $this->calculateUserQualification(
-			$this->guideUserRepository->getCurrentGuideUser($survey->guide_id, $this->auth()->id, $survey->survey_id)
+			$this->guideUserRepository->getCurrentGuideUser($guideId, $this->auth()->id, $surveyId)
 		);
-		//TODO: Make guides by steps for user
 
 		$surveyUser = $this->guideUserRepository->finalizeGuideUser(
-			$survey->survey_id,
-			$survey->guide_id,
+			$guide->survey_id,
+			$guide->guide_id,
 			$this->auth()->id,
 			$userQualification
 		);
@@ -245,11 +230,18 @@ final class SurveyService
 			return new Exception('Parece que hubo un error al finalizar la encuesta', 500);
 		}
 
-		$hasNextGuide = $this->guideSurveyRepository->findAvailableGuides($survey->survey_id, $survey->guide_id);
+		$surveyGuides = $this->guideSurveyRepository->findSurveyWithAvailableGuides($survey->id);
+
+		$availableGuides =  [...array_filter((array)[...$surveyGuides], function ($guide, $key) {
+			$currentGuide = $this->guideUserRepository->getCurrentGuideUser($guide->guide_id, $this->auth()->id, $guide->survey_id);
+			return $currentGuide && !$currentGuide->status;
+		}, ARRAY_FILTER_USE_BOTH)];
 
 		return [
 			'message' => 'La encuesta ha finalizado correctamente',
-			'guide' => $this->guideUserRepository->getCurrentGuideUser($hasNextGuide->guide_id, $this->auth()->id, $hasNextGuide->survey_id),
+			'guide' => count($availableGuides) > 0 ? 
+			$this->guideUserRepository->getCurrentGuideUser($availableGuides[0]->guide_id, $this->auth()->id, $availableGuides[0]->survey_id)
+				: null,
 		];
 	}
 
@@ -260,16 +252,21 @@ final class SurveyService
 			return new Exception('No hay encuestas disponibles', 400);
 		}
 
-		$guideSurvey = $this->guideSurveyRepository->findGuideInProgress();
+		$surveyGuides = $this->guideSurveyRepository->findSurveyWithAvailableGuides($survey->id);
 
-		if (!$guideSurvey) {
+		$availableGuides =  [...array_filter((array)[...$surveyGuides], function ($guide, $key) {
+			$currentGuide = $this->guideUserRepository->getCurrentGuideUser($guide->guide_id, $this->auth()->id, $guide->survey_id);
+			return $currentGuide && !$currentGuide->status;
+		}, ARRAY_FILTER_USE_BOTH)];
+
+		if (count($availableGuides) <= 0) {
 			return new Exception('La encuesta ya ha sido contestada', 400);
 		}
 
 		$guideUser = $this->guideUserRepository->getCurrentGuideUser(
-			$guideSurvey->guide_id,
+			$availableGuides[0]->guide_id,
 			$this->auth()->id,
-			$guideSurvey->survey_id
+			$availableGuides[0]->survey_id
 		);
 
 		return $guideUser->status ? new Exception('La encuesta ya ha sido contestada', 400) : ['guide' => $guideUser];

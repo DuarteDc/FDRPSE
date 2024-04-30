@@ -144,7 +144,8 @@ final class GuideUserRepository extends BaseRepository implements ContractsRepos
 		return $this->guideUser::where('user_id', $userId)
 			->where('status', true)
 			->with(['guide:id,name', 'user:id,nombre,apellidoP,apellidoM,id_area', 'user.area:id,nombreArea'])
-			->latest()->first(['user_id', 'total', 'status', 'answers', 'guide_id']);
+			->orderBy('updated_at', 'desc')
+			->first(['user_id', 'total', 'status', 'answers', 'guide_id']);
 	}
 
 	public function countSurveyUserAnswers(string $surveyId): int

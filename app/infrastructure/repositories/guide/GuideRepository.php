@@ -109,10 +109,6 @@ final class GuideRepository extends BaseRepository implements ContractsRepositor
 				$currentguide->surveys()->updateExistingPivot($surveyId, ['status' => $status->value]);
 				return $currentguide;
 			}
-			if ($currentguide->pivot->status == GuideStatus::INPROGRESS->value) {
-				$currentguide->surveys()->updateExistingPivot($surveyId, ['status' => GuideStatus::PAUSED->value]);
-				return $currentguide;
-			}
 			return $currentguide;
 		});
 

@@ -9,7 +9,7 @@ final class CheckAuthMiddleware extends Middleware
 	public function handle(): void
 	{
 		if (!$this->check($_SERVER['HTTP_SESSION'] ?? '')) {
-			$this->responseJson(['message' => '401 - Unauthorized'], 401);
+			$this->responseJson(['message' => 'La sesión caducó'], 401);
 			exit();
 		}
 	}

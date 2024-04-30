@@ -69,8 +69,8 @@ function router(Router $router)
 		$surveyController->startSurveyByUser($surveyId, $guideId);
 	});
 
-	$router->post('/end-user', function () use ($surveyController) {
-		$surveyController->finishUserSurvey();
+	$router->post('/end-user/{surveyId}/guide/{guideId}', function (string $surveyId, string $guideId) use ($surveyController) {
+		$surveyController->finishUserSurvey($surveyId, $guideId);
 	});
 
 	$router->get('/current', function () use ($surveyController) {

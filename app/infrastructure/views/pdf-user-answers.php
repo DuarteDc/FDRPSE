@@ -39,6 +39,9 @@ const QUALIFICATION_NAME = [
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        tbody{
+            margin-bottom: 15px;
+        }
         th,
         td {
             padding: 10px;

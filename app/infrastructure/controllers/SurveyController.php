@@ -50,9 +50,9 @@ final class SurveyController extends Controller
 		$this->response($this->surveyUseCase->startSurveyByUser($surveyId, $guideId));
 	}
 
-	public function finishUserSurvey()
+	public function finishUserSurvey(string $surveyId, string $guideId)
 	{
-		$this->response($this->surveyUseCase->finalizeSurveyByUser());
+		$this->response($this->surveyUseCase->finalizeSurveyByUser($surveyId, $guideId));
 	}
 
 	public function getCurrentSurvey()

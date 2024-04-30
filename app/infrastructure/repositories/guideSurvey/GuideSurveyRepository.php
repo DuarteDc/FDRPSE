@@ -7,6 +7,7 @@ use App\domain\guideSurvey\GuideSurvey;
 use App\domain\guideSurvey\GuideSurveyRepository as ContractRepository;
 use App\domain\section\Section;
 use App\infrastructure\repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 final class GuideSurveyRepository extends BaseRepository implements ContractRepository
 {
@@ -73,11 +74,6 @@ final class GuideSurveyRepository extends BaseRepository implements ContractRepo
 				return $guide;
 			}
 
-			if ($guide->status == GuideStatus::INPROGRESS->value) {
-				$guide->status = GuideStatus::PAUSED;
-				$guide->save();
-				return $guide;
-			}
 			return $guide;
 		});
 
@@ -102,4 +98,13 @@ final class GuideSurveyRepository extends BaseRepository implements ContractRepo
 			->orderBy('id', 'asc')
 			->first();
 	}
+
+	public function findSurveyWithAvailableGuides(string $surveyId): Collection
+	{
+		return $this->guideSurvey::where('survey_id', $surveyId)
+			->where('status', GuideStatus::INPROGRESS->value)
+			->orderBy('id', 'asc')
+			->get();
+	}
+
 }

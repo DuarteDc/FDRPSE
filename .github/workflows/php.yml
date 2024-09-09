@@ -13,9 +13,9 @@ jobs:
   build:
 
     runs-on: self-hosted
-
     steps:
     - uses: actions/checkout@v4
+    - uses: php-actions/composer@v6
 
     - name: Cache Composer packages
       id: composer-cache
